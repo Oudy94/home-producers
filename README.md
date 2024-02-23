@@ -1,78 +1,26 @@
-## Introduction
+# E-Commerce Platform and Management System
 
-This is a simple pipeline example for a .NET Core application, showing just
-how easy it is to get up and running with .NET development using GitLab.
 
-# Reference links
+## Website Application:
 
-- [GitLab CI Documentation](https://docs.gitlab.com/ee/ci/)
-- [.NET Hello World tutorial](https://dotnet.microsoft.com/learn/dotnet/hello-world-tutorial/)
+### Purpose:
+To enable customers to browse, search, and purchase products conveniently online.
 
-If you're new to .NET you'll want to check out the tutorial, but if you're
-already a seasoned developer considering building your own .NET app with GitLab,
-this should all look very familiar.
+### Features:
+- Display products with detailed descriptions, images, and prices.
+- Filter products by category, price range, or other attributes.
+- Sort products by relevance, price, popularity, etc.
+- Provide user authentication and authorization for different roles (e.g., customers, administrators).
+- Allow customers to manage their accounts, view order history, and track shipments.
+- Showcase popular or most bought products prominently on the main page.
 
-## What's contained in this project
 
-The root of the repository contains the out of the `dotnet new console` command,
-which generates a new console application that just prints out "Hello, World."
-It's a simple example, but great for demonstrating how easy GitLab CI is to
-use with .NET. Check out the `Program.cs` and `dotnetcore.csproj` files to
-see how these work.
+## Desktop Application for Management (Admin Panel):
 
-In addition to the .NET Core content, there is a ready-to-go `.gitignore` file
-sourced from the the .NET Core [.gitignore](https://github.com/dotnet/core/blob/master/.gitignore). This
-will help keep your repository clean of build files and other configuration.
+### Purpose:
+To empower administrators with tools for managing products and orders efficiently.
 
-Finally, the `.gitlab-ci.yml` contains the configuration needed for GitLab
-to build your code. Let's take a look, section by section.
-
-First, we note that we want to use the official Microsoft .NET SDK image
-to build our project.
-
-```
-image: microsoft/dotnet:latest
-```
-
-We're defining two stages here: `build`, and `test`. As your project grows
-in complexity you can add more of these.
-
-```
-stages:
-    - build
-    - test
-```
-
-Next, we define our build job which simply runs the `dotnet build` command and
-identifies the `bin` folder as the output directory. Anything in the `bin` folder
-will be automatically handed off to future stages, and is also downloadable through
-the web UI.
-
-```
-build:
-    stage: build
-    script:
-        - "dotnet build"
-    artifacts:
-      paths:
-        - bin/
-```
-
-Similar to the build step, we get our test output simply by running `dotnet test`.
-
-```
-test:
-    stage: test
-    script: 
-        - "dotnet test"
-```
-
-This should be enough to get you started. There are many, many powerful options 
-for your `.gitlab-ci.yml`. You can read about them in our documentation 
-[here](https://docs.gitlab.com/ee/ci/yaml/).
-
-## Developing with Gitpod
-
-This template repository also has a fully-automated dev setup for [Gitpod](https://docs.gitlab.com/ee/integration/gitpod.html).
-
-The `.gitpod.yml` ensures that, when you open this repository in Gitpod, you'll get a cloud workspace with .NET Core pre-installed, and your project will automatically be built and start running.
+### Features:
+- Manage product listings, including adding new products, updating information, and removing items.
+- Monitor and process incoming orders, update order status, and manage inventory.
+- Admin dashboard with analytics and reporting capabilities to track sales, revenue, and popular products.
