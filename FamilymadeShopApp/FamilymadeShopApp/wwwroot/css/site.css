@@ -20,3 +20,31 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+@media (max-width: 350px) {
+    .my-element {
+        display: none;
+    }
+}
+
+@media (min-width: 350px) {
+    .navbar-toggler {
+        display: none;
+    }
+    .navbar-collapse {
+        display: block !important;
+    }
+}
+
+
+html, body {
+    height: 100%;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+}
