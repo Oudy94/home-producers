@@ -48,3 +48,17 @@ html, body {
     width: 100%;
 }
 
+@media (min-width: 1200px) {
+    .col-xl-2-5 {
+        flex: 0 0 calc(20% + 20px);
+        max-width: calc(20% + 20px);
+    }
+}
+
+.product-text-title {
+    color: black;
+}
+
+    .product-text-title:hover {
+        color: #22b4a6;
+    }
