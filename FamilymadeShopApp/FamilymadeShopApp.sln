@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34622.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilymadeShopApp", "FamilymadeShopApp\FamilymadeShopApp.csproj", "{765C5B95-F422-4825-9AFC-3D5A6EBEDC25}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{765C5B95-F422-4825-9AFC-3D5A6EBEDC25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{765C5B95-F422-4825-9AFC-3D5A6EBEDC25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{765C5B95-F422-4825-9AFC-3D5A6EBEDC25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{765C5B95-F422-4825-9AFC-3D5A6EBEDC25}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5233816B-0EA0-4094-894B-3BACC0488397}
+	EndGlobalSection
+EndGlobal
