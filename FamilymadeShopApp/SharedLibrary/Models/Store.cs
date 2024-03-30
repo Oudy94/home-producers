@@ -8,5 +8,15 @@ namespace SharedLibrary.Models
 {
     public class Store
     {
+        public UserManager UserManager { get; set; }
+        public ProductManager ProductManager { get; set; }
+        public OrderManager OrderManager { get; set; }
+
+        public Store(UserManager userManager, ProductManager productManager, OrderManager orderManager)
+        {
+            UserManager = userManager;
+            ProductManager = productManager;
+            OrderManager = orderManager;
+        }
     }
 }

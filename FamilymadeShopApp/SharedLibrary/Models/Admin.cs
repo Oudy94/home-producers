@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedLibrary.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace SharedLibrary.Models
 {
-    public class Admin
+    public class Admin : User
     {
+        public RoleEnum Role { get; set; }
     }
 }
