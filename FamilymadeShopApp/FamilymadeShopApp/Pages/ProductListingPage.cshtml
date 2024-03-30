@@ -6,7 +6,7 @@
 <section style="background-color: #eee;">
     <div class="container py-5">
         <div class="row">
-            @foreach (var product in Model.ProductManager.ProductDict.Values)
+            @foreach (var product in Model.ProductManager.GetAll())
             {
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
                     <div class="card h-100">
