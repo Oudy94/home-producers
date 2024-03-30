@@ -1,32 +1,75 @@
 ﻿using SharedLibrary.Enums;
+using SharedLibrary.Helpers;
+using SharedLibrary.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SharedLibrary.Models
 {
-    public class ProductManager
-    {
-        public Dictionary<int, Product> ProductDict { get; set; }
+    public class ProductManager: IManager<Product>
+	{
+		private readonly DatabaseHelper _dbHelper;
 
-        public ProductManager()
-        {
-            this.ProductDict = new Dictionary<int, Product>();
-        }
+		public ProductManager()
+		{
+			this._dbHelper = new DatabaseHelper();
+		}
 
-        public void Add(int id, string name, string description, CategoryEnum category, double price, int quantity, List<string> images, int salesCount, double revenue)
+		public void Add(Product product)
         {
-            try
-            {
-                Product product = new Product(id, name, description, category, price, quantity, images, salesCount, revenue);
-                ProductDict.Add(id, product);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
+			throw new NotImplementedException();
+
+			try
+			{
+				_dbHelper.OpenConnection();
+				//_dbHelper.AddProductToDB(product);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+			finally
+			{
+				_dbHelper.CloseConnection();
+			}
+		}
+
+        public Product Get(int id)
+        {
+			try
+			{
+				_dbHelper.OpenConnection();
+				return _dbHelper.GetProductByIdFromDB(id);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+			finally
+			{
+				_dbHelper.CloseConnection();
+			}
+		}
+
+        public List<Product> GetAll()
+        {
+			try
+			{
+				_dbHelper.OpenConnection();
+				return _dbHelper.GetProductsFromDB();
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+			finally
+			{
+				_dbHelper.CloseConnection();
+			}
+		}
     }
 }

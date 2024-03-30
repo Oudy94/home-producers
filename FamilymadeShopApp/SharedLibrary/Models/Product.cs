@@ -13,13 +13,12 @@ namespace SharedLibrary.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public CategoryEnum Category { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public int Quantity { get; set; }
         public List<string> Images { get; set; }
         public int SalesCount { get; set; }
-        public double Revenue { get; set; }
 
-        public Product(int id, string name, string description, CategoryEnum category, double price, int quantity, List<string> images, int salesCount, double revenue)
+        public Product(int id, string name, string description, CategoryEnum category, decimal price, int quantity, List<string> images, int salesCount)
         {
             this.Id = id;
             this.Name = name;
@@ -29,7 +28,6 @@ namespace SharedLibrary.Models
             this.Quantity = quantity;
             this.Images = images;
             this.SalesCount = salesCount;
-            this.Revenue = revenue;
         }
     }
 }
