@@ -46,3 +46,12 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+.btn-navbar {
+    width: 40px;
+    height: 40px;
+}
+
+.cart-icon {
+    margin-left: -4px;
+}
