@@ -55,9 +55,9 @@ namespace SharedLibrary.Helpers
 				cmd.Parameters.AddWithValue("@Name", user.Name);
 				cmd.Parameters.AddWithValue("@Email", user.Email);
 				cmd.Parameters.AddWithValue("@Password", user.Password);
-				cmd.Parameters.AddWithValue("@RegistrationDate", user.RegistrationDate.ToUniversalTime()); // Convert to UTC
+				cmd.Parameters.AddWithValue("@RegistrationDate", user.RegistrationDate.ToUniversalTime());
 				cmd.Parameters.AddWithValue("@ShippingAddress", user.ShippingAddress);
-				cmd.Parameters.AddWithValue("@Role", 0); // Ensure this matches the role ID datatype in your database
+				cmd.Parameters.AddWithValue("@Role", DBNull.Value);
 				cmd.ExecuteNonQuery();
 			}
 		}
@@ -124,5 +124,91 @@ namespace SharedLibrary.Helpers
 
 			return products;
 		}
-	}
+
+        public Customer AuthenticateCustomerFromDB(string email, string password)
+        {
+            try
+            {
+                User user = AuthenticateUserFromDB(email, password);
+                if (user != null && user is Customer)
+                {
+                    return new Customer
+                    {
+                        Id = user.Id,
+                        Name = user.Name
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+            return null;
+        }
+
+        public Admin AuthenticateAdminFromDB(string email, string password)
+        {
+            try
+            {
+                User user = AuthenticateUserFromDB(email, password);
+                if (user != null && user is Admin)
+                {
+                    return new Admin
+                    {
+                        Id = user.Id,
+                        Name = user.Name
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+            return null;
+        }
+
+        private User AuthenticateUserFromDB(string email, string password)
+        {
+            User user = null;
+
+            try
+            {
+                string query = "SELECT id, name, role FROM [user] WHERE email = @Email AND password = @Password;";
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+					cmd.Parameters.AddWithValue("@Email", email);
+					cmd.Parameters.AddWithValue("@Password", password);
+
+					using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            if (!reader.IsDBNull(reader.GetOrdinal("role")))
+                            {
+                                user = new Admin
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("id")),
+                                    Name = reader.GetString(reader.GetOrdinal("name")),
+                                };
+                            }
+                            else
+                            {
+                                user = new Customer
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("id")),
+                                    Name = reader.GetString(reader.GetOrdinal("name")),
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+
+            return user;
+        }
+    }
 }

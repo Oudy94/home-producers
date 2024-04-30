@@ -9,7 +9,7 @@ namespace SharedLibrary.Models
 {
     public abstract class User
     {
-        public int Id { get; }
+        public int Id { get; set; }
 		[Required(ErrorMessage = "is required")]
 		[StringLength(24, ErrorMessage = "must be between {2} and {1} characters", MinimumLength = 4)]
 		public string Name { get; set; }
