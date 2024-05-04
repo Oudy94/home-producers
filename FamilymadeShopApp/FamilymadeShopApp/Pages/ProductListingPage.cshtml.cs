@@ -7,12 +7,15 @@ namespace FamilymadeShopApp.Pages
 {
     public class ProductListingPageModel : PageModel
     {
-        [BindProperty]
         public ProductManager ProductManager { get; set; }
+        public string SearchTerm { get; set; }
+        public int PageIndex { get; set; }
 
-        public void OnGet()
+        public void OnGet(string search, int pageIndex = 1)
         {
             this.ProductManager = new ProductManager();
+            SearchTerm = search;
+            PageIndex = pageIndex;
         }
     }
 }

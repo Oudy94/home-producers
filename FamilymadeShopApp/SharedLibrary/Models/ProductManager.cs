@@ -57,19 +57,53 @@ namespace SharedLibrary.Models
 
         public List<Product> GetAll()
         {
-			try
-			{
-				_dbHelper.OpenConnection();
-				return _dbHelper.GetProductsFromDB();
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.Message);
-			}
-			finally
-			{
-				_dbHelper.CloseConnection();
-			}
-		}
+            try
+            {
+                _dbHelper.OpenConnection();
+                return _dbHelper.GetProductsFromDB();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                _dbHelper.CloseConnection();
+            }
+        }
+
+        public List<Product> GetAll(string searchTerm, int pageNumber = 1)
+        {
+            try
+            {
+                _dbHelper.OpenConnection();
+                return _dbHelper.GetProductsFromDB(searchTerm, pageNumber);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                _dbHelper.CloseConnection();
+            }
+        }
+
+        public int GetProductsCount(string searchTerm)
+        {
+            try
+            {
+                _dbHelper.OpenConnection();
+                return _dbHelper.GetProductsCountFromDB(searchTerm);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                _dbHelper.CloseConnection();
+            }
+        }
     }
 }
