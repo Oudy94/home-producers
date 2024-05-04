@@ -23,7 +23,7 @@
 								Forgot Password?
 							</a>
 						</div>
-						<input id="password" class="form-control" asp-for="Credential.Password">
+						<input class="form-control" asp-for="Credential.Password">
 					</div>
 
 					<div class="d-flex align-items-center">
@@ -45,3 +45,7 @@
 		</div>
 	</div>
 </div>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
