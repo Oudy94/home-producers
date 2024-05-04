@@ -10,6 +10,7 @@ namespace SharedLibrary.Models
 {
     public class Customer : User
     {
+		public Cart Cart { get; set; }
 		public string ShippingAddress { get; set; } = string.Empty;
 	}
 }
