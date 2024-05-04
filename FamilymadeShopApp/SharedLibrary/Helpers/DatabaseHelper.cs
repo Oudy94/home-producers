@@ -94,36 +94,78 @@ namespace SharedLibrary.Helpers
 			return product;
 		}
 
-		public List<Product> GetProductsFromDB()
-		{
-			List<Product> products = new List<Product>();
+        public List<Product> GetProductsFromDB(string searchTerm = null, int pageNumber = 1)
+        {
+            List<Product> products = new List<Product>();
+            int pageSize = 2;
 
-			string query = "SELECT * FROM product";
+            int offset = (pageNumber - 1) * pageSize;
 
-			using (SqlCommand cmd = new SqlCommand(query, connection))
-			{
-				using (SqlDataReader reader = cmd.ExecuteReader())
-				{
-					while (reader.Read())
-					{
-						Product product = new Product
-						(
-							reader.GetInt32(reader.GetOrdinal("id")),
-							reader.GetString(reader.GetOrdinal("name")),
-							reader.GetString(reader.GetOrdinal("description")),
-							(CategoryEnum)reader.GetInt32(reader.GetOrdinal("category")) - 1,
-							reader.GetDecimal(reader.GetOrdinal("price")),
-							reader.GetInt32(reader.GetOrdinal("quantity")),
-							new List<string> { "", "", "" },
-							reader.GetInt32(reader.GetOrdinal("sales_count"))
-						);
-						products.Add(product);
-					}
-				}
-			}
+            string query = "SELECT * FROM product";
 
-			return products;
-		}
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query += " WHERE name LIKE @searchTerm";
+            }
+
+            query += " ORDER BY id OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY";
+
+            using (SqlCommand cmd = new SqlCommand(query, connection))
+            {
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    cmd.Parameters.AddWithValue("@searchTerm", "%" + searchTerm + "%");
+                }
+
+                cmd.Parameters.AddWithValue("@offset", offset);
+                cmd.Parameters.AddWithValue("@pageSize", pageSize);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Product product = new Product
+                        (
+                            reader.GetInt32(reader.GetOrdinal("id")),
+                            reader.GetString(reader.GetOrdinal("name")),
+                            reader.GetString(reader.GetOrdinal("description")),
+                            (CategoryEnum)reader.GetInt32(reader.GetOrdinal("category")) - 1,
+                            reader.GetDecimal(reader.GetOrdinal("price")),
+                            reader.GetInt32(reader.GetOrdinal("quantity")),
+                            new List<string> { "", "", "" },
+                            reader.GetInt32(reader.GetOrdinal("sales_count"))
+                        );
+                        products.Add(product);
+                    }
+                }
+            }
+
+            return products;
+        }
+
+        public int GetProductsCountFromDB(string searchTerm)
+        {
+            int count = 0;
+
+            string query = "SELECT COUNT(*) FROM product";
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query += " WHERE name LIKE @searchTerm";
+            }
+
+            using (SqlCommand cmd = new SqlCommand(query, connection))
+            {
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    cmd.Parameters.AddWithValue("@searchTerm", "%" + searchTerm + "%");
+                }
+
+                count = (int)cmd.ExecuteScalar();
+            }
+
+            return count;
+        }
 
         public Customer AuthenticateCustomerFromDB(string email, string password)
         {

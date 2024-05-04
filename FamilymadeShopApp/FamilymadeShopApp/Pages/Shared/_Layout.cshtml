@@ -16,12 +16,16 @@
                 <a class="navbar-brand" asp-area="" asp-page="/Index">
                     <img src="~/img/familymade_shop.png" alt="FamilymadeShopApp Logo" class="" style="max-width: 220px; height: auto;" />
                 </a>
-                <div class="input-group d-none d-sm-flex w-50">
-                    <input type="text" class="form-control border" placeholder="What are you looking for?" aria-label="Search" aria-describedby="button-addon2" />
-                    <a class="btn btn-light border shadow-0 text-dark" data-mdb-ripple-color="dark" asp-area="" asp-page="/ProductListingPage">
-                        Search
-                    </a>
-                </div>
+                <form class="input-group d-none d-sm-flex w-50" asp-page="/ProductListingPage" method="get">
+                        <div class="input-group">
+                        <input type="text" name="search" class="form-control border search-input" placeholder="What are you looking for?" aria-label="Search" aria-describedby="button-addon2" value="@Context.Request.Query["search"].ToString()" />
+                         <div class="input-group-append">
+                                <button type="submit" class="btn btn-light border shadow-0 text-dark" data-mdb-ripple-color="dark">
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </form>
 
                 <div class="d-flex">
 
@@ -87,6 +91,7 @@
         &copy; 2024 - FamilymadeShopApp - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
+
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
