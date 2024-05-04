@@ -94,6 +94,9 @@
 
     @* Include _ValidationScriptsPartial *@
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        UpdateCartBadge()
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

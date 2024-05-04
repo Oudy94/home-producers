@@ -1,6 +1,7 @@
 ﻿@page
 @model FamilymadeShopApp.Pages.ProductModel
 @{
+    @Html.AntiForgeryToken();
 }
 
 <section class="py-3">
@@ -73,7 +74,7 @@
                     <hr />
 
                     <div class="row mb-4">
- @*                        <div class="col-md-4 col-6">
+    @*                        <div class="col-md-4 col-6">
                             <label class="mb-2">Size</label>
                             <select class="form-select border border-secondary" style="height: 35px;">
                                 <option>Small</option>
@@ -84,20 +85,90 @@
                         <div class="col-md-4 col-6 mb-3">
                             <label class="mb-2 d-block">Quantity</label>
                             <div class="input-group mb-3" style="width: 170px;">
-                                <button class="btn btn-white border border-secondary px-3" type="button" id="button-addon1" data-mdb-ripple-color="dark">
+                                <button class="btn btn-white border border-secondary px-3" onclick="OnClickDecreaseQuantity()">
                                     <i class="fas fa-minus"></i>
                                 </button>
-                                <input type="text" class="form-control text-center border border-secondary" placeholder="1" aria-label="Example text with button addon" aria-describedby="button-addon1" />
-                                <button class="btn btn-white border border-secondary px-3" type="button" id="button-addon2" data-mdb-ripple-color="dark">
+                                <input class="form-control text-center border border-secondary form-control-quantity" value="1" />
+                                <button class="btn btn-white border border-secondary px-3" onclick="OnClickIncreaseQuantity()">
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <a class="btn btn-success shadow-0" asp-area="" asp-page="/Cart"> Buy now </a>
-                    <a href="#" class="btn btn-secondary shadow-0"> <i class="me-1 fa fa-shopping-basket"></i> Add to cart </a>
+                    
+                    <button class="btn btn-success mt-2" onclick="OnClickBuyNow()">Buy Now</button>
+                    <button class="btn btn-warning mt-2" onclick="OnClickAddToCart()"><i class="me-1 fa fa-shopping-basket"></i> Add to cart</button>
+
                 </div>
             </main>
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        function OnClickIncreaseQuantity() {
+            var quantityInput = document.querySelector('.form-control-quantity');
+            quantityInput.value = parseInt(quantityInput.value) + 1;
+        };
+
+        function OnClickDecreaseQuantity() {
+            var quantityInput = document.querySelector('.form-control-quantity');
+            var newValue = parseInt(quantityInput.value) - 1;
+            if (newValue > 0) {
+                quantityInput.value = newValue;
+            }
+        };
+
+        function OnClickBuyNow() {
+            var dataToSend = {
+                ProductId: @Model.Product.Id,
+                Quantity: document.querySelector('.form-control-quantity').value
+            };
+
+            fetch('/Product?handler=AddToCart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                body: JSON.stringify(dataToSend)
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/Cart';
+                } else {
+                    console.error('Failed to process the request:', response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        };
+
+        function OnClickAddToCart() {
+            var dataToSend = {
+                ProductId: @Model.Product.Id,
+                Quantity: document.querySelector('.form-control-quantity').value
+            };
+
+            fetch('/Product?handler=AddToCart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                body: JSON.stringify(dataToSend)
+            })
+            .then(response => response.text())
+            .then(data => {
+                    UpdateCartBadge()
+                    alert("Product added to cart.");
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        };
+
+    </script>
+}
