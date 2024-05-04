@@ -18,15 +18,14 @@
                             <div class="row product-@cartItem.ProductId">
                                 <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
                                     <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                                        <img src="https://via.placeholder.com/650x500" class="w-100" />
                                         <a href="/Product?id=@cartItem.ProductId">
-                                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                                            <img src="https://via.placeholder.com/650x500" class="w-100" />
                                         </a>
                                     </div>
                                 </div>
 
                                 <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
-                                    <p><strong>@cartItem.Name</strong></p>
+                                    <p><strong><a asp-page="/Product" asp-route-id="@cartItem.ProductId">@cartItem.Name</a></strong></p>
 
                                     <button type="button" class="btn btn-danger btn-sm me-1 mb-2" onclick="OnClickRemoveProduct(@cartItem.ProductId)" data-mdb-toggle="tooltip" title="Remove item">
                                         <i class="fas fa-trash"></i>
@@ -217,6 +216,7 @@
                 productCountElement.textContent = `Cart - ${parsedData.cartItems.length} items`;
                 UpdateCart(parsedData.cartItems);
                 UpdateSummary(parsedData.cartItems);
+                UpdateCartBadge();
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -233,15 +233,15 @@
                     <div class="row product-${cartItem.productId}">
                         <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
                             <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                                <img src="https://via.placeholder.com/650x500" class="w-100" />
                                 <a href="/Product?id=${cartItem.productId}">
-                                    <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                                    <img src="https://via.placeholder.com/650x500" class="w-100" />
                                 </a>
                             </div>
                         </div>
 
                         <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
-                            <p><strong>${cartItem.name}</strong></p>
+                           <p><strong><a href="/Product?id=${cartItem.productId}">${cartItem.name}</a></strong></p>
+
 
                             <button type="button" class="btn btn-danger btn-sm me-1 mb-2" onclick="OnClickRemoveProduct(${cartItem.productId})" data-mdb-toggle="tooltip" title="Remove item">
                                 <i class="fas fa-trash"></i>
