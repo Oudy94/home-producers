@@ -51,3 +51,9 @@ body {
 .product-text-title:hover {
     color: #22b4a6;
 }
+
+.form-control-quantity::-webkit-inner-spin-button,
+.form-control-quantity::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

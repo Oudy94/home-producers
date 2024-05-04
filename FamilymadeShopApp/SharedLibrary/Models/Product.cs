@@ -18,6 +18,11 @@ namespace SharedLibrary.Models
         public List<string> Images { get; set; }
         public int SalesCount { get; set; }
 
+        public Product()
+        {
+
+        }
+
         public Product(int id, string name, string description, CategoryEnum category, decimal price, int quantity, List<string> images, int salesCount)
         {
             this.Id = id;

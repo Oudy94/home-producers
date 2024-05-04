@@ -5,7 +5,24 @@
 
 function confirmLogout() {
     if (confirm("Are you sure you want to log out?")) {
-        // If the user confirms, submit the logout form
         document.getElementById("logoutForm").submit();
+    }
+}
+
+function UpdateCartBadge() {
+    var cartItemsCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('CartItems='));
+
+    if (cartItemsCookie) {
+        var cartItemsJson = decodeURIComponent(cartItemsCookie.split('=')[1]);
+        var cartItems = JSON.parse(cartItemsJson);
+
+        var itemCount = cartItems.length;
+
+        var countBadge = document.querySelector('.badge');
+
+        countBadge.textContent = itemCount;
+    } else {
+        var countBadge = document.querySelector('.badge');
+        countBadge.textContent = '0';
     }
 }
