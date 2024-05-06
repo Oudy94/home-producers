@@ -32,10 +32,10 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <p class="me-2 mb-0" style="margin-top: 7px;">Hello, @User.Identity.Name</p>
-                        <a class="btn btn-light text-secondary position-relative me-2 btn-navbar" asp-area="" asp-page="/Index">
+                        <a class="btn btn-light text-secondary position-relative me-2 btn-navbar" asp-area="" asp-page="/PersonalInformation">
                             <i class="fas fa-user"></i>
                         </a>
-                        <a class="btn btn-light text-secondary position-relative me-2 btn-navbar" href="/Logout" onclick="confirmLogout()">
+                        <a id="logoutLink" class="btn btn-light text-secondary position-relative me-2 btn-navbar" href="/Logout" onclick="return confirmLogout()">
                             <i class="fas fa-sign-out"></i>
                         </a>
                     }
@@ -96,10 +96,6 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
-    <script>
-        UpdateCartBadge()
-    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

@@ -5,7 +5,9 @@
 
 function confirmLogout() {
     if (confirm("Are you sure you want to log out?")) {
-        document.getElementById("logoutForm").submit();
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -26,3 +28,6 @@ function UpdateCartBadge() {
         countBadge.textContent = '0';
     }
 }
+
+
+UpdateCartBadge();

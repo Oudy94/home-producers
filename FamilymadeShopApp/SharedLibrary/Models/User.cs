@@ -20,7 +20,6 @@ namespace SharedLibrary.Models
 		[DataType(DataType.Password)]
         [StringLength(24, ErrorMessage = "must be between {2} and {1} characters", MinimumLength = 6)]
         public string Password { get; set; }
-		public DateTime RegistrationDate { get; } = DateTime.Now;
-
+		public DateTime RegistrationDate { get; set; } = DateTime.Now;
 	}
 }

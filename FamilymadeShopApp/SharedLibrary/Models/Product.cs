@@ -14,7 +14,7 @@ namespace SharedLibrary.Models
         public string Description { get; set; }
         public CategoryEnum Category { get; set; }
         public decimal Price { get; set; }
-        public int Quantity { get; set; }
+        public int Stock { get; set; }
         public List<string> Images { get; set; }
         public int SalesCount { get; set; }
 
@@ -23,14 +23,14 @@ namespace SharedLibrary.Models
 
         }
 
-        public Product(int id, string name, string description, CategoryEnum category, decimal price, int quantity, List<string> images, int salesCount)
+        public Product(int id, string name, string description, CategoryEnum category, decimal price, int stock, List<string> images, int salesCount)
         {
             this.Id = id;
             this.Name = name;
             this.Description = description;
             this.Category = category;
             this.Price = price;
-            this.Quantity = quantity;
+            this.Stock = stock;
             this.Images = images;
             this.SalesCount = salesCount;
         }

@@ -14,7 +14,16 @@ namespace FamilymadeShopApp.Pages
 
         public void OnGet()
         {
-
+            if (TempData.ContainsKey("MessageDanger"))
+            {
+                string message = TempData["MessageDanger"].ToString();
+                ViewData["MessageDanger"] = message;
+            }
+            else if (TempData.ContainsKey("MessageSuccess"))
+            {
+                string message = TempData["MessageSuccess"].ToString();
+                ViewData["MessageSuccess"] = message;
+            }
         }
     }
 }

@@ -1,0 +1,138 @@
+﻿@page
+@model FamilymadeShopApp.Pages.CheckoutModel
+@{
+}
+
+<section class="h-100 gradient-custom">
+    <div class="container py-5">
+        <form method="POST" autocomplete="off">
+            <div class="row d-flex justify-content-center my-4">
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="mb-0">Contact Information</h5>
+                        </div>
+                        <div class="card-body p-3">
+                            <div class="mb-3">
+                                <label class="mb-2 text-muted" asp-for="Customer.Name"></label>
+                                <span class="text-danger" asp-validation-for="Customer.Name"></span>
+                                <input class="form-control" asp-for="Customer.Name">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="mb-2 text-muted" asp-for="Customer.Email"></label>
+                                <span class="text-danger" asp-validation-for="Customer.Email"></span>
+                                <input class="form-control" asp-for="Customer.Email">
+                            </div>
+                        </div>
+                        <div class="card-header py-3">
+                            <h5 class="mb-0">Address</h5>
+                        </div>
+                        <div class="card-body p-3">
+                            <div class="mb-3">
+                                <label class="mb-2 text-muted" asp-for="Address.AddressLine"></label>
+                                <span class="text-danger" asp-validation-for="Address.AddressLine"></span>
+                                <input class="form-control" asp-for="Address.AddressLine">
+                            </div>
+                            <div class="mb-3">
+                                <label class="mb-2 text-muted" asp-for="Address.PostalCode"></label>
+                                <span class="text-danger" asp-validation-for="Address.PostalCode"></span>
+                                <input class="form-control" asp-for="Address.PostalCode">
+                            </div>
+                            <div class="mb-3">
+                                <label class="mb-2 text-muted" asp-for="Address.City"></label>
+                                <span class="text-danger" asp-validation-for="Address.City"></span>
+                                <input class="form-control" asp-for="Address.City">
+                            </div>
+                            <div class="mb-3">
+                                <label class="mb-2 text-muted" asp-for="Address.Country"></label>
+                                <span class="text-danger" asp-validation-for="Address.Country"></span>
+                                <input class="form-control" asp-for="Address.Country" disabled value="@Model.Address.Country">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="mb-0">Summary</h5>
+                        </div>
+                        <div class="card-body cart-summary">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                    Products
+                                    <span>
+                                        €@(Model.CartItems.Sum(cartItem => cartItem.Price * cartItem.Quantity))
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    Shipping
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        bool isVIP = false;
+
+                                        if (isVIP)
+                                        {
+                                            <span>Free</span>
+                                        }
+                                        else
+                                        {
+                                            <span>€10,00</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span>€10,00</span>
+                                    }
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                    <div>
+                                        <strong>Total amount</strong>
+                                    </div>
+                                    <span>
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            bool isVIP = false;
+
+                                            if (isVIP)
+                                            {
+                                                <strong>@(Model.CartItems.Sum(cartItem => cartItem.Price * cartItem.Quantity))</strong>
+                                            }
+                                            else
+                                            {
+                                                <strong>€@(Model.CartItems.Sum(cartItem => cartItem.Price * cartItem.Quantity) + 10)</strong>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <strong>€@(Model.CartItems.Sum(cartItem => cartItem.Price * cartItem.Quantity) + 10)</strong>
+                                        }
+
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <p><strong>Expected shipping delivery</strong></p>
+                            <p class="mb-0">@DateTime.Today.AddDays(1).ToString("dd.MM.yyyy") - @DateTime.Today.AddDays(3).ToString("dd.MM.yyyy")</p>
+                        </div>
+                    </div>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                Make order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

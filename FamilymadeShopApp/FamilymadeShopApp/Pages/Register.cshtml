@@ -12,21 +12,15 @@
 						<h1 class="fs-4 card-title fw-bold mb-4">Sign-Up</h1>
 						<form method="POST">
 							<div class="mb-3">
-								<label class="mb-2 text-muted" asp-for="Customer.Name">Name</label>
+								<label class="mb-2 text-muted" asp-for="Customer.Name"></label>
 								<span class="text-danger" asp-validation-for="Customer.Name"></span>
-								<input class="form-control" asp-for="Customer.Name" required>
-								<div class="invalid-feedback">
-									Name is invalid
-								</div>
+								<input class="form-control" asp-for="Customer.Name">
 							</div>
 							
 							<div class="mb-3">
-								<label class="mb-2 text-muted" asp-for="Customer.Email">E-Mail Address</label>
+								<label class="mb-2 text-muted" asp-for="Customer.Email"></label>
 								<span class="text-danger" asp-validation-for="Customer.Email"></span>
-								<input class="form-control" asp-for="Customer.Email" required>
-								<div class="invalid-feedback">
-									Email is invalid
-								</div>
+								<input class="form-control" asp-for="Customer.Email">
 							</div>
 
 							<div class="mb-3">
@@ -34,10 +28,7 @@
 									<label class="text-muted" asp-for="Customer.Password">Password</label>
 									<span class ="text-danger" asp-validation-for="Customer.Password"></span>
 								</div>
-								<input class="form-control" asp-for="Customer.Password" required>
-								<div class="invalid-feedback">
-									Password is required
-								</div>
+								<input class="form-control" asp-for="Customer.Password">
 							</div>
 
 @* 							<div class="mb-3">

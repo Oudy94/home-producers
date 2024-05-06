@@ -47,52 +47,52 @@ namespace SharedLibrary.Helpers
             }
         }
 
-		public void AddUserToDB(Customer user)
-		{
-			string query = "INSERT INTO [user] (name, email, password, registration_date, shipping_address, role) VALUES (@Name, @Email, @Password, @RegistrationDate, @ShippingAddress, @Role)";
-			using (SqlCommand cmd = new SqlCommand(query, connection))
-			{
-				cmd.Parameters.AddWithValue("@Name", user.Name);
-				cmd.Parameters.AddWithValue("@Email", user.Email);
-				cmd.Parameters.AddWithValue("@Password", user.Password);
-				cmd.Parameters.AddWithValue("@RegistrationDate", user.RegistrationDate.ToUniversalTime());
-				cmd.Parameters.AddWithValue("@ShippingAddress", user.ShippingAddress);
-				cmd.Parameters.AddWithValue("@Role", DBNull.Value);
-				cmd.ExecuteNonQuery();
-			}
-		}
+        public void AddUserToDB(Customer user)
+        {
+            string query = "INSERT INTO [user] (name, email, password, registration_date, shipping_address, role) VALUES (@Name, @Email, @Password, @RegistrationDate, @ShippingAddress, @Role)";
+            using (SqlCommand cmd = new SqlCommand(query, connection))
+            {
+                cmd.Parameters.AddWithValue("@Name", user.Name);
+                cmd.Parameters.AddWithValue("@Email", user.Email);
+                cmd.Parameters.AddWithValue("@Password", user.Password);
+                cmd.Parameters.AddWithValue("@RegistrationDate", user.RegistrationDate.ToUniversalTime());
+                cmd.Parameters.AddWithValue("@ShippingAddress", user.ShippingAddress);
+                cmd.Parameters.AddWithValue("@Role", DBNull.Value);
+                cmd.ExecuteNonQuery();
+            }
+        }
 
-		public Product GetProductByIdFromDB(int id)
-		{
-			Product product = null;
+        public Product GetProductByIdFromDB(int id)
+        {
+            Product product = null;
 
-			string query = "SELECT * FROM product WHERE id = @Id";
+            string query = "SELECT * FROM product WHERE id = @Id";
 
-			using (SqlCommand cmd = new SqlCommand(query, connection))
-			{
-				cmd.Parameters.AddWithValue("@Id", id);
+            using (SqlCommand cmd = new SqlCommand(query, connection))
+            {
+                cmd.Parameters.AddWithValue("@Id", id);
 
-				using (SqlDataReader reader = cmd.ExecuteReader())
-				{
-					if (reader.Read())
-					{
-						product = new Product
-						(
-							reader.GetInt32(reader.GetOrdinal("id")),
-							reader.GetString(reader.GetOrdinal("name")),
-							reader.GetString(reader.GetOrdinal("description")),
-							(CategoryEnum)reader.GetInt32(reader.GetOrdinal("category")) - 1,
-							reader.GetDecimal(reader.GetOrdinal("price")),
-							reader.GetInt32(reader.GetOrdinal("quantity")),
-							new List<string> { "", "", "" },
-							reader.GetInt32(reader.GetOrdinal("sales_count"))
-						);
-					}
-				}
-			}
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        product = new Product
+                        (
+                            reader.GetInt32(reader.GetOrdinal("id")),
+                            reader.GetString(reader.GetOrdinal("name")),
+                            reader.GetString(reader.GetOrdinal("description")),
+                            (CategoryEnum)reader.GetInt32(reader.GetOrdinal("category")) - 1,
+                            reader.GetDecimal(reader.GetOrdinal("price")),
+                            reader.GetInt32(reader.GetOrdinal("quantity")),
+                            new List<string> { "", "", "" },
+                            reader.GetInt32(reader.GetOrdinal("sales_count"))
+                        );
+                    }
+                }
+            }
 
-			return product;
-		}
+            return product;
+        }
 
         public List<Product> GetProductsFromDB(string searchTerm = null, int pageNumber = 1)
         {
@@ -218,10 +218,10 @@ namespace SharedLibrary.Helpers
                 string query = "SELECT id, name, role FROM [user] WHERE email = @Email AND password = @Password;";
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
-					cmd.Parameters.AddWithValue("@Email", email);
-					cmd.Parameters.AddWithValue("@Password", password);
+                    cmd.Parameters.AddWithValue("@Email", email);
+                    cmd.Parameters.AddWithValue("@Password", password);
 
-					using (SqlDataReader reader = cmd.ExecuteReader())
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
@@ -330,5 +330,78 @@ namespace SharedLibrary.Helpers
                 throw new Exception(ex.Message, ex);
             }
         }
+
+        public void AddOrderToDB(Order order)
+        {
+            try
+            {
+                string query = "INSERT INTO [order] (customer_id, status, date, shipping_price, shipping_address) VALUES (@CustomerId, @Status, @Date, @ShippingPrice, @ShippingAddress); SELECT SCOPE_IDENTITY();";
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@CustomerId", order.CustomerId);
+                    cmd.Parameters.AddWithValue("@Status", (int)order.Status);
+                    cmd.Parameters.AddWithValue("@Date", order.Date);
+                    cmd.Parameters.AddWithValue("@ShippingPrice", order.ShippingPrice);
+                    cmd.Parameters.AddWithValue("@ShippingAddress", order.ShippingAddress);
+
+                    int orderId = Convert.ToInt32(cmd.ExecuteScalar());
+
+                    foreach (OrderProduct orderProduct in order.Products)
+                    {
+                        string queryProduct = "INSERT INTO [order_product] (order_id, product_id, quantity, price) VALUES (@OrderId, @ProductId, @Quantity, @Price)";
+
+                        using (SqlCommand cmdProduct = new SqlCommand(queryProduct, connection))
+                        {
+                            cmdProduct.Parameters.AddWithValue("@OrderId", orderId);
+                            cmdProduct.Parameters.AddWithValue("@ProductId", orderProduct.Product.Id);
+                            cmdProduct.Parameters.AddWithValue("@Quantity", orderProduct.Quantity);
+                            cmdProduct.Parameters.AddWithValue("@Price", orderProduct.Price);
+                            cmdProduct.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+
+        public Customer GetUserFromDB(int id)
+        {
+            Customer user = null;
+
+            try
+            {
+                string query = "SELECT name, email, registration_date FROM [user] WHERE id = @Id;";
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@Id", id);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            user = new Customer
+                            {
+                                Id = id,
+                                Name = reader.GetString(reader.GetOrdinal("name")),
+                                Email = reader.GetString(reader.GetOrdinal("email")),
+                                RegistrationDate = reader.GetDateTime(reader.GetOrdinal("registration_date")),
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+
+            return user;
+        }
+
     }
 }

@@ -37,7 +37,19 @@ namespace SharedLibrary.Models
 
 		public Customer Get(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _dbHelper.OpenConnection();
+                return _dbHelper.GetUserFromDB(id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                _dbHelper.CloseConnection();
+            }
         }
 
         public List<Customer> GetAll() 

@@ -4,6 +4,21 @@
     ViewData["Title"] = "Home page";
 }
 
+@if (ViewData.ContainsKey("MessageDanger"))
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @Html.Raw(ViewData["MessageDanger"])
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+else if (ViewData.ContainsKey("MessageSuccess"))
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @Html.Raw(ViewData["MessageSuccess"])
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <!-- Showcase -->
 <section class="mt-5">
     <div class="container-fluid">
