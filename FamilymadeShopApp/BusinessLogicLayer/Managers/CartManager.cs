@@ -11,13 +11,18 @@ namespace BusinessLogicLayer.Managers
 {
 	public class CartManager : IManager<Cart>
 	{
-		private readonly DatabaseHelper _dbHelper;
+		private readonly CartRepository _CartRepository;
 
-		public void Add(Cart cart)
+        public CartManager()
+        {
+            this._CartRepository = new CartRepository();
+        }
+
+        public void Add(Cart cart)
 		{
 			try
 			{
-				_dbHelper.AddCartToDB(cart);
+                _CartRepository.AddCartToDB(cart);
 			}
 			catch (Exception ex)
 			{
@@ -39,7 +44,7 @@ namespace BusinessLogicLayer.Managers
 		{
             try
             {
-                _dbHelper.AddProductToCartInDB(prodcutId, quantity, customerId);
+                _CartRepository.AddProductToCartInDB(prodcutId, quantity, customerId);
             }
             catch (Exception ex)
             {

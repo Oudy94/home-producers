@@ -11,65 +11,41 @@ using ModelLayer.Models;
 
 namespace BusinessLogicLayer.Managers
 {
-    public class ProductManager: IManager<Product>
-	{
-		private readonly DatabaseHelper _dbHelper;
+    public class ProductManager : IManager<Product>
+    {
+        private readonly ProductRepository _ProductRepository;
 
-		public ProductManager()
-		{
-			this._dbHelper = new DatabaseHelper();
-		}
-
-		public void Add(Product product)
+        public ProductManager()
         {
-			throw new NotImplementedException();
+            this._ProductRepository = new ProductRepository();
+        }
 
-			try
-			{
-				_dbHelper.OpenConnection();
-				//_dbHelper.AddProductToDB(product);
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.Message);
-			}
-			finally
-			{
-				_dbHelper.CloseConnection();
-			}
-		}
+        public void Add(Product product)
+        {
+            throw new NotImplementedException();
+        }
 
         public Product Get(int id)
         {
-			try
-			{
-				_dbHelper.OpenConnection();
-				return _dbHelper.GetProductByIdFromDB(id);
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.Message);
-			}
-			finally
-			{
-				_dbHelper.CloseConnection();
-			}
-		}
-
-        public List<Product> GetAll()
-        {
             try
             {
-                _dbHelper.OpenConnection();
-                return _dbHelper.GetProductsFromDB();
+                return _ProductRepository.GetProductByIdFromDB(id);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            finally
+        }
+
+        public List<Product> GetAll()
+        {
+            try
             {
-                _dbHelper.CloseConnection();
+                return _ProductRepository.GetProductsFromDB();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 
@@ -77,16 +53,11 @@ namespace BusinessLogicLayer.Managers
         {
             try
             {
-                _dbHelper.OpenConnection();
-                return _dbHelper.GetProductsFromDB(searchTerm, pageNumber);
+                return _ProductRepository.GetProductsFromDB(searchTerm, pageNumber);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }
-            finally
-            {
-                _dbHelper.CloseConnection();
             }
         }
 
@@ -94,17 +65,13 @@ namespace BusinessLogicLayer.Managers
         {
             try
             {
-                _dbHelper.OpenConnection();
-                return _dbHelper.GetProductsCountFromDB(searchTerm);
+                return _ProductRepository.GetProductsCountFromDB(searchTerm);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            finally
-            {
-                _dbHelper.CloseConnection();
-            }
         }
     }
+
 }
