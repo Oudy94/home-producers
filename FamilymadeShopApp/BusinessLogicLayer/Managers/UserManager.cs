@@ -12,65 +12,51 @@ namespace BusinessLogicLayer.Managers
 {
     public class UserManager : IManager<Customer>
     {
-		private readonly DatabaseHelper _dbHelper;
+        private readonly UserRepository _UserRepository;
 
-		public UserManager()
-		{
-			this._dbHelper = new DatabaseHelper();
-		}
+        public UserManager()
+        {
+            this._UserRepository = new UserRepository();
+        }
 
-		public void Add(Customer user)
-		{
-			try
-			{
-				_dbHelper.OpenConnection();
-				_dbHelper.AddUserToDB(user);
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.Message);
-			}
-			finally
-			{
-				_dbHelper.CloseConnection();
-			}
-		}
-
-		public Customer Get(int id)
+        public void Add(Customer user)
         {
             try
             {
-                _dbHelper.OpenConnection();
-                return _dbHelper.GetUserFromDB(id);
+                _UserRepository.AddUserToDB(user);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            finally
+        }
+
+        public Customer Get(int id)
+        {
+            try
             {
-                _dbHelper.CloseConnection();
+                return _UserRepository.GetUserFromDB(id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 
-        public List<Customer> GetAll() 
-        { 
+        public List<Customer> GetAll()
+        {
             throw new NotImplementedException();
         }
+
         public Customer AuthenticateCustomer(string email, string password)
         {
             try
             {
-                _dbHelper.OpenConnection();
-                return _dbHelper.AuthenticateCustomerFromDB(email, password);
+                return _UserRepository.AuthenticateCustomerFromDB(email, password);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }
-            finally
-            {
-                _dbHelper.CloseConnection();
             }
         }
     }

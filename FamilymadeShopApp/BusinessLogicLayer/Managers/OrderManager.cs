@@ -9,29 +9,24 @@ using ModelLayer.Models;
 
 namespace BusinessLogicLayer.Managers
 {
-    public class OrderManager: IManager<Order>
+    public class OrderManager : IManager<Order>
     {
-        private readonly DatabaseHelper _dbHelper;
+        private readonly OrderRepository _OrderRepository;
 
         public OrderManager()
         {
-            this._dbHelper = new DatabaseHelper();
+            this._OrderRepository = new OrderRepository();
         }
 
         public void Add(Order order)
         {
             try
             {
-                _dbHelper.OpenConnection();
-                _dbHelper.AddOrderToDB(order);
+                _OrderRepository.AddOrderToDB(order);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }
-            finally
-            {
-                _dbHelper.CloseConnection();
             }
         }
 
@@ -49,16 +44,11 @@ namespace BusinessLogicLayer.Managers
         {
             try
             {
-                _dbHelper.OpenConnection();
-                return _dbHelper.GetOrdersByUserIdFromDB(id);
+                return _OrderRepository.GetOrdersByUserIdFromDB(id);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }
-            finally
-            {
-                _dbHelper.CloseConnection();
             }
         }
     }
