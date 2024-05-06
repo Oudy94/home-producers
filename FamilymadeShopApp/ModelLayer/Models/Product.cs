@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SharedLibrary.Enums;
+using SharedLayer.Enums;
 
-namespace SharedLibrary.Models
+namespace ModelLayer.Models
 {
     public class Product
     {

@@ -1,14 +1,15 @@
-﻿using SharedLibrary.Enums;
-using SharedLibrary.Helpers;
-using SharedLibrary.Interfaces;
+﻿using SharedLayer.Enums;
+using DataAccessLayer.DataAccess;
+using BusinessLogicLayer.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ModelLayer.Models;
 
-namespace SharedLibrary.Models
+namespace BusinessLogicLayer.Managers
 {
     public class ProductManager: IManager<Product>
 	{

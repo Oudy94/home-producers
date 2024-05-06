@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedLibrary.Enums
+namespace SharedLayer.Enums
 {
     public enum CategoryEnum
     {
         BakeryGoods,
         BathAndBeauty,
         ClothingAndAccessories,
-        GiftsAndSpecialOccassions,
-        CarftSupplies
+        GiftsAndSpecialOccasions,
+        CraftSupplies
     }
 }

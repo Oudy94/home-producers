@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FamilymadeShopApp.Pages
+namespace WebApp.Pages
 {
     public class AboutUsModel : PageModel
     {

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SharedLibrary.Helpers;
-using SharedLibrary.Interfaces;
+using DataAccessLayer.DataAccess;
+using BusinessLogicLayer.Interfaces;
+using ModelLayer.Models;
 
-namespace SharedLibrary.Models
+namespace BusinessLogicLayer.Managers
 {
     public class OrderManager: IManager<Order>
     {
