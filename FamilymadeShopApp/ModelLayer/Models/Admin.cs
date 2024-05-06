@@ -9,6 +9,6 @@ namespace ModelLayer.Models
 {
     public class Admin : User
     {
-        public RoleEnum Role { get; set; }
+        public Role Role { get; set; }
     }
 }

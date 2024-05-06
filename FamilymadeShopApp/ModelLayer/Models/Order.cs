@@ -15,13 +15,13 @@ namespace ModelLayer.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; }
         public int CustomerId { get; set; }
-        public OrderStatusEnum Status { get; set; }
+        public OrderStatus Status { get; set; }
         public DateTime Date { get; set; }
         public List<OrderProduct> Products { get; set; }
         public decimal ShippingPrice { get; set; }
         public string ShippingAddress { get; set; }
 
-        public Order(int id, int customerId, OrderStatusEnum status, DateTime date, List<OrderProduct> products, decimal shippingPrice, string shippingAddress)
+        public Order(int id, int customerId, OrderStatus status, DateTime date, List<OrderProduct> products, decimal shippingPrice, string shippingAddress)
         {
             Id = id;
             CustomerId = customerId;
@@ -32,7 +32,7 @@ namespace ModelLayer.Models
             ShippingAddress = shippingAddress;
         }
 
-        public Order(int customerId, OrderStatusEnum status, DateTime date, List<OrderProduct> products, decimal shippingPrice, string shippingAddress)
+        public Order(int customerId, OrderStatus status, DateTime date, List<OrderProduct> products, decimal shippingPrice, string shippingAddress)
         {
             CustomerId = customerId;
             Status = status;
@@ -42,7 +42,7 @@ namespace ModelLayer.Models
             ShippingAddress = shippingAddress;
         }
 
-        public Order(OrderStatusEnum status, DateTime date, List<OrderProduct> products, decimal shippingPrice, string shippingAddress)
+        public Order(OrderStatus status, DateTime date, List<OrderProduct> products, decimal shippingPrice, string shippingAddress)
         {
             Status = status;
             Date = date;

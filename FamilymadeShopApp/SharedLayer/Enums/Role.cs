@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedLayer.Enums
 {
-    public enum RoleEnum
+    public enum Role
     {
         SuperAdmin,
         ContentManager,

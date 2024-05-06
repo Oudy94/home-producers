@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace SharedLayer.Enums
 {
-    public enum CategoryEnum
+    public enum OrderStatus
     {
-        BakeryGoods,
-        BathAndBeauty,
-        ClothingAndAccessories,
-        GiftsAndSpecialOccasions,
-        CraftSupplies
+        Pending,
+        Processing,
+        Shipped,
+        Delivered,
+        Cancelled
     }
 }
