@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
-using SharedLibrary.Models;
+using ModelLayer.Models;
+using BusinessLogicLayer.Managers;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace FamilymadeShopApp.Pages
+namespace WebApp.Pages
 {
     public class CheckoutModel : PageModel
     {
@@ -116,7 +117,7 @@ namespace FamilymadeShopApp.Pages
                         fullAddress.Append(Address.City);
                         fullAddress.Append(", ");
                         fullAddress.Append(Address.Country);
-                        Order order = new Order(Customer.Id, SharedLibrary.Enums.OrderStatusEnum.Pending, DateTime.Now, orderProducts, shippingPrice, fullAddress.ToString());
+                        Order order = new Order(Customer.Id, SharedLayer.Enums.OrderStatusEnum.Pending, DateTime.Now, orderProducts, shippingPrice, fullAddress.ToString());
 
                         OrderManager.Add(order);
                     }

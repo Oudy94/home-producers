@@ -1,5 +1,5 @@
-﻿using SharedLibrary.Enums;
-using SharedLibrary.Models;
+﻿using SharedLayer.Enums;
+using ModelLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -8,7 +8,7 @@ using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedLibrary.Helpers
+namespace DataAccessLayer.DataAccess
 {
     public class DatabaseHelper
     {

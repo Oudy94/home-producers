@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SharedLibrary.Models;
+using ModelLayer.Models;
+using BusinessLogicLayer.Managers;
 
-namespace FamilymadeShopApp.Pages
+namespace WebApp.Pages
 {
     [Authorize]
     public class PersonalInformationModel : PageModel

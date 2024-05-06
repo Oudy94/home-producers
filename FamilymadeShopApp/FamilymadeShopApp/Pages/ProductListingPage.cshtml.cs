@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SharedLibrary.Models;
-using SharedLibrary.Enums;
+using ModelLayer.Models;
+using BusinessLogicLayer.Managers;
 
-namespace FamilymadeShopApp.Pages
+namespace WebApp.Pages
 {
     public class ProductListingPageModel : PageModel
     {

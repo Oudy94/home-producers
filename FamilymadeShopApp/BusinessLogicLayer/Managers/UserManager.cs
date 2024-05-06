@@ -4,10 +4,11 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SharedLibrary.Helpers;
-using SharedLibrary.Interfaces;
+using DataAccessLayer.DataAccess;
+using BusinessLogicLayer.Interfaces;
+using ModelLayer.Models;
 
-namespace SharedLibrary.Models
+namespace BusinessLogicLayer.Managers
 {
     public class UserManager : IManager<Customer>
     {
@@ -55,6 +56,22 @@ namespace SharedLibrary.Models
         public List<Customer> GetAll() 
         { 
             throw new NotImplementedException();
+        }
+        public Customer AuthenticateCustomer(string email, string password)
+        {
+            try
+            {
+                _dbHelper.OpenConnection();
+                return _dbHelper.AuthenticateCustomerFromDB(email, password);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                _dbHelper.CloseConnection();
+            }
         }
     }
 }

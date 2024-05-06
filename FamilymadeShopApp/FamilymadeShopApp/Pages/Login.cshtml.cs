@@ -2,11 +2,12 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SharedLibrary.Models;
+using ModelLayer.Models;
+using BusinessLogicLayer.Managers;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
-namespace FamilymadeShopApp.Pages
+namespace WebApp.Pages
 {
     public class LoginModel : PageModel
     {
@@ -27,8 +28,8 @@ namespace FamilymadeShopApp.Pages
                 return Page();
             }
 
-            Login login = new Login();
-            Customer customer = login.AuthenticateCustomer(this.Credential.Email, this.Credential.Password);
+            UserManager UserManager = new UserManager();
+            Customer customer = UserManager.AuthenticateCustomer(this.Credential.Email, this.Credential.Password);
 
             if (customer == null)
             {

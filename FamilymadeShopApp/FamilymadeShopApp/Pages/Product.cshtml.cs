@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
-using SharedLibrary.Enums;
-using SharedLibrary.Models;
-using Microsoft.AspNetCore.Antiforgery;
+using ModelLayer.Models;
+using BusinessLogicLayer.Managers;
 
-namespace FamilymadeShopApp.Pages
+namespace WebApp.Pages
 {
     public class ProductModel : PageModel
     {

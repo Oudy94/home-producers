@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
-using SharedLibrary.Models;
+using ModelLayer.Models;
+using BusinessLogicLayer.Managers;
 
-namespace FamilymadeShopApp.Pages
+namespace WebApp.Pages
 {
     public class CartModel : PageModel
     {
