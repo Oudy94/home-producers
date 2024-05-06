@@ -57,3 +57,33 @@ body {
     -webkit-appearance: none;
     margin: 0;
 }
+
+.btn-primary {
+    color: #fff;
+    background-color: #C1D8C5;
+    border-color: #C1D8C5;
+}
+
+.btn-primary:hover {
+    background-color: #A5BCA9;
+    border-color: #A5BCA9;
+}
+
+.nav-link.active {
+    background-color: #C1D8C5;
+    color: black;
+}
+
+.nav-link {
+    background-color: transparent;
+    color: black;
+}
+
+.nav-link:hover {
+    color: #C1D8C5;
+}
+
+.nav-link.active {
+    background-color: #C1D8C5 !important;
+    color: white;
+}
