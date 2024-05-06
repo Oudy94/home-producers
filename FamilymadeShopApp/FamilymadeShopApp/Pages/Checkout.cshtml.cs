@@ -5,9 +5,11 @@ using ModelLayer.Models;
 using BusinessLogicLayer.Managers;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Pages
 {
+    [Authorize]
     public class CheckoutModel : PageModel
     {
         public UserManager UserManager { get; set; }
@@ -38,11 +40,6 @@ namespace WebApp.Pages
             }
 
             //TODO: accept order from guest
-            if (!User.Identity.IsAuthenticated)
-            {
-                TempData["MessageDanger"] = "You need to be logged in to make an order.";
-                return RedirectToPage("/Index");
-            }
 
             ProductManager = new ProductManager();
 
@@ -117,7 +114,7 @@ namespace WebApp.Pages
                         fullAddress.Append(Address.City);
                         fullAddress.Append(", ");
                         fullAddress.Append(Address.Country);
-                        Order order = new Order(Customer.Id, SharedLayer.Enums.OrderStatusEnum.Pending, DateTime.Now, orderProducts, shippingPrice, fullAddress.ToString());
+                        Order order = new Order(Customer.Id, SharedLayer.Enums.OrderStatus.Pending, DateTime.Now, orderProducts, shippingPrice, fullAddress.ToString());
 
                         OrderManager.Add(order);
                     }

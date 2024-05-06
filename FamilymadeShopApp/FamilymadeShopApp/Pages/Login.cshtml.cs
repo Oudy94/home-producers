@@ -28,23 +28,36 @@ namespace WebApp.Pages
                 return Page();
             }
 
-            UserManager UserManager = new UserManager();
-            Customer customer = UserManager.AuthenticateCustomer(this.Credential.Email, this.Credential.Password);
+            UserManager userManager = new UserManager(); 
+            Customer customer = userManager.AuthenticateCustomer(this.Credential.Email, this.Credential.Password);
 
             if (customer == null)
             {
                 return Page();
             }
 
-            List<Claim> claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Name, customer.Name));
-            claims.Add(new Claim("id", customer.Id.ToString()));
+            List<Claim> claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Name, customer.Name),
+                new Claim("id", customer.Id.ToString())
+            };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity));
 
-            return RedirectToPage("/Index");
+
+			string returnUrl = Request.Query["ReturnUrl"];
+			if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+			{
+				return LocalRedirect(returnUrl);
+			}
+			else
+			{
+				return LocalRedirect("/Index");
+			}
+
         }
+
     }
 
     public class Credential
