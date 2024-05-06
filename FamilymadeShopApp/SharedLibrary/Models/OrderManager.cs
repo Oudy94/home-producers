@@ -43,5 +43,22 @@ namespace SharedLibrary.Models
         {
             throw new NotImplementedException();
         }
+
+        public List<Order> GetOrdersByUserId(int id)
+        {
+            try
+            {
+                _dbHelper.OpenConnection();
+                return _dbHelper.GetOrdersByUserIdFromDB(id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                _dbHelper.CloseConnection();
+            }
+        }
     }
 }

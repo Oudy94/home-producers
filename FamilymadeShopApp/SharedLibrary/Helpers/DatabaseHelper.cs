@@ -403,5 +403,64 @@ namespace SharedLibrary.Helpers
             return user;
         }
 
+        public List<Order> GetOrdersByUserIdFromDB(int id)
+        {
+            List<Order> orders = new List<Order>();
+
+            try
+            {
+                string query = "SELECT o.id, o.Status, o.date, o.shipping_price, o.shipping_address, op.product_id , op.quantity, op.price, p.name " +
+                               "FROM [Order] o " +
+                               "INNER JOIN order_product op ON o.id = op.order_id " +
+                               "INNER JOIN Product p ON op.product_id = p.id " +
+                               "WHERE o.customer_id = @Id";
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@Id", id);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int orderId = reader.GetInt32(reader.GetOrdinal("id"));
+                            Order order = orders.FirstOrDefault(o => o.Id == orderId);
+                            if (order == null)
+                            {
+                                order = new Order
+                                (
+                                    orderId,
+                                    id,
+                                    (OrderStatusEnum)reader.GetInt32(reader.GetOrdinal("status")),
+                                    reader.GetDateTime(reader.GetOrdinal("date")),
+                                    new List<OrderProduct>(),
+                                    reader.GetDecimal(reader.GetOrdinal("shipping_price")),
+                                    reader.GetString(reader.GetOrdinal("shipping_address"))
+                                );
+
+                                orders.Add(order);
+                            }
+
+                            order.Products.Add(new OrderProduct
+                            (
+                                new Product
+                                {
+                                    Name = reader.GetString(reader.GetOrdinal("name")),
+                                },
+                                reader.GetInt32(reader.GetOrdinal("quantity")),
+                                reader.GetDecimal(reader.GetOrdinal("price"))
+                            ));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+
+            return orders;
+
+        }
     }
 }
