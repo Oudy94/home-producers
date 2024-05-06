@@ -12,7 +12,7 @@ namespace ModelLayer.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public CategoryEnum Category { get; set; }
+        public Category Category { get; set; }
         public decimal Price { get; set; }
         public int Stock { get; set; }
         public List<string> Images { get; set; }
@@ -23,7 +23,7 @@ namespace ModelLayer.Models
 
         }
 
-        public Product(int id, string name, string description, CategoryEnum category, decimal price, int stock, List<string> images, int salesCount)
+        public Product(int id, string name, string description, Category category, decimal price, int stock, List<string> images, int salesCount)
         {
             this.Id = id;
             this.Name = name;
