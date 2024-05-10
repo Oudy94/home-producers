@@ -11,7 +11,7 @@ namespace DataAccessLayer.Interfaces
     {
         void AddUserToDB(Customer user);
         Customer GetUserFromDB(int id);
-        List<Customer> GetAllUsersFromDB();
+        List<Customer> GetCustomersFromDB();
         Customer AuthenticateCustomerFromDB(string email, string password);
     }
 }
