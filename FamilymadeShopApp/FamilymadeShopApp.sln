@@ -5,13 +5,15 @@ VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "FamilymadeShopApp\WebApp.csproj", "{205895F9-A7B8-4A74-A642-7E4F5CA7333C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{AB9EB956-FEB2-4167-B9EF-7F21C3FB757F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{AB9EB956-FEB2-4167-B9EF-7F21C3FB757F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelLayer", "ModelLayer\ModelLayer.csproj", "{12F978BC-024C-4C14-B205-8AE23D13C4FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelLayer", "ModelLayer\ModelLayer.csproj", "{12F978BC-024C-4C14-B205-8AE23D13C4FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogicLayer", "BusinessLogicLayer\BusinessLogicLayer.csproj", "{1698A326-FA74-4694-A3AE-25B9B9EF9C1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogicLayer", "BusinessLogicLayer\BusinessLogicLayer.csproj", "{1698A326-FA74-4694-A3AE-25B9B9EF9C1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedLayer", "SharedLayer\SharedLayer.csproj", "{927F1FC8-2CF6-4737-BAEA-556336EF5088}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedLayer", "SharedLayer\SharedLayer.csproj", "{927F1FC8-2CF6-4737-BAEA-556336EF5088}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopApp", "DesktopApp\DesktopApp.csproj", "{67AEFF34-A86E-49ED-939E-00C92D5AC48E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{927F1FC8-2CF6-4737-BAEA-556336EF5088}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{927F1FC8-2CF6-4737-BAEA-556336EF5088}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{927F1FC8-2CF6-4737-BAEA-556336EF5088}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67AEFF34-A86E-49ED-939E-00C92D5AC48E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67AEFF34-A86E-49ED-939E-00C92D5AC48E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67AEFF34-A86E-49ED-939E-00C92D5AC48E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67AEFF34-A86E-49ED-939E-00C92D5AC48E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

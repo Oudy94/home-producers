@@ -45,10 +45,34 @@ namespace BusinessLogicLayer.Managers
 
         public List<Customer> GetAll()
         {
-            throw new NotImplementedException();
-        }
+			throw new NotImplementedException();
+		}
 
-        public Customer AuthenticateCustomer(string email, string password)
+		public async Task<List<Customer>> GetCustomersAsync()
+		{
+			try
+			{
+				return await _UserRepository.GetCustomersFromDBAsync();
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+
+		public async Task<List<Admin>> GetAdminsAsync()
+		{
+			try
+			{
+				return await _UserRepository.GetAdminsFromDBAsync();
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+
+		public Customer AuthenticateCustomer(string email, string password)
         {
             try
             {
@@ -59,5 +83,17 @@ namespace BusinessLogicLayer.Managers
                 throw new Exception(ex.Message);
             }
         }
-    }
+
+		public Admin AuthenticateAdmin(string email, string password)
+		{
+			try
+			{
+				return _UserRepository.AuthenticateAdminFromDB(email, password);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+	}
 }
