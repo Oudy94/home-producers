@@ -21,7 +21,6 @@ namespace DesktopApp.DashboardMenuControls
 			InitializeComponent();
 
 			_productManager = new ProductManager();
-			cmbFilterType.SelectedIndex = 0;
 		}
 	}
 }
