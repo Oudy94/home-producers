@@ -10,11 +10,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using DesktopApp.DashboardMenuControls;
+using DesktopApp.PanelControls;
 
-namespace DesktopApp
+namespace DesktopApp.MainControls
 {
-	public partial class DashboardControl : UserControl
+	public partial class PanelControl : UserControl
 	{
 		private Button currentButton;
 		private UserControl activeControl;
@@ -26,19 +26,42 @@ namespace DesktopApp
 		private ProductManagerControl productManagerControl;
 		private OrderManagerControl orderManagerControl;
 
-		public DashboardControl()
+		private Admin _admin;
+
+		public PanelControl(Admin admin)
 		{
 			InitializeComponent();
 
+			_admin = admin;
+
+
 			homeControl = new HomeControl();
-			userManagerControl = new UserManagerControl();
-			productManagerControl = new ProductManagerControl();
-			orderManagerControl = new OrderManagerControl();
+
+			switch (admin.Role)
+			{
+				case SharedLayer.Enums.Role.SuperAdmin:
+					userManagerControl = new UserManagerControl();
+					productManagerControl = new ProductManagerControl();
+					orderManagerControl = new OrderManagerControl();
+					break;
+				case SharedLayer.Enums.Role.InventoryManager:
+					productManagerControl = new ProductManagerControl();
+					btnUserManager.Hide();
+					btnOrderManager.Hide();
+					break;
+				case SharedLayer.Enums.Role.OrderManager:
+					orderManagerControl = new OrderManagerControl();
+					btnUserManager.Hide();
+					btnProductManager.Hide();
+					break;
+			}
+
+			lblGreetAdmin.Text = $"Welcome, {admin.Name}";
 		}
 
 		private void DashboardControl_Load(object sender, EventArgs e)
 		{
-			OpenMenuForm(new DashboardMenuControls.HomeControl(), btnHome, "Home");
+			OpenMenuForm(new PanelControls.HomeControl(), btnHome, "Home");
 		}
 
 		private void ActivateButton(object btnSender)
@@ -73,7 +96,6 @@ namespace DesktopApp
 			menuControl.Dock = DockStyle.Fill;
 			this.pnlContent.Controls.Add(menuControl);
 			menuControl.BringToFront();
-			//menuControl.Show();
 			lblHeaderTitle.Text = name;
 		}
 
@@ -84,17 +106,26 @@ namespace DesktopApp
 
 		private void btnUsers_Click(object sender, EventArgs e)
 		{
-			OpenMenuForm(userManagerControl, sender, "User Manager");
+			if (_admin.Role == SharedLayer.Enums.Role.SuperAdmin)
+			{
+				OpenMenuForm(userManagerControl, sender, "User Manager");
+			}
 		}
 
 		private void btnProducts_Click(object sender, EventArgs e)
 		{
-			OpenMenuForm(productManagerControl, sender, "Product Manager");
+			if (_admin.Role == SharedLayer.Enums.Role.SuperAdmin || _admin.Role == SharedLayer.Enums.Role.InventoryManager)
+			{ 
+				OpenMenuForm(productManagerControl, sender, "Product Manager");
+			}
 		}
 
 		private void btnOrders_Click(object sender, EventArgs e)
 		{
-			OpenMenuForm(orderManagerControl, sender, "Order Manager");
+			if (_admin.Role == SharedLayer.Enums.Role.SuperAdmin || _admin.Role == SharedLayer.Enums.Role.OrderManager)
+			{
+				OpenMenuForm(orderManagerControl, sender, "Order Manager");
+			}
 		}
 
 		private void btnLogout_Click(object sender, EventArgs e)
@@ -113,11 +144,6 @@ namespace DesktopApp
 			{
 				LogoutSuccess(this, e);
 			}
-		}
-
-		public void SetLoginUser(Admin admin)
-		{
-			lblGreetAdmin.Text = $"Welcome, {admin.Name}";
 		}
 	}
 }

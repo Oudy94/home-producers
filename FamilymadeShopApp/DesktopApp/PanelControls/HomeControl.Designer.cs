@@ -1,6 +1,6 @@
-﻿namespace DesktopApp.DashboardMenuControls
+﻿namespace DesktopApp.PanelControls
 {
-	partial class OrderManagerControl
+	partial class HomeControl
 	{
 		/// <summary> 
 		/// Required designer variable.
@@ -35,17 +35,17 @@
 			// 
 			label1.AutoSize = true;
 			label1.Font = new Font("Segoe UI", 16F);
-			label1.Location = new Point(326, 203);
+			label1.Location = new Point(364, 197);
 			label1.Name = "label1";
-			label1.Size = new Size(164, 30);
+			label1.Size = new Size(73, 30);
 			label1.TabIndex = 0;
-			label1.Text = "Order Manager";
+			label1.Text = "Home";
 			// 
-			// OrderManagerControl
+			// HomeControl
 			// 
 			AutoScaleMode = AutoScaleMode.None;
 			Controls.Add(label1);
-			Name = "OrderManagerControl";
+			Name = "HomeControl";
 			Size = new Size(812, 467);
 			ResumeLayout(false);
 			PerformLayout();

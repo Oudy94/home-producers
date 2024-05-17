@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DesktopApp.Utilities
+{
+	public static class AppConfig
+	{
+		public const int s_UserPageSize = 50;
+		public const int s_MaxDBRequestCount = 5;
+		public const int s_MaxDBRequestTime = 10;
+	}
+}

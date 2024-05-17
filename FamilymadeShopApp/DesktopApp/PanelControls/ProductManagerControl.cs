@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DesktopApp.DashboardMenuControls
+namespace DesktopApp.PanelControls
 {
 	public partial class ProductManagerControl : UserControl
 	{

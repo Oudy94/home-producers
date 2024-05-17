@@ -1,4 +1,4 @@
-﻿namespace DesktopApp.DashboardMenuControls
+﻿namespace DesktopApp.PanelControls
 {
 	partial class ProductManagerControl
 	{
