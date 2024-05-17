@@ -1,4 +1,5 @@
 using BusinessLogicLayer.Managers;
+using DesktopApp.MainControls;
 using ModelLayer.Models;
 using System.Windows.Forms;
 
@@ -6,7 +7,7 @@ namespace DesktopApp
 {
 	public partial class MainForm : Form
 	{
-		private DashboardControl dashboardControl;
+		private PanelControl dashboardControl;
 		private LoginControl loginControl;
 
 		public MainForm()

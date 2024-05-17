@@ -1,6 +1,6 @@
-﻿namespace DesktopApp
+﻿namespace DesktopApp.MainControls
 {
-	partial class DashboardControl
+	partial class PanelControl
 	{
 		/// <summary> 
 		/// Required designer variable.
@@ -30,9 +30,9 @@
 		{
 			pnlMenu = new Panel();
 			btnLogout = new Button();
-			btnOrders = new Button();
-			btnProducts = new Button();
-			btnUsers = new Button();
+			btnOrderManager = new Button();
+			btnProductManager = new Button();
+			btnUserManager = new Button();
 			btnHome = new Button();
 			pnlLogo = new Panel();
 			pictureBox1 = new PictureBox();
@@ -50,9 +50,9 @@
 			// 
 			pnlMenu.BackColor = Color.Silver;
 			pnlMenu.Controls.Add(btnLogout);
-			pnlMenu.Controls.Add(btnOrders);
-			pnlMenu.Controls.Add(btnProducts);
-			pnlMenu.Controls.Add(btnUsers);
+			pnlMenu.Controls.Add(btnOrderManager);
+			pnlMenu.Controls.Add(btnProductManager);
+			pnlMenu.Controls.Add(btnUserManager);
 			pnlMenu.Controls.Add(btnHome);
 			pnlMenu.Controls.Add(pnlLogo);
 			pnlMenu.Dock = DockStyle.Left;
@@ -75,47 +75,47 @@
 			btnLogout.UseVisualStyleBackColor = true;
 			btnLogout.Click += btnLogout_Click;
 			// 
-			// btnOrders
+			// btnOrderManager
 			// 
-			btnOrders.Dock = DockStyle.Top;
-			btnOrders.FlatAppearance.BorderSize = 0;
-			btnOrders.FlatStyle = FlatStyle.Flat;
-			btnOrders.ForeColor = Color.Gainsboro;
-			btnOrders.Image = Properties.Resources.orders;
-			btnOrders.Location = new Point(0, 263);
-			btnOrders.Name = "btnOrders";
-			btnOrders.Size = new Size(88, 60);
-			btnOrders.TabIndex = 4;
-			btnOrders.UseVisualStyleBackColor = true;
-			btnOrders.Click += btnOrders_Click;
+			btnOrderManager.Dock = DockStyle.Top;
+			btnOrderManager.FlatAppearance.BorderSize = 0;
+			btnOrderManager.FlatStyle = FlatStyle.Flat;
+			btnOrderManager.ForeColor = Color.Gainsboro;
+			btnOrderManager.Image = Properties.Resources.orders;
+			btnOrderManager.Location = new Point(0, 263);
+			btnOrderManager.Name = "btnOrderManager";
+			btnOrderManager.Size = new Size(88, 60);
+			btnOrderManager.TabIndex = 4;
+			btnOrderManager.UseVisualStyleBackColor = true;
+			btnOrderManager.Click += btnOrders_Click;
 			// 
-			// btnProducts
+			// btnProductManager
 			// 
-			btnProducts.Dock = DockStyle.Top;
-			btnProducts.FlatAppearance.BorderSize = 0;
-			btnProducts.FlatStyle = FlatStyle.Flat;
-			btnProducts.ForeColor = Color.Gainsboro;
-			btnProducts.Image = Properties.Resources.products;
-			btnProducts.Location = new Point(0, 203);
-			btnProducts.Name = "btnProducts";
-			btnProducts.Size = new Size(88, 60);
-			btnProducts.TabIndex = 3;
-			btnProducts.UseVisualStyleBackColor = true;
-			btnProducts.Click += btnProducts_Click;
+			btnProductManager.Dock = DockStyle.Top;
+			btnProductManager.FlatAppearance.BorderSize = 0;
+			btnProductManager.FlatStyle = FlatStyle.Flat;
+			btnProductManager.ForeColor = Color.Gainsboro;
+			btnProductManager.Image = Properties.Resources.products;
+			btnProductManager.Location = new Point(0, 203);
+			btnProductManager.Name = "btnProductManager";
+			btnProductManager.Size = new Size(88, 60);
+			btnProductManager.TabIndex = 3;
+			btnProductManager.UseVisualStyleBackColor = true;
+			btnProductManager.Click += btnProducts_Click;
 			// 
-			// btnUsers
+			// btnUserManager
 			// 
-			btnUsers.Dock = DockStyle.Top;
-			btnUsers.FlatAppearance.BorderSize = 0;
-			btnUsers.FlatStyle = FlatStyle.Flat;
-			btnUsers.ForeColor = Color.Gainsboro;
-			btnUsers.Image = Properties.Resources.users;
-			btnUsers.Location = new Point(0, 143);
-			btnUsers.Name = "btnUsers";
-			btnUsers.Size = new Size(88, 60);
-			btnUsers.TabIndex = 2;
-			btnUsers.UseVisualStyleBackColor = true;
-			btnUsers.Click += btnUsers_Click;
+			btnUserManager.Dock = DockStyle.Top;
+			btnUserManager.FlatAppearance.BorderSize = 0;
+			btnUserManager.FlatStyle = FlatStyle.Flat;
+			btnUserManager.ForeColor = Color.Gainsboro;
+			btnUserManager.Image = Properties.Resources.users;
+			btnUserManager.Location = new Point(0, 143);
+			btnUserManager.Name = "btnUserManager";
+			btnUserManager.Size = new Size(88, 60);
+			btnUserManager.TabIndex = 2;
+			btnUserManager.UseVisualStyleBackColor = true;
+			btnUserManager.Click += btnUsers_Click;
 			// 
 			// btnHome
 			// 
@@ -193,13 +193,13 @@
 			pnlContent.Size = new Size(812, 467);
 			pnlContent.TabIndex = 2;
 			// 
-			// DashboardControl
+			// PanelControl
 			// 
 			AutoScaleMode = AutoScaleMode.None;
 			Controls.Add(pnlContent);
 			Controls.Add(pnlTitle);
 			Controls.Add(pnlMenu);
-			Name = "DashboardControl";
+			Name = "PanelControl";
 			Size = new Size(900, 550);
 			Load += DashboardControl_Load;
 			pnlMenu.ResumeLayout(false);
@@ -215,9 +215,9 @@
 		private Panel pnlMenu;
 		private Button btnHome;
 		private Panel pnlLogo;
-		private Button btnOrders;
-		private Button btnProducts;
-		private Button btnUsers;
+		private Button btnOrderManager;
+		private Button btnProductManager;
+		private Button btnUserManager;
 		private Panel pnlTitle;
 		private Label lblHeaderTitle;
 		private PictureBox pictureBox1;
