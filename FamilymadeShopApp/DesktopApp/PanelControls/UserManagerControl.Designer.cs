@@ -75,7 +75,7 @@
 			btnRefreshData.FlatAppearance.BorderColor = Color.White;
 			btnRefreshData.FlatStyle = FlatStyle.Flat;
 			btnRefreshData.Image = Properties.Resources.refresh_icon;
-			btnRefreshData.Location = new Point(761, 64);
+			btnRefreshData.Location = new Point(758, 64);
 			btnRefreshData.Name = "btnRefreshData";
 			btnRefreshData.Size = new Size(45, 25);
 			btnRefreshData.TabIndex = 6;
@@ -134,6 +134,7 @@
 			txtCurrentPage.TabIndex = 33;
 			txtCurrentPage.Text = "1";
 			txtCurrentPage.TextAlign = HorizontalAlignment.Center;
+			txtCurrentPage.KeyPress += txtCurrentPage_KeyPress;
 			txtCurrentPage.Leave += txtCurrentPage_Leave;
 			// 
 			// btnNextPage
@@ -171,14 +172,15 @@
 			// progressBar
 			// 
 			progressBar.ForeColor = Color.LimeGreen;
-			progressBar.Location = new Point(325, 242);
+			progressBar.Location = new Point(331, 242);
 			progressBar.Name = "progressBar";
-			progressBar.Size = new Size(146, 23);
+			progressBar.Size = new Size(140, 23);
 			progressBar.TabIndex = 30;
 			// 
 			// dgvUsers
 			// 
-			dgvUsers.AllowUserToResizeRows = false;
+			dgvUsers.AllowUserToAddRows = false;
+			dgvUsers.AllowUserToDeleteRows = false;
 			dgvUsers.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 			dgvUsers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 			dgvUsers.BackgroundColor = SystemColors.ControlLight;
@@ -193,18 +195,17 @@
 			dgvUsers.ColumnHeadersHeight = 37;
 			dgvUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
 			dgvUsers.EnableHeadersVisualStyles = false;
-			dgvUsers.Location = new Point(6, 95);
+			dgvUsers.Location = new Point(9, 92);
 			dgvUsers.MultiSelect = false;
 			dgvUsers.Name = "dgvUsers";
 			dgvUsers.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
 			dgvUsers.ShowEditingIcon = false;
-			dgvUsers.Size = new Size(800, 326);
+			dgvUsers.Size = new Size(794, 326);
 			dgvUsers.TabIndex = 28;
 			dgvUsers.CellValueChanged += dgvUsers_CellValueChanged;
 			// 
 			// groupBox1
 			// 
-			groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 			groupBox1.Controls.Add(btnFilterSearch);
 			groupBox1.Controls.Add(label2);
 			groupBox1.Controls.Add(txtFilterSearch);
@@ -249,6 +250,7 @@
 			txtFilterSearch.Name = "txtFilterSearch";
 			txtFilterSearch.Size = new Size(251, 25);
 			txtFilterSearch.TabIndex = 3;
+			txtFilterSearch.KeyPress += txtFilterSearch_KeyPress;
 			// 
 			// label1
 			// 

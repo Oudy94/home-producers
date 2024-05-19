@@ -14,9 +14,6 @@ namespace DesktopApp
 		{
 			InitializeComponent();
 
-			dashboardControl = new DashboardControl();
-			dashboardControl.Dock = DockStyle.Fill;
-
 			loginControl = new LoginControl();
 			loginControl.Dock = DockStyle.Fill;
 
@@ -26,18 +23,19 @@ namespace DesktopApp
 
 		private void OnLoginSuccess(Admin admin)
 		{
-			loginControl.LoginSuccess -= OnLoginSuccess;
+			//loginControl.LoginSuccess -= OnLoginSuccess;
 			Controls.Remove(loginControl);
 
+			dashboardControl = new PanelControl(admin);
+			dashboardControl.Dock = DockStyle.Fill;
 			dashboardControl.LogoutSuccess += OnLogoutSuccess;
-			dashboardControl.SetLoginUser(admin);
 			Controls.Add(dashboardControl);
 			dashboardControl.BringToFront();
 		}
 
 		private void OnLogoutSuccess(object sender, EventArgs e)
 		{
-			dashboardControl.LogoutSuccess -= OnLogoutSuccess;
+			//dashboardControl.LogoutSuccess -= OnLogoutSuccess;
 			Controls.Remove(dashboardControl);
 
 			loginControl.LoginSuccess += OnLoginSuccess;
