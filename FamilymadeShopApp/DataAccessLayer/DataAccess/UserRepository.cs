@@ -41,6 +41,33 @@ namespace DataAccessLayer.DataAccess
             {
                 CloseConnection();
             }
+        }  
+		
+		public void AddAdminToDB(Admin admin)
+        {
+            try
+            {
+                OpenConnection();
+
+                string query = "INSERT INTO [user] (name, email, password, registration_date, role) VALUES (@Name, @Email, @Password, @RegistrationDate, @Role)";
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@Name", admin.Name);
+                    cmd.Parameters.AddWithValue("@Email", admin.Email);
+                    cmd.Parameters.AddWithValue("@Password", admin.Password);
+                    cmd.Parameters.AddWithValue("@RegistrationDate", admin.RegistrationDate.ToUniversalTime());
+                    cmd.Parameters.AddWithValue("@Role", admin.Role);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         public Customer GetUserFromDB(int id)
@@ -83,33 +110,46 @@ namespace DataAccessLayer.DataAccess
             }
         }
 
-		public async Task<List<Customer>> GetCustomersFromDBAsync()
+		public async Task<List<Customer>> GetCustomersFromDBAsync(string filterName, int pageNumber, int pageSize)
 		{
 			try
 			{
 				OpenConnection();
 
 				List<Customer> customers = new List<Customer>();
+				int offset = (pageNumber - 1) * pageSize;
 
-				string query = "SELECT id, name, email, registration_date, shipping_address, role FROM [user];";
+				string query = "SELECT id, name, email, registration_date, shipping_address, role FROM [user] WHERE role IS NULL";
+
+				if (!string.IsNullOrEmpty(filterName))
+				{
+					query += " AND name LIKE @FilterName";
+				}
+
+				query += " ORDER BY id OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
+
 				using (SqlCommand cmd = new SqlCommand(query, connection))
 				{
+					if (!string.IsNullOrEmpty(filterName))
+					{
+						cmd.Parameters.AddWithValue("@FilterName", "%" + filterName + "%");
+					}
+					cmd.Parameters.AddWithValue("@Offset", offset);
+					cmd.Parameters.AddWithValue("@PageSize", pageSize);
+
 					using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
 					{
 						while (await reader.ReadAsync())
 						{
-							if (reader.IsDBNull(reader.GetOrdinal("role")))
+							Customer customer = new Customer
 							{
-								Customer customer = new Customer
-								{
-									Id = reader.GetInt32(reader.GetOrdinal("id")),
-									Name = reader.GetString(reader.GetOrdinal("name")),
-									Email = reader.GetString(reader.GetOrdinal("email")),
-									RegistrationDate = reader.GetDateTime(reader.GetOrdinal("registration_date")),
-									ShippingAddress = reader.GetString(reader.GetOrdinal("shipping_address")),
-								};
-								customers.Add(customer);
-							}
+								Id = reader.GetInt32(reader.GetOrdinal("id")),
+								Name = reader.GetString(reader.GetOrdinal("name")),
+								Email = reader.GetString(reader.GetOrdinal("email")),
+								RegistrationDate = reader.GetDateTime(reader.GetOrdinal("registration_date")),
+								ShippingAddress = reader.GetString(reader.GetOrdinal("shipping_address")),
+							};
+							customers.Add(customer);
 						}
 					}
 				}
@@ -126,38 +166,117 @@ namespace DataAccessLayer.DataAccess
 			}
 		}
 
-		public async Task<List<Admin>> GetAdminsFromDBAsync()
+		public async Task<List<Admin>> GetAdminsFromDBAsync(string filterName, int pageNumber, int pageSize)
 		{
 			try
 			{
 				OpenConnection();
 
 				List<Admin> admins = new List<Admin>();
+				int offset = (pageNumber - 1) * pageSize;
 
-				string query = "SELECT id, name, email, registration_date, role FROM [user];";
+				string query = "SELECT id, name, email, registration_date, role FROM [user] WHERE role IS NOT NULL";
+
+				if (!string.IsNullOrEmpty(filterName))
+				{
+					query += " AND name LIKE @FilterName";
+				}
+
+				query += " ORDER BY id OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
+
 				using (SqlCommand cmd = new SqlCommand(query, connection))
 				{
+					if (!string.IsNullOrEmpty(filterName))
+					{
+						cmd.Parameters.AddWithValue("@FilterName", "%" + filterName + "%");
+					}
+					cmd.Parameters.AddWithValue("@Offset", offset);
+					cmd.Parameters.AddWithValue("@PageSize", pageSize);
+
 					using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
 					{
 						while (await reader.ReadAsync())
 						{
-							if (!reader.IsDBNull(reader.GetOrdinal("role")))
+							Admin admin = new Admin
 							{
-								Admin admin = new Admin
-								{
-									Id = reader.GetInt32(reader.GetOrdinal("id")),
-									Name = reader.GetString(reader.GetOrdinal("name")),
-									Email = reader.GetString(reader.GetOrdinal("email")),
-									RegistrationDate = reader.GetDateTime(reader.GetOrdinal("registration_date")),
-									Role = (Role)reader.GetInt32(reader.GetOrdinal("role")),
-								};
-								admins.Add(admin);
-							}
+								Id = reader.GetInt32(reader.GetOrdinal("id")),
+								Name = reader.GetString(reader.GetOrdinal("name")),
+								Email = reader.GetString(reader.GetOrdinal("email")),
+								RegistrationDate = reader.GetDateTime(reader.GetOrdinal("registration_date")),
+								Role = (Role)reader.GetInt32(reader.GetOrdinal("role")),
+							};
+							admins.Add(admin);
 						}
 					}
 				}
 
 				return admins;
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message, ex);
+			}
+			finally
+			{
+				CloseConnection();
+			}
+		}
+
+		public async Task<int> GetAdminDataCountFromDBAsync(string filterName)
+		{
+			try
+			{
+				OpenConnection();
+
+				string query = "SELECT COUNT(*) FROM [user] WHERE role IS NOT NULL";
+
+				if (!string.IsNullOrEmpty(filterName))
+				{
+					query += " AND name LIKE @FilterName";
+				}
+
+				using (SqlCommand cmd = new SqlCommand(query, connection))
+				{
+					if (!string.IsNullOrEmpty(filterName))
+					{
+						cmd.Parameters.AddWithValue("@FilterName", "%" + filterName + "%");
+					}
+
+					return (int)await cmd.ExecuteScalarAsync();
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message, ex);
+			}
+			finally
+			{
+				CloseConnection();
+			}
+		}
+
+		public async Task<int> GetCustomerDataCountFromDBAsync(string filterName)
+		{
+			try
+			{
+				OpenConnection();
+
+				string query = "SELECT COUNT(*) FROM [user] WHERE role IS NULL";
+
+				if (!string.IsNullOrEmpty(filterName))
+				{
+					query += " AND name LIKE @FilterName";
+				}
+
+				using (SqlCommand cmd = new SqlCommand(query, connection))
+				{
+					if (!string.IsNullOrEmpty(filterName))
+					{
+						cmd.Parameters.AddWithValue("@FilterName", "%" + filterName + "%");
+					}
+
+					return (int)await cmd.ExecuteScalarAsync();
+				}
 			}
 			catch (Exception ex)
 			{
@@ -257,6 +376,140 @@ namespace DataAccessLayer.DataAccess
 		public List<Customer> GetCustomersFromDB()
 		{
 			throw new NotImplementedException();
+		}
+
+		public async Task<bool> UpdateAdminDataDBAsync(List<Admin> admins)
+		{
+			if (admins == null || admins.Count == 0)
+			{  
+				return false; 
+			}
+
+			SqlTransaction transaction = null;
+
+			try
+			{
+				OpenConnection();
+
+				transaction = connection.BeginTransaction();
+
+				foreach (Admin admin in admins)
+				{
+					string updateQuery = "UPDATE [user] SET name = @Name, email = @Email, role = @Role WHERE id = @Id";
+
+					using (SqlCommand command = new SqlCommand(updateQuery, connection, transaction))
+					{
+						command.Parameters.AddWithValue("@Name", admin.Name);
+						command.Parameters.AddWithValue("@Email", admin.Email);
+						command.Parameters.AddWithValue("@Role", admin.Role);
+						command.Parameters.AddWithValue("@Id", admin.Id);
+
+						await command.ExecuteNonQueryAsync();
+					}
+				}
+
+				transaction.Commit();
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				transaction?.Rollback();
+				throw new Exception("Error updating admin data.", ex);
+			}
+			finally
+			{
+				connection?.Close();
+			}
+		}
+
+		public async Task<bool> AddAdminDataDBAsync(List<Admin> admins)
+		{
+			if (admins == null || admins.Count == 0)
+			{
+				return false;
+			}
+
+			SqlTransaction transaction = null;
+
+			try
+			{
+				OpenConnection();
+
+				transaction = connection.BeginTransaction();
+
+				foreach (Admin admin in admins)
+				{
+					string insertQuery = "INSERT INTO [user] (name, email, role) VALUES (@Name, @Email, @Role)";
+
+					using (SqlCommand command = new SqlCommand(insertQuery, connection, transaction))
+					{
+						command.Parameters.AddWithValue("@Name", admin.Name);
+						command.Parameters.AddWithValue("@Email", admin.Email);
+						command.Parameters.AddWithValue("@Role", admin.Role);
+
+						await command.ExecuteNonQueryAsync();
+					}
+				}
+
+				transaction.Commit();
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				transaction?.Rollback();
+				throw new Exception("Error inserting admin data.", ex);
+			}
+			finally
+			{
+				connection?.Close();
+			}
+		}
+
+		public async Task<bool> UpdateCustomerDataDBAsync(List<Customer> customers)
+		{
+			if (customers == null || customers.Count == 0)
+			{  
+				return false; 
+			}
+
+			SqlTransaction transaction = null;
+
+			try
+			{
+				OpenConnection();
+
+				transaction = connection.BeginTransaction();
+
+				foreach (Customer customer in customers)
+				{
+					string updateQuery = "UPDATE [user] SET name = @Name, email = @Email, shipping_address = @ShippingAddress WHERE id = @Id";
+
+					using (SqlCommand command = new SqlCommand(updateQuery, connection, transaction))
+					{
+						command.Parameters.AddWithValue("@Name", customer.Name);
+						command.Parameters.AddWithValue("@Email", customer.Email);
+						command.Parameters.AddWithValue("@ShippingAddress", customer.ShippingAddress);
+						command.Parameters.AddWithValue("@Id", customer.Id);
+
+						await command.ExecuteNonQueryAsync();
+					}
+				}
+
+				transaction.Commit();
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				transaction?.Rollback();
+				throw new Exception("Error updating customer data.", ex);
+			}
+			finally
+			{
+				connection?.Close();
+			}
 		}
 	}
 }

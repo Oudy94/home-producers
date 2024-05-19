@@ -29,9 +29,9 @@ namespace DesktopApp.PanelControls.UserManagerControls
 		}
 		private void AddAdminControl_Load(object sender, EventArgs e)
 		{
-			foreach (Role enumValue in Enum.GetValues(typeof(Role)))
+			foreach (Role role in Enum.GetValues(typeof(Role)))
 			{
-				cmbAdminRole.Items.Add(enumValue);
+				cmbAdminRole.Items.Add(role);
 			}
 		}
 
@@ -53,7 +53,7 @@ namespace DesktopApp.PanelControls.UserManagerControls
 				return;
 			}
 
-			var admin = new Admin { Name = name, Email = email, Password = password, Role = (Role)selectedRole };
+			Admin admin = new Admin { Name = name, Email = email, Password = password, Role = (Role)selectedRole };
 
 			var validationContext = new ValidationContext(admin);
 			var validationResults = new List<ValidationResult>();

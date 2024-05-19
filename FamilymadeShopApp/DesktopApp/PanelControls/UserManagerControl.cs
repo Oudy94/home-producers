@@ -1,20 +1,18 @@
 ﻿using BusinessLogicLayer.Managers;
 using ModelLayer.Models;
+using SharedLayer.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using SharedLayer.Enums;
 using static DesktopApp.Utilities.AppConfig;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Reflection;
 using DesktopApp.PanelControls.UserManagerControls;
+using System.Drawing.Printing;
 
 namespace DesktopApp.PanelControls
 {
@@ -28,6 +26,7 @@ namespace DesktopApp.PanelControls
 		private List<string> _rolesValues;
 		private Dictionary<int, Admin> _editedAdminDict;
 		private Dictionary<int, Customer> _editedCustomerDict;
+		private int _pageNumber;
 
 		public UserManagerControl()
 		{
@@ -41,6 +40,7 @@ namespace DesktopApp.PanelControls
 			_rolesValues = Enum.GetNames(typeof(Role)).ToList();
 			_editedAdminDict = new Dictionary<int, Admin>();
 			_editedCustomerDict = new Dictionary<int, Customer>();
+			_pageNumber = 1;
 		}
 
 		private void UserManagerControl_Load(object sender, EventArgs e)
@@ -61,7 +61,7 @@ namespace DesktopApp.PanelControls
 			dgvUsers.Columns["RegistrationDate"].ReadOnly = true;
 		}
 
-		private void BuildAdminDataGridView(List<Admin> admins)
+		private void BuildAdminDataGridView()
 		{
 			if (dgvUsers.Columns["Role"] == null)
 			{
@@ -70,17 +70,17 @@ namespace DesktopApp.PanelControls
 				{
 					dgvUsers.Columns.Remove(shippingAddressColumn);
 				}
-				//dgvUsers.Columns.Add("Role", "Role");
-
-				DataGridViewComboBoxColumn comboColumn = new DataGridViewComboBoxColumn();
-				comboColumn.Name = "Role";
-				comboColumn.HeaderText = "Role";
-				comboColumn.DataSource = _rolesValues;
-				dgvUsers.Columns.Add(comboColumn);
+				DataGridViewComboBoxColumn roleColumn = new DataGridViewComboBoxColumn();
+				roleColumn.Name = "Role";
+				roleColumn.HeaderText = "Role";
+				roleColumn.DataSource = _rolesValues;
+				dgvUsers.Columns.Add(roleColumn);
 			}
+		}
 
+		private void PopulateAdminData(List<Admin> admins)
+		{
 			dgvUsers.Rows.Clear();
-
 
 			foreach (Admin admin in admins)
 			{
@@ -88,7 +88,7 @@ namespace DesktopApp.PanelControls
 			}
 		}
 
-		private void BuildCustomerDataGridView(List<Customer> customers)
+		private void BuildCustomerDataGridView()
 		{
 			if (dgvUsers.Columns["ShippingAddress"] == null)
 			{
@@ -99,7 +99,10 @@ namespace DesktopApp.PanelControls
 				}
 				dgvUsers.Columns.Add("ShippingAddress", "Shipping Address");
 			}
+		}
 
+		private void PopulateCustomerData(List<Customer> customers)
+		{
 			dgvUsers.Rows.Clear();
 
 			foreach (Customer customer in customers)
@@ -111,33 +114,31 @@ namespace DesktopApp.PanelControls
 		private void BuildPageNumber()
 		{
 			lblMaxPage.Text = $"of {_maxPageNumber}";
+			txtCurrentPage.Text = _pageNumber.ToString();
 
-			if (int.TryParse(txtCurrentPage.Text, out int currentPageNumber))
+			if (_pageNumber == 1 && _maxPageNumber == 1)
 			{
-				if (currentPageNumber == 1 && _maxPageNumber == 1)
-				{
-					btnPreviousPage.Enabled = false;
-					btnNextPage.Enabled = false;
-				}
-				else if (currentPageNumber == 1)
-				{
-					btnPreviousPage.Enabled = false;
-					btnNextPage.Enabled = true;
-				}
-				else if (currentPageNumber == _maxPageNumber)
-				{
-					btnPreviousPage.Enabled = true;
-					btnNextPage.Enabled = false;
-				}
-				else
-				{
-					btnPreviousPage.Enabled = true;
-					btnNextPage.Enabled = true;
-				}
+				btnPreviousPage.Enabled = false;
+				btnNextPage.Enabled = false;
+			}
+			else if (_pageNumber == 1)
+			{
+				btnPreviousPage.Enabled = false;
+				btnNextPage.Enabled = true;
+			}
+			else if (_pageNumber == _maxPageNumber)
+			{
+				btnPreviousPage.Enabled = true;
+				btnNextPage.Enabled = false;
+			}
+			else
+			{
+				btnPreviousPage.Enabled = true;
+				btnNextPage.Enabled = true;
 			}
 		}
 
-		private async Task LoadAndBuildUserDataAsync()
+		private async Task<bool> LoadAndBuildUserDataAsync(int pageNumber = 0)
 		{
 			DateTime currentTime = DateTime.Now;
 
@@ -152,24 +153,29 @@ namespace DesktopApp.PanelControls
 			if (_requestCount > s_MaxDBRequestCount)
 			{
 				MessageBox.Show("Too many requests. Please try again later.");
-				return;
+				return false;
 			}
+
+			_pageNumber = pageNumber > 0 ? pageNumber : _pageNumber;
 
 			ClearDataEditingChanges();
 
 			if (cmbFilterType.SelectedIndex == 0)
 			{
-				BuildAdminDataGridView(await LoadAdminDataAsync());
+				BuildAdminDataGridView();
+				PopulateAdminData(await FetchAdminDataAsync());
 			}
 			else if (cmbFilterType.SelectedIndex == 1)
 			{
-				BuildCustomerDataGridView(await LoadCustomerDataAsync());
+				BuildCustomerDataGridView();
+				PopulateCustomerData(await FetchCustomerDataAsync());
 			}
 
 			BuildPageNumber();
+			return true;
 		}
 
-		private async Task<List<Admin>> LoadAdminDataAsync()
+		private async Task<List<Admin>> FetchAdminDataAsync()
 		{
 			List<Admin> admins = new List<Admin>();
 
@@ -177,14 +183,10 @@ namespace DesktopApp.PanelControls
 			{
 				ShowLoadingIndicator();
 
-				_maxPageNumber = await _userManager.GetAdminDataMaxPageAsync(s_UserPageSize);
+				int totalCount = await _userManager.GetAdminDataCountAsync(txtFilterSearch.Text);
+				_maxPageNumber = (int)Math.Ceiling((double)totalCount / s_UsersPageSize);
 
-				if (!int.TryParse(txtCurrentPage.Text, out int pageNumber))
-				{
-					pageNumber = 1;
-				}
-
-				admins = await _userManager.GetAdminDataAsync(txtFilterSearch.Text, pageNumber, s_UserPageSize);
+				admins = await _userManager.GetAdminDataAsync(txtFilterSearch.Text, _pageNumber, s_UsersPageSize);
 			}
 			catch (Exception ex)
 			{
@@ -198,7 +200,7 @@ namespace DesktopApp.PanelControls
 			return admins;
 		}
 
-		private async Task<List<Customer>> LoadCustomerDataAsync()
+		private async Task<List<Customer>> FetchCustomerDataAsync()
 		{
 			List<Customer> customers = new List<Customer>();
 
@@ -206,14 +208,10 @@ namespace DesktopApp.PanelControls
 			{
 				ShowLoadingIndicator();
 
-				_maxPageNumber = await _userManager.GetCustomerDataMaxPageAsync(s_UserPageSize);
+				int totalCount = await _userManager.GetCustomerDataCountAsync(txtFilterSearch.Text);
+				_maxPageNumber = (int)Math.Ceiling((double)totalCount / s_UsersPageSize);
 
-				if (!int.TryParse(txtCurrentPage.Text, out int pageNumber))
-				{
-					pageNumber = 1;
-				}
-
-				customers = await _userManager.GetCustomerDataAsync(txtFilterSearch.Text, pageNumber, s_UserPageSize);
+				customers = await _userManager.GetCustomerDataAsync(txtFilterSearch.Text, _pageNumber, s_UsersPageSize);
 			}
 			catch (Exception ex)
 			{
@@ -243,7 +241,7 @@ namespace DesktopApp.PanelControls
 
 		private async Task RefreshUserData()
 		{
-			txtCurrentPage.Text = "1";
+			_pageNumber = 1;
 			await LoadAndBuildUserDataAsync();
 		}
 
@@ -262,26 +260,26 @@ namespace DesktopApp.PanelControls
 			btnSaveData.Enabled = false;
 		}
 
-		private void cmbFilterType_SelectedIndexChanged(object sender, EventArgs e)
+		private async void cmbFilterType_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			_ = RefreshUserData();
+			await RefreshUserData();
 		}
 
-		private void btnFilterSearch_Click(object sender, EventArgs e)
+		private async void btnFilterSearch_Click(object sender, EventArgs e)
 		{
-			_ = RefreshUserData();
+			await RefreshUserData();
 		}
 
-		private void txtFilterSearch_KeyPress(object sender, KeyPressEventArgs e)
+		private async void txtFilterSearch_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			if (e.KeyChar == (char)Keys.Enter)
 			{
-				_ = RefreshUserData();
+				await RefreshUserData();
 				e.Handled = true;
 			}
 		}
 
-		private void txtCurrentPage_KeyPress(object sender, KeyPressEventArgs e)
+		private async void txtCurrentPage_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			//Accept only numbers and control button like delete
 			if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
@@ -292,7 +290,10 @@ namespace DesktopApp.PanelControls
 			//When press enter, load the new data
 			if (e.KeyChar == (char)Keys.Enter)
 			{
-				_ = LoadAndBuildUserDataAsync();
+				if (int.TryParse(txtCurrentPage.Text, out int pageNumber))
+				{
+					await LoadAndBuildUserDataAsync(pageNumber);
+				}
 				e.Handled = true;
 			}
 
@@ -314,46 +315,31 @@ namespace DesktopApp.PanelControls
 			}
 		}
 
-		private void txtCurrentPage_Leave(object sender, EventArgs e)
+		private async void txtCurrentPage_Leave(object sender, EventArgs e)
 		{
-			if (_maxPageNumber != int.Parse(txtCurrentPage.Text))
+			if (int.TryParse(txtCurrentPage.Text, out int pageNumber))
 			{
-				_ = LoadAndBuildUserDataAsync();
+				await LoadAndBuildUserDataAsync(pageNumber);
 			}
 		}
 
-		private void btnPreviousPage_Click(object sender, EventArgs e)
+		private async void btnPreviousPage_Click(object sender, EventArgs e)
 		{
-			if (int.TryParse(txtCurrentPage.Text, out int currentPage))
-			{
-				currentPage--;
-
-				txtCurrentPage.Text = currentPage.ToString();
-				_ = LoadAndBuildUserDataAsync();
-			}
+			await LoadAndBuildUserDataAsync(_pageNumber - 1);
 		}
 
-		private void btnNextPage_Click(object sender, EventArgs e)
+		private async void btnNextPage_Click(object sender, EventArgs e)
 		{
-			if (int.TryParse(txtCurrentPage.Text, out int currentPage))
-			{
-				currentPage++;
-
-				txtCurrentPage.Text = currentPage.ToString();
-				_ = LoadAndBuildUserDataAsync();
-			}
+			await LoadAndBuildUserDataAsync(_pageNumber + 1);
 		}
 
 		private void dgvUsers_CellValueChanged(object sender, DataGridViewCellEventArgs e)
 		{
-			if (e.RowIndex < 0 || e.ColumnIndex < 0 || _editedAdminDict.ContainsKey(e.RowIndex))
+			if (e.RowIndex < 0 || e.ColumnIndex < 0)
 				return;
 
 			DataGridViewRow editedRow = dgvUsers.Rows[e.RowIndex];
 			DataGridViewCell editedCell = editedRow.Cells[e.ColumnIndex];
-
-			editedCell.Style.BackColor = Color.Yellow;
-			btnSaveData.Enabled = true;
 
 			int id;
 			if (!int.TryParse(editedRow.Cells["Id"].Value?.ToString(), out id))
@@ -366,10 +352,13 @@ namespace DesktopApp.PanelControls
 
 			if (cmbFilterType.SelectedIndex == 0)
 			{
-				DataGridViewComboBoxCell comboBoxCell = editedRow.Cells["Role"] as DataGridViewComboBoxCell;
-				int roleIndex = comboBoxCell.EditedFormattedValue == null ? -1 : comboBoxCell.Items.IndexOf(comboBoxCell.EditedFormattedValue);
+				DataGridViewComboBoxCell roleCell = editedRow.Cells["Role"] as DataGridViewComboBoxCell;
+				if (roleCell.EditedFormattedValue == null)
+				{
+					return;
+				}
 
-				Admin admin = new Admin { Id = id, Name = name, Email = email, Role = (Role)roleIndex };
+				Admin admin = new Admin { Id = id, Name = name, Email = email, Role = (Role)roleCell.Items.IndexOf(roleCell.EditedFormattedValue) };
 
 				_editedAdminDict.Add(e.RowIndex, admin);
 			}
@@ -381,9 +370,12 @@ namespace DesktopApp.PanelControls
 				_editedCustomerDict.Add(e.RowIndex, customer);
 
 			}
+
+			editedCell.Style.BackColor = Color.Yellow;
+			btnSaveData.Enabled = true;
 		}
 
-		private void btnSaveData_Click(object sender, EventArgs e)
+		private async void btnSaveData_Click(object sender, EventArgs e)
 		{
 			if (cmbFilterType.SelectedIndex == 0)
 			{
@@ -404,7 +396,7 @@ namespace DesktopApp.PanelControls
 
 				try
 				{
-					bool updateSuccess = _userManager.UpdateAdminData(_editedAdminDict.Values.ToList());
+					bool updateSuccess = await _userManager.UpdateAdminDataAsync(_editedAdminDict.Values.ToList());
 					if (updateSuccess)
 					{
 						ClearDataEditingChanges();
@@ -435,7 +427,7 @@ namespace DesktopApp.PanelControls
 
 				try
 				{
-					bool updateSuccess = _userManager.UpdateCustomerData(_editedCustomerDict.Values.ToList());
+					bool updateSuccess = await _userManager.UpdateCustomerData(_editedCustomerDict.Values.ToList());
 					if (updateSuccess)
 					{
 						ClearDataEditingChanges();
@@ -467,28 +459,28 @@ namespace DesktopApp.PanelControls
 		{
 			pnlUserManager.Visible = false;
 
-			AddAdminControl addEmployeeControl = new AddAdminControl();
-			addEmployeeControl.Dock = DockStyle.Fill;
+			AddAdminControl addAdminControl = new AddAdminControl();
+			addAdminControl.Dock = DockStyle.Fill;
 
-			addEmployeeControl.OpenUserManager += OnOpenUserManager;
+			addAdminControl.OpenUserManager += OnOpenUserManager;
 
-			this.Controls.Add(addEmployeeControl);
+			this.Controls.Add(addAdminControl);
 		}
 
-		private void OnOpenUserManager(object sender, bool success)
+		private async void OnOpenUserManager(object sender, bool success)
 		{
 			this.Controls.Remove((Control)sender);
 			pnlUserManager.Visible = true;
 
 			if (success)
 			{
-				_ = RefreshUserData();
+				await RefreshUserData();
 			}
 		}
 
-		private void btnRefreshData_Click(object sender, EventArgs e)
+		private async void btnRefreshData_Click(object sender, EventArgs e)
 		{
-			_ = RefreshUserData();
+			await RefreshUserData();
 		}
 	}
 }
