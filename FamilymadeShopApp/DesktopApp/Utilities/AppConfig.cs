@@ -9,6 +9,8 @@ namespace DesktopApp.Utilities
 	public static class AppConfig
 	{
 		public const int s_UsersPageSize = 50;
+		public const int s_ProductsPageSize = 5;
+
 		public const int s_MaxDBRequestCount = 5;
 		public const int s_MaxDBRequestTime = 10;
 	}

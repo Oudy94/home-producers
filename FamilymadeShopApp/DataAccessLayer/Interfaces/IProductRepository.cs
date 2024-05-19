@@ -1,4 +1,5 @@
 ﻿using ModelLayer.Models;
+using SharedLayer.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace DataAccessLayer.Interfaces
     public interface IProductRepository
     {
         Product GetProductByIdFromDB(int id);
-        List<Product> GetProductsFromDB(string searchTerm = null, int pageNumber = 1);
-        int GetProductsCountFromDB(string searchTerm);
+        List<Product> GetProductsFromDB(string filterName = null, int pageNumber = 1);
+		Task<int> GetProductsCountDBAsync(string filterName, Category? filterCategory);
     }
 }

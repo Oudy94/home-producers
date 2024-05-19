@@ -4,7 +4,7 @@
     string search = Model.SearchTerm;
     int pageIndex = Model.PageIndex;
     int productsPerPage = 4;
-    int totalProducts = Model.ProductManager.GetProductsCount(search);
+    int totalProducts = await Model.ProductManager.GetProductsCount(search);
     int totalPages = (int)Math.Ceiling((double)totalProducts / productsPerPage);
 }
 

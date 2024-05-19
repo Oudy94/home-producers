@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ModelLayer.Models;
+using DataAccessLayer.Interfaces;
 
 namespace BusinessLogicLayer.Managers
 {
@@ -49,11 +50,11 @@ namespace BusinessLogicLayer.Managers
             }
         }
 
-        public List<Product> GetAll(string searchTerm, int pageNumber = 1)
+        public List<Product> GetAll(string filterName, int pageNumber = 1)
         {
             try
             {
-                return _ProductRepository.GetProductsFromDB(searchTerm, pageNumber);
+                return _ProductRepository.GetProductsFromDB(filterName, pageNumber);
             }
             catch (Exception ex)
             {
@@ -61,17 +62,52 @@ namespace BusinessLogicLayer.Managers
             }
         }
 
-        public int GetProductsCount(string searchTerm)
+        public async Task<int> GetProductsCount(string filterName, Category? filterCategory)
         {
             try
             {
-                return _ProductRepository.GetProductsCountFromDB(searchTerm);
+                return await _ProductRepository.GetProductsCountDBAsync(filterName, filterCategory);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-    }
 
+        public async Task<List<Product>> GetProductDataAsync(int pageNumber, int pageSize, string filterName, Category? filterCategory)
+        {
+			try
+			{
+				return await _ProductRepository.GetProductDataDBAsync(pageNumber, pageSize, filterName, filterCategory);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+
+		public async Task<bool> UpdateProductData(List<Product> products)
+		{
+			try
+			{
+				return await _ProductRepository.UpdateProductDataDBAsync(products);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+
+		public async Task AddProductAsync(Product product)
+		{
+			try
+			{
+				await _ProductRepository.AddProductDBAsync(product);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,13 +11,19 @@ namespace ModelLayer.Models
     public class Product
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+		[Required(ErrorMessage = "Name is required")]
+		[StringLength(24, ErrorMessage = "Name must be between {2} and {1} characters", MinimumLength = 3)]
+		public string Name { get; set; }
         public string Description { get; set; }
-        public Category Category { get; set; }
-        public decimal Price { get; set; }
-        public int Stock { get; set; }
+		[Required(ErrorMessage = "Category is required")]
+		public Category Category { get; set; }
+		[Required(ErrorMessage = "Price is required")]
+		public decimal Price { get; set; }
+		[Required(ErrorMessage = "Stock is required")]
+		public int Stock { get; set; }
         public List<string> Images { get; set; }
-        public int SalesCount { get; set; }
+		[Required(ErrorMessage = "Sales count is required")]
+		public int SalesCount { get; set; }
 
         public Product()
         {
