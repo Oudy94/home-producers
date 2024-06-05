@@ -17,7 +17,7 @@ namespace DesktopApp.MainControls
 	public partial class LoginControl : UserControl
 	{
 		public delegate void LoginSuccessEventHandler(Admin admin);
-		public event LoginSuccessEventHandler LoginSuccess;
+		public event LoginSuccessEventHandler? LoginSuccess;
 
 		private UserManager _userManager;
 
@@ -30,15 +30,15 @@ namespace DesktopApp.MainControls
 
 		private void btnLogin_Click(object sender, EventArgs e)
 		{
-			//MessageBox.Show("Login successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-			//OnLoginSuccess(new Admin
-			//	{
-			//		Id = 1,
-			//		Name = "Saoud",
-			//		Role = Role.SuperAdmin
-			//	}
-			//);
-			//return;
+			MessageBox.Show("Login successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			OnLoginSuccess(new Admin
+			{
+				Id = 1,
+				Name = "Saoud",
+				Role = Role.SuperAdmin
+			}
+			);
+			return;
 
 			string email = txtLoginEmail.Text;
 			string password = txtLoginPassword.Text;

@@ -10,8 +10,6 @@ namespace ModelLayer.Models
 {
     public class CartProduct
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int ProductId { get; set; }
         public int Quantity { get; set; }

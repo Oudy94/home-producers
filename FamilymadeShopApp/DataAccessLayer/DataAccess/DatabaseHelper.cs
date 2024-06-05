@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.DataAccess
 {
-    public class DatabaseHelper
+    public abstract class DatabaseHelper
     {
         private readonly string connectionString = "Server=mssqlstud.fhict.local;Database=dbi534217_familymade;User Id=dbi534217_familymade;Password=123456;";
         protected SqlConnection connection;
@@ -20,7 +20,7 @@ namespace DataAccessLayer.DataAccess
             connection = new SqlConnection(connectionString);
         }
 
-        public void OpenConnection()
+        protected void OpenConnection()
         {
             try
             {
@@ -32,7 +32,7 @@ namespace DataAccessLayer.DataAccess
             }
         }
 
-        public void CloseConnection()
+        protected void CloseConnection()
         {
             try
             {

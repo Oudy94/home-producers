@@ -135,6 +135,8 @@
 			txtCurrentPage.Text = "1";
 			txtCurrentPage.TextAlign = HorizontalAlignment.Center;
 			txtCurrentPage.KeyPress += txtCurrentPage_KeyPress;
+			txtCurrentPage.KeyDown += txtCurrentPage_KeyDown;
+			txtCurrentPage.TextChanged += txtCurrentPage_TextChanged;
 			txtCurrentPage.Leave += txtCurrentPage_Leave;
 			// 
 			// btnNextPage

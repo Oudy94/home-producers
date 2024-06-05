@@ -109,5 +109,18 @@ namespace BusinessLogicLayer.Managers
 				throw new Exception(ex.Message);
 			}
 		}
-	}
+
+        public async Task<List<string>> GetProductsNamesAsync()
+        {
+            try
+            {
+                return await _ProductRepository.GetProductsNamesDBAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+    }
 }

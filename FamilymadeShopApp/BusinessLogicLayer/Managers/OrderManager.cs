@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using DataAccessLayer.DataAccess;
 using BusinessLogicLayer.Interfaces;
 using ModelLayer.Models;
+using DataAccessLayer.Interfaces;
+using SharedLayer.Enums;
 
 namespace BusinessLogicLayer.Managers
 {
@@ -51,5 +53,53 @@ namespace BusinessLogicLayer.Managers
                 throw new Exception(ex.Message);
             }
         }
-    }
+
+		public async Task<int> GetOrdersCountAsync(string filterName, OrderStatus? filterStatus)
+		{
+			try
+			{
+				return await _OrderRepository.GetOrdersCountDBAsync(filterName, filterStatus);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+
+		public async Task<List<Order>> GetOrderDataAsync(int pageNumber, int pageSize, string filterName, OrderStatus? filterStatus)
+		{
+			try
+			{
+				return await _OrderRepository.GetOrderDataDBAsync(pageNumber, pageSize, filterName, filterStatus);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+
+		public async Task<bool> UpdateOrderData(List<Order> orders)
+		{
+			try
+			{
+				return await _OrderRepository.UpdateOrderDataDBAsync(orders);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+
+		public async Task<Order> GetOrderAsync(int orderId)
+		{
+			try
+			{
+				return await _OrderRepository.GetOrderDBAsync(orderId);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+	}
 }

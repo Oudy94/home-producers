@@ -13,7 +13,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static DesktopApp.Utilities.AppConfig;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DesktopApp.PanelControls
 {
@@ -22,36 +21,59 @@ namespace DesktopApp.PanelControls
 		private ProductManager _productManager;
 		private bool _isLoading = false;
 		private int _maxPageNumber;
+		private int _pageNumber;
 		private DateTime _lastRequestTime;
 		private int _requestCount;
 		private List<string> _categoryValues;
 		private HashSet<int> _editedRowsSet;
-		private int _pageNumber;
+        private AutoCompleteStringCollection _autoCompleteCollection;
 
-		public ProductManagerControl()
+        public ProductManagerControl()
 		{
 			InitializeComponent();
 
 			_productManager = new ProductManager();
 			_isLoading = false;
 			_maxPageNumber = 0;
+			_pageNumber = 1;
 			_lastRequestTime = DateTime.MinValue;
 			_requestCount = 0;
 			_categoryValues = Enum.GetNames(typeof(Category)).ToList();
 			_editedRowsSet = new HashSet<int>();
-			_pageNumber = 1;
-		}
+            _autoCompleteCollection = new AutoCompleteStringCollection();
+        }
 
-		private void ProductManagerControl_Load(object sender, EventArgs e)
+		private async void ProductManagerControl_Load(object sender, EventArgs e)
 		{
 			BuildProductGridView();
 
-			cmbFilterCategory.Items.Insert(0, "All");
+            txtFilterSearch.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            List<string> productNames = await FetchProductSearchAutoCompleteData();
+            _autoCompleteCollection.AddRange(productNames.ToArray());
+            txtFilterSearch.AutoCompleteCustomSource = _autoCompleteCollection;
+
+            cmbFilterCategory.Items.Insert(0, "All");
 			cmbFilterCategory.Items.AddRange(_categoryValues.ToArray());
 			cmbFilterCategory.SelectedIndex = 0;
 		}
 
-		private void BuildProductGridView()
+		private async Task<List<string>> FetchProductSearchAutoCompleteData()
+		{
+            List<string> productsNames = new List<string>();
+
+            try
+            {
+                productsNames = await _productManager.GetProductsNamesAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return productsNames;
+        }
+
+        private void BuildProductGridView()
 		{
 			dgvProducts.Columns.Add("Id", "Id");
 			dgvProducts.Columns.Add("Name", "Name");
@@ -108,6 +130,11 @@ namespace DesktopApp.PanelControls
 
 		private async Task<bool> LoadAndDisplayProductDataAsync(int pageNumber = 0)
 		{
+			if (_isLoading)
+			{
+				return false;
+			}
+
 			DateTime currentTime = DateTime.Now;
 
 			if ((currentTime - _lastRequestTime).TotalSeconds >= s_MaxDBRequestTime)
@@ -186,6 +213,7 @@ namespace DesktopApp.PanelControls
 			progressBar.Style = ProgressBarStyle.Blocks;
 			_isLoading = false;
 		}
+
 		private async Task RefreshProductData()
 		{
 			await LoadAndDisplayProductDataAsync(1);
@@ -210,39 +238,48 @@ namespace DesktopApp.PanelControls
 			}
 		}
 
-		private async void txtCurrentPage_KeyPress(object sender, KeyPressEventArgs e)
+		private async void txtCurrentPage_KeyDown(object sender, KeyEventArgs e)
 		{
-			//Accept only numbers and control button like delete
-			if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
-			{
-				e.Handled = true;
-			}
-
-			//When press enter, load the new data
-			if (e.KeyChar == (char)Keys.Enter)
+			if (e.KeyCode == Keys.Enter)
 			{
 				if (int.TryParse(txtCurrentPage.Text, out int pageNumber))
 				{
 					await LoadAndDisplayProductDataAsync(pageNumber);
 				}
 				e.Handled = true;
+				e.SuppressKeyPress = true;
+			}
+		}
+
+		private void txtCurrentPage_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+			{
+				e.Handled = true;
+			}
+		}
+
+		private void txtCurrentPage_TextChanged(object sender, EventArgs e)
+		{
+			string currentPageText = txtCurrentPage.Text;
+
+			if (string.IsNullOrWhiteSpace(currentPageText))
+			{
+				return;
 			}
 
-			//Prevent typing a value more than the max page number
-			string currentPageText = txtCurrentPage.Text;
-			string newPageText = currentPageText.Substring(0, txtCurrentPage.SelectionStart) + e.KeyChar.ToString() +
-							 currentPageText.Substring(txtCurrentPage.SelectionStart + txtCurrentPage.SelectionLength);
-
-			if (int.TryParse(newPageText, out int newPageNumber))
+			if (int.TryParse(currentPageText, out int newPageNumber))
 			{
 				if (newPageNumber > _maxPageNumber)
 				{
-					e.Handled = true;
+					txtCurrentPage.Text = _maxPageNumber.ToString();
+					txtCurrentPage.SelectionStart = txtCurrentPage.Text.Length;
 				}
 			}
 			else
 			{
-				e.Handled = true;
+				txtCurrentPage.Text = "1";
+				txtCurrentPage.SelectionStart = txtCurrentPage.Text.Length;
 			}
 		}
 
@@ -416,7 +453,12 @@ namespace DesktopApp.PanelControls
 			if (success)
 			{
 				await RefreshProductData();
-			}
+
+                //if (!_autoCompleteCollection.Contains(newProductName))
+                //{
+                //    _autoCompleteCollection.Add(newProductName);
+                //}
+            }
 		}
 	}
 }

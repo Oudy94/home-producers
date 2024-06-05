@@ -21,7 +21,7 @@ namespace DesktopApp.MainControls
 		public delegate void LogoutSuccessEventHandler(object sender, EventArgs e);
 		public event LogoutSuccessEventHandler LogoutSuccess;
 
-		private HomeControl homeControl;
+		private DashboardControl homeControl;
 		private UserManagerControl userManagerControl;
 		private ProductManagerControl productManagerControl;
 		private OrderManagerControl orderManagerControl;
@@ -35,7 +35,7 @@ namespace DesktopApp.MainControls
 			_admin = admin;
 
 
-			homeControl = new HomeControl();
+			homeControl = new DashboardControl();
 
 			switch (admin.Role)
 			{
@@ -61,7 +61,7 @@ namespace DesktopApp.MainControls
 
 		private void DashboardControl_Load(object sender, EventArgs e)
 		{
-			OpenMenuForm(new PanelControls.HomeControl(), btnHome, "Home");
+			OpenMenuForm(new PanelControls.DashboardControl(), btnHome, "Dashboard");
 		}
 
 		private void ActivateButton(object btnSender)
@@ -101,7 +101,7 @@ namespace DesktopApp.MainControls
 
 		private void btnHome_Click(object sender, EventArgs e)
 		{
-			OpenMenuForm(homeControl, sender, "Home");
+			OpenMenuForm(homeControl, sender, "Dashboard");
 		}
 
 		private void btnUsers_Click(object sender, EventArgs e)

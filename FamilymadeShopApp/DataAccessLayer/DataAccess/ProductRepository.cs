@@ -275,11 +275,11 @@ namespace DataAccessLayer.DataAccess
 			catch (Exception ex)
 			{
 				transaction?.Rollback();
-				throw new Exception("Error updating customer data.", ex);
+				throw new Exception("Error updating product data.", ex);
 			}
 			finally
 			{
-				connection?.Close();
+				CloseConnection();
 			}
 		}
 
@@ -311,5 +311,37 @@ namespace DataAccessLayer.DataAccess
 				CloseConnection();
 			}
 		}
-	}
+
+        public async Task<List<string>> GetProductsNamesDBAsync()
+        {
+            try
+            {
+                OpenConnection();
+
+                List<string> productsNames = new List<string>();
+                string query = "SELECT name FROM [product]";
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            productsNames.Add(reader.GetString(reader.GetOrdinal("name")));
+                        }
+                    }
+                }
+
+                return productsNames;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+    }
 }
