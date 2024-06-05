@@ -140,6 +140,11 @@ namespace DesktopApp.PanelControls
 
 		private async Task<bool> LoadAndBuildUserDataAsync(int pageNumber = 0)
 		{
+			if (_isLoading)
+			{
+				return false;
+			}
+
 			DateTime currentTime = DateTime.Now;
 
 			if ((currentTime - _lastRequestTime).TotalSeconds >= s_MaxDBRequestTime)
@@ -279,39 +284,48 @@ namespace DesktopApp.PanelControls
 			}
 		}
 
-		private async void txtCurrentPage_KeyPress(object sender, KeyPressEventArgs e)
+		private async void txtCurrentPage_KeyDown(object sender, KeyEventArgs e)
 		{
-			//Accept only numbers and control button like delete
-			if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
-			{
-				e.Handled = true;
-			}
-
-			//When press enter, load the new data
-			if (e.KeyChar == (char)Keys.Enter)
+			if (e.KeyCode == Keys.Enter)
 			{
 				if (int.TryParse(txtCurrentPage.Text, out int pageNumber))
 				{
 					await LoadAndBuildUserDataAsync(pageNumber);
 				}
 				e.Handled = true;
+				e.SuppressKeyPress = true;
+			}
+		}
+
+		private void txtCurrentPage_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+			{
+				e.Handled = true;
+			}
+		}
+
+		private void txtCurrentPage_TextChanged(object sender, EventArgs e)
+		{
+			string currentPageText = txtCurrentPage.Text;
+
+			if (string.IsNullOrWhiteSpace(currentPageText))
+			{
+				return;
 			}
 
-			//Prevent typing a value more than the max page number
-			string currentPageText = txtCurrentPage.Text;
-			string newPageText = currentPageText.Substring(0, txtCurrentPage.SelectionStart) + e.KeyChar.ToString() +
-							 currentPageText.Substring(txtCurrentPage.SelectionStart + txtCurrentPage.SelectionLength);
-
-			if (int.TryParse(newPageText, out int newPageNumber))
+			if (int.TryParse(currentPageText, out int newPageNumber))
 			{
 				if (newPageNumber > _maxPageNumber)
 				{
-					e.Handled = true;
+					txtCurrentPage.Text = _maxPageNumber.ToString();
+					txtCurrentPage.SelectionStart = txtCurrentPage.Text.Length;
 				}
 			}
 			else
 			{
-				e.Handled = true;
+				txtCurrentPage.Text = "1";
+				txtCurrentPage.SelectionStart = txtCurrentPage.Text.Length;
 			}
 		}
 

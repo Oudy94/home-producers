@@ -1,0 +1,126 @@
+﻿using DataAccessLayer.DataAccess;
+using Microsoft.Extensions.Caching.Memory;
+using ModelLayer.Models;
+using SharedLayer.Structs;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace BusinessLogicLayer.Managers
+{
+    public class DashboardManager
+    {
+        private readonly DashboardRepository _dashboardRepository;
+        private readonly MemoryCache _cache;
+
+        public DashboardManager()
+        {
+            _dashboardRepository = new DashboardRepository();
+            _cache = new MemoryCache(new MemoryCacheOptions());
+        }
+
+        public async Task<(int, int)> GetEntityStatisticsAsync()
+        {
+            if (_cache.TryGetValue("EntityStatistics", out (int, int) cachedData))
+            {
+                return cachedData;
+            }
+
+            try
+            {
+                var data = await _dashboardRepository.FetchEntityStatisticsAsync();
+                _cache.Set("EntityStatistics", data, TimeSpan.FromMinutes(10));
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public async Task<(int, decimal)> GetOrderStatisticsAsync(DateTime startDate, DateTime endDate)
+        {
+            string cacheKey = $"OrderStatistics_{startDate.ToString("yyyyMMdd")}_{endDate.ToString("yyyyMMdd")}";
+
+            if (_cache.TryGetValue(cacheKey, out (int, decimal) cachedData))
+            {
+                return cachedData;
+            }
+
+            try
+            {
+                var data = await _dashboardRepository.FetchOrderStatisticsAsync(startDate, endDate);
+                _cache.Set(cacheKey, data, TimeSpan.FromMinutes(10));
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public async Task<List<KeyValuePair<string, int>>> GetTopProductsList(DateTime startDate, DateTime endDate)
+        {
+            string cacheKey = $"TopProductsList_{startDate.ToString("yyyyMMdd")}_{endDate.ToString("yyyyMMdd")}";
+
+            if (_cache.TryGetValue(cacheKey, out List<KeyValuePair<string, int>> cachedData))
+            {
+                return cachedData;
+            }
+
+            try
+            {
+                var data = await _dashboardRepository.FetchTopProductsListAsync(startDate, endDate);
+                _cache.Set(cacheKey, data, TimeSpan.FromMinutes(10));
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public async Task<List<KeyValuePair<DateTime, decimal>>> GetGrossRevenueAsync(DateTime startDate, DateTime endDate)
+        {
+            string cacheKey = $"GrossRevenue_{startDate.ToString("yyyyMMdd")}_{endDate.ToString("yyyyMMdd")}";
+
+            if (_cache.TryGetValue(cacheKey, out List<KeyValuePair<DateTime, decimal>> cachedData))
+            {
+                return cachedData;
+            }
+
+            try
+            {
+                var data = await _dashboardRepository.FetchGrossRevenueAsync(startDate, endDate);
+                _cache.Set(cacheKey, data, TimeSpan.FromMinutes(10));
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public async Task<List<Product>> GetUnderStockProducts()
+        {
+            if (_cache.TryGetValue("UnderStockProducts", out List<Product> cachedData))
+            {
+                return cachedData;
+            }
+
+            try
+            {
+                var data = await _dashboardRepository.FetchUnderStockProductsAsync();
+                _cache.Set("UnderStockProducts", data, TimeSpan.FromMinutes(10));
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+    }
+}

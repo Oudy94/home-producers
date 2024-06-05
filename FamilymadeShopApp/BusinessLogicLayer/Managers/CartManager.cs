@@ -40,11 +40,11 @@ namespace BusinessLogicLayer.Managers
 			throw new NotImplementedException();
 		}
 
-		public void AddProductToCart(int prodcutId, int quantity, int customerId)
+		public void AddProductToCart(int productId, int quantity, int customerId)
 		{
             try
             {
-                _CartRepository.AddProductToCartInDB(prodcutId, quantity, customerId);
+                _CartRepository.AddProductToCartInDB(productId, quantity, customerId);
             }
             catch (Exception ex)
             {

@@ -419,7 +419,7 @@ namespace DataAccessLayer.DataAccess
 			}
 			finally
 			{
-				connection?.Close();
+				CloseConnection();
 			}
 		}
 
@@ -463,7 +463,7 @@ namespace DataAccessLayer.DataAccess
 			}
 			finally
 			{
-				connection?.Close();
+				CloseConnection();
 			}
 		}
 
@@ -508,7 +508,7 @@ namespace DataAccessLayer.DataAccess
 			}
 			finally
 			{
-				connection?.Close();
+				CloseConnection();
 			}
 		}
 	}
