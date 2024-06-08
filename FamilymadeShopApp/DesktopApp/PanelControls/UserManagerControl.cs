@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using static DesktopApp.Utilities.AppConfig;
 using DesktopApp.PanelControls.UserManagerControls;
 using System.Drawing.Printing;
+using DataAccessLayer.DataAccess;
 
 namespace DesktopApp.PanelControls
 {
@@ -32,7 +33,7 @@ namespace DesktopApp.PanelControls
 		{
 			InitializeComponent();
 
-			_userManager = new UserManager();
+			_userManager = new UserManager(new UserRepository());
 			_isLoading = false;
 			_maxPageNumber = 0;
 			_lastRequestTime = DateTime.MinValue;
@@ -188,10 +189,10 @@ namespace DesktopApp.PanelControls
 			{
 				ShowLoadingIndicator();
 
-				int totalCount = await _userManager.GetAdminDataCountAsync(txtFilterSearch.Text);
+				int totalCount = await _userManager.GetAdminCountAsync(txtFilterSearch.Text);
 				_maxPageNumber = (int)Math.Ceiling((double)totalCount / s_UsersPageSize);
 
-				admins = await _userManager.GetAdminDataAsync(txtFilterSearch.Text, _pageNumber, s_UsersPageSize);
+				admins = await _userManager.GetAllAdminsAsync(txtFilterSearch.Text, _pageNumber, s_UsersPageSize);
 			}
 			catch (Exception ex)
 			{
@@ -213,10 +214,10 @@ namespace DesktopApp.PanelControls
 			{
 				ShowLoadingIndicator();
 
-				int totalCount = await _userManager.GetCustomerDataCountAsync(txtFilterSearch.Text);
+				int totalCount = await _userManager.GetCustomerCountAsync(txtFilterSearch.Text);
 				_maxPageNumber = (int)Math.Ceiling((double)totalCount / s_UsersPageSize);
 
-				customers = await _userManager.GetCustomerDataAsync(txtFilterSearch.Text, _pageNumber, s_UsersPageSize);
+				customers = await _userManager.GetAllCustomersAsync(txtFilterSearch.Text, _pageNumber, s_UsersPageSize);
 			}
 			catch (Exception ex)
 			{
@@ -410,7 +411,7 @@ namespace DesktopApp.PanelControls
 
 				try
 				{
-					bool updateSuccess = await _userManager.UpdateAdminDataAsync(_editedAdminDict.Values.ToList());
+					bool updateSuccess = await _userManager.UpdateAdminsAsync(_editedAdminDict.Values.ToList());
 					if (updateSuccess)
 					{
 						ClearDataEditingChanges();
@@ -441,7 +442,7 @@ namespace DesktopApp.PanelControls
 
 				try
 				{
-					bool updateSuccess = await _userManager.UpdateCustomerData(_editedCustomerDict.Values.ToList());
+					bool updateSuccess = await _userManager.UpdateCustomersAsync(_editedCustomerDict.Values.ToList());
 					if (updateSuccess)
 					{
 						ClearDataEditingChanges();

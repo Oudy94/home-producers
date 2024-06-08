@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Managers;
+using DataAccessLayer.DataAccess;
 using DesktopApp.PanelControls.ProductManagerControls;
 using DesktopApp.PanelControls.UserManagerControls;
 using ModelLayer.Models;
@@ -32,7 +33,7 @@ namespace DesktopApp.PanelControls
 		{
 			InitializeComponent();
 
-			_productManager = new ProductManager();
+			_productManager = new ProductManager(new ProductRepository());
 			_isLoading = false;
 			_maxPageNumber = 0;
 			_pageNumber = 1;
@@ -169,10 +170,10 @@ namespace DesktopApp.PanelControls
 				ShowLoadingIndicator();
 
 				Category? categorySelected = cmbFilterCategory.SelectedIndex > 0 ? (Category)cmbFilterCategory.SelectedIndex - 1 : null;
-				int totalCount = await _productManager.GetProductsCount(txtFilterSearch.Text, categorySelected);
+				int totalCount = await _productManager.GetProductsCountAsync(txtFilterSearch.Text, categorySelected);
 				_maxPageNumber = (int)Math.Ceiling((double)totalCount / s_ProductsPageSize);
 
-				products = await _productManager.GetProductDataAsync(_pageNumber, s_ProductsPageSize, txtFilterSearch.Text, categorySelected);
+				products = await _productManager.GetAllProductsAsync(_pageNumber, s_ProductsPageSize, txtFilterSearch.Text, categorySelected);
 			}
 			catch (Exception ex)
 			{
@@ -334,7 +335,7 @@ namespace DesktopApp.PanelControls
 
 			try
 			{
-				bool updateSuccess = await _productManager.UpdateProductData(products);
+				bool updateSuccess = await _productManager.UpdateProductsAsync(products);
 				if (updateSuccess)
 				{
 					ClearDataEditingChanges();

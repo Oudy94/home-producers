@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Managers;
+using DataAccessLayer.DataAccess;
 using ModelLayer.Models;
 using SharedLayer.Structs;
 using System;
@@ -23,7 +24,7 @@ namespace DesktopApp.PanelControls
         {
             InitializeComponent();
 
-            _dashboardManager = new DashboardManager();
+            _dashboardManager = new DashboardManager(new DashboardRepository());
         }
 
         private async void HomeControl_Load(object sender, EventArgs e)
@@ -39,8 +40,8 @@ namespace DesktopApp.PanelControls
             var (numberOfCustomers, numberOfProducts) = await _dashboardManager.GetEntityStatisticsAsync();
             var (numberOfOrders, totalRevenue) = await _dashboardManager.GetOrderStatisticsAsync(dtpStartDate.Value, dtpEndDate.Value);
             List<KeyValuePair<DateTime, decimal>> revenuesList = await _dashboardManager.GetGrossRevenueAsync(dtpStartDate.Value, dtpEndDate.Value);
-            List<KeyValuePair<string, int>> topProductsList = await _dashboardManager.GetTopProductsList(dtpStartDate.Value, dtpEndDate.Value);
-            List<Product> understockProducts = await _dashboardManager.GetUnderStockProducts();
+            List<KeyValuePair<string, int>> topProductsList = await _dashboardManager.GetTopProductsListAsync(dtpStartDate.Value, dtpEndDate.Value);
+            List<Product> understockProducts = await _dashboardManager.GetUnderStockProductsAsync();
 
             lblNumberOfCustomers.Text = numberOfCustomers.ToString("N0");
             lblNumberOfProducts.Text = numberOfProducts.ToString("N0");

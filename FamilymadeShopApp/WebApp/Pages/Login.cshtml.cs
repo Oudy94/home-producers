@@ -6,6 +6,7 @@ using ModelLayer.Models;
 using BusinessLogicLayer.Managers;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using DataAccessLayer.DataAccess;
 
 namespace WebApp.Pages
 {
@@ -28,8 +29,8 @@ namespace WebApp.Pages
                 return Page();
             }
 
-            UserManager userManager = new UserManager(); 
-            Customer customer = userManager.AuthenticateCustomer(this.Credential.Email, this.Credential.Password);
+            UserManager userManager = new UserManager(new UserRepository()); 
+            Customer customer = userManager.GetCustomerByCredentials(this.Credential.Email, this.Credential.Password);
 
             if (customer == null)
             {

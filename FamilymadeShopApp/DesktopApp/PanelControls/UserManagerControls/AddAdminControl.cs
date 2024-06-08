@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.ComponentModel.DataAnnotations;
+using DataAccessLayer.DataAccess;
 
 namespace DesktopApp.PanelControls.UserManagerControls
 {
@@ -25,7 +26,7 @@ namespace DesktopApp.PanelControls.UserManagerControls
 		{
 			InitializeComponent();
 
-			_userManager = new UserManager();
+			_userManager = new UserManager(new UserRepository());
 		}
 		private void AddAdminControl_Load(object sender, EventArgs e)
 		{

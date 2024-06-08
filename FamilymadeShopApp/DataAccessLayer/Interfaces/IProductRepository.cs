@@ -10,8 +10,11 @@ namespace DataAccessLayer.Interfaces
 {
     public interface IProductRepository
     {
-        Product GetProductByIdFromDB(int id);
-        List<Product> GetProductsFromDB(string filterName = null, int pageNumber = 1);
-		Task<int> GetProductsCountDBAsync(string filterName, Category? filterCategory);
+        Task AddProductAsyncDAL(Product product);
+        Product GetProductByIdDAL(int id);
+        Task<int> GetProductsCountAsyncDAL(string filterName, Category? filterCategory);
+        Task<List<Product>> GetAllProductsAsyncDAL(int pageNumber, int pageSize, string filterName, Category? filterCategory);
+        Task<List<string>> GetProductsNamesAsyncDAL();
+        Task<bool> UpdateProductsAsyncDAL(List<Product> products);
     }
 }

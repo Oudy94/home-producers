@@ -1,4 +1,5 @@
-﻿using ModelLayer.Models;
+﻿using DataAccessLayer.Interfaces;
+using ModelLayer.Models;
 using SharedLayer.Structs;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.DataAccess
 {
-    public class DashboardRepository : DatabaseHelper
+    public class DashboardRepository : DatabaseHelper, IDashboardRepository
     {
         public DashboardRepository() : base() { }
 
-        public async Task<(int, int)> FetchEntityStatisticsAsync()
+        public async Task<(int, int)> GetEntityStatisticsAsyncDAL()
         {
             int numberOfCustomers = 0;
             int numberOfProducts = 0;
@@ -53,7 +54,7 @@ namespace DataAccessLayer.DataAccess
             return (numberOfCustomers, numberOfProducts);
         }
 
-        public async Task<List<KeyValuePair<string, int>>> FetchTopProductsListAsync(DateTime startDate, DateTime endDate)
+        public async Task<List<KeyValuePair<string, int>>> GetTopProductsListAsyncDAL(DateTime startDate, DateTime endDate)
         {
             var topProductsList = new List<KeyValuePair<string, int>>();
             try
@@ -95,7 +96,7 @@ namespace DataAccessLayer.DataAccess
             return topProductsList;
         }
 
-        public async Task<List<KeyValuePair<DateTime, decimal>>> FetchGrossRevenueAsync(DateTime startDate, DateTime endDate)
+        public async Task<List<KeyValuePair<DateTime, decimal>>> GetGrossRevenueAsyncDAL(DateTime startDate, DateTime endDate)
         {
             var revenueData = new List<KeyValuePair<DateTime, decimal>>();
 
@@ -137,7 +138,7 @@ namespace DataAccessLayer.DataAccess
             return revenueData;
         }
 
-        public async Task<(int, decimal)> FetchOrderStatisticsAsync(DateTime startDate, DateTime endDate)
+        public async Task<(int, decimal)> GetOrderStatisticsAsyncDAL(DateTime startDate, DateTime endDate)
         {
             int numberOfOrders = 0;
             decimal totalAmount = 0;
@@ -181,7 +182,7 @@ namespace DataAccessLayer.DataAccess
             return (numberOfOrders, totalAmount);
         }
 
-        public async Task<List<Product>> FetchUnderStockProductsAsync()
+        public async Task<List<Product>> GetUnderStockProductsAsyncDAL()
         {
             List<Product> products = new List<Product>();
 
@@ -221,6 +222,5 @@ namespace DataAccessLayer.DataAccess
 
             return products;
         }
-
     }
 }

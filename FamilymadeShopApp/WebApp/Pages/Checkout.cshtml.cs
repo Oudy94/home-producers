@@ -6,6 +6,7 @@ using BusinessLogicLayer.Managers;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using DataAccessLayer.DataAccess;
 
 namespace WebApp.Pages
 {
@@ -41,11 +42,11 @@ namespace WebApp.Pages
 
             //TODO: accept order from guest
 
-            ProductManager = new ProductManager();
+            ProductManager = new ProductManager(new ProductRepository());
 
             foreach (CartProduct cartItem in CartItems)
             {
-                Product product = ProductManager.Get(cartItem.ProductId);
+                Product product = ProductManager.GetProductById(cartItem.ProductId);
 
                 cartItem.Name = product.Name;
                 cartItem.Price = product.Price;
@@ -56,15 +57,13 @@ namespace WebApp.Pages
 
             if (User.Identity.IsAuthenticated)
             {
-                UserManager = new UserManager();
-
                 var userIdClaim = User.FindFirst("id");
                 if (userIdClaim != null)
                 {
                     if (int.TryParse(userIdClaim.Value, out int userId))
                     {
-                        UserManager = new UserManager();
-                        Customer = UserManager.Get(userId);
+                        UserManager = new UserManager(new UserRepository());
+                        Customer = UserManager.GetCustomerById(userId);
                     }
                 }
             }
@@ -81,14 +80,14 @@ namespace WebApp.Pages
             //    return Page();
             //}
 
-            ProductManager = new ProductManager();
+            ProductManager = new ProductManager(new ProductRepository());
             CartItems = JsonConvert.DeserializeObject<List<CartProduct>>(Request.Cookies["CartItems"]);
 
             List<OrderProduct> orderProducts = new List<OrderProduct>();
 
             foreach (CartProduct cartItem in CartItems)
             {
-                Product product = ProductManager.Get(cartItem.ProductId);
+                Product product = ProductManager.GetProductById(cartItem.ProductId);
                 orderProducts.Add(new OrderProduct(product, cartItem.Quantity, product.Price));
             }
 
@@ -100,10 +99,10 @@ namespace WebApp.Pages
                 {
                     if (int.TryParse(userIdClaim.Value, out int userId))
                     {
-                        UserManager = new UserManager();
-                        OrderManager = new OrderManager();
+                        UserManager = new UserManager(new UserRepository());
+                        OrderManager = new OrderManager(new OrderRepository());
 
-                        Customer = UserManager.Get(userId);
+                        Customer = UserManager.GetCustomerById(userId);
                         //decimal shippingPrice = isVip ? 0 : 10;
                         decimal shippingPrice = 10;
                         StringBuilder fullAddress = new StringBuilder();
@@ -116,7 +115,7 @@ namespace WebApp.Pages
                         fullAddress.Append(Address.Country);
                         Order order = new Order(Customer.Id, SharedLayer.Enums.OrderStatus.Pending, DateTime.Now, orderProducts, shippingPrice, fullAddress.ToString());
 
-                        OrderManager.Add(order);
+                        OrderManager.AddOrder(order);
                     }
                 }
             }

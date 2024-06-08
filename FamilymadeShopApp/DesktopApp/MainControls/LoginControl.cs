@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Managers;
+using DataAccessLayer.DataAccess;
 using Microsoft.VisualBasic.Logging;
 using ModelLayer.Models;
 using SharedLayer.Enums;
@@ -25,7 +26,7 @@ namespace DesktopApp.MainControls
 		{
 			InitializeComponent();
 
-			_userManager = new UserManager();
+			_userManager = new UserManager(new UserRepository());
 		}
 
 		private void btnLogin_Click(object sender, EventArgs e)
@@ -51,7 +52,7 @@ namespace DesktopApp.MainControls
 
 			try
 			{
-				Admin admin = _userManager.AuthenticateAdmin(email, password);
+				Admin admin = _userManager.GetAdminByCredentials(email, password);
 				if (admin != null)
 				{
 					MessageBox.Show("Login successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);

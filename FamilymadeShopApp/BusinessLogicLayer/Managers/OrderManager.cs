@@ -11,20 +11,20 @@ using SharedLayer.Enums;
 
 namespace BusinessLogicLayer.Managers
 {
-    public class OrderManager : IManager<Order>
+    public class OrderManager: IOrderManager
     {
-        private readonly OrderRepository _OrderRepository;
+        private readonly IOrderRepository _orderRepository;
 
-        public OrderManager()
+        public OrderManager(IOrderRepository orderRepository)
         {
-            this._OrderRepository = new OrderRepository();
+            this._orderRepository = orderRepository;
         }
 
-        public void Add(Order order)
+        public void AddOrder(Order order)
         {
             try
             {
-                _OrderRepository.AddOrderToDB(order);
+                _orderRepository.AddOrderDAL(order);
             }
             catch (Exception ex)
             {
@@ -32,21 +32,11 @@ namespace BusinessLogicLayer.Managers
             }
         }
 
-        public Order Get(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Order> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
         public List<Order> GetOrdersByUserId(int id)
         {
             try
             {
-                return _OrderRepository.GetOrdersByUserIdFromDB(id);
+                return _orderRepository.GetOrdersByUserIdDAL(id);
             }
             catch (Exception ex)
             {
@@ -58,7 +48,7 @@ namespace BusinessLogicLayer.Managers
 		{
 			try
 			{
-				return await _OrderRepository.GetOrdersCountDBAsync(filterName, filterStatus);
+				return await _orderRepository.GetOrdersCountAsyncDAL(filterName, filterStatus);
 			}
 			catch (Exception ex)
 			{
@@ -70,7 +60,7 @@ namespace BusinessLogicLayer.Managers
 		{
 			try
 			{
-				return await _OrderRepository.GetOrderDataDBAsync(pageNumber, pageSize, filterName, filterStatus);
+				return await _orderRepository.GetOrderDataAsyncDAL(pageNumber, pageSize, filterName, filterStatus);
 			}
 			catch (Exception ex)
 			{
@@ -78,11 +68,11 @@ namespace BusinessLogicLayer.Managers
 			}
 		}
 
-		public async Task<bool> UpdateOrderData(List<Order> orders)
+		public async Task<bool> UpdateOrdersAsync(List<Order> orders)
 		{
 			try
 			{
-				return await _OrderRepository.UpdateOrderDataDBAsync(orders);
+				return await _orderRepository.UpdateOrdersDAL(orders);
 			}
 			catch (Exception ex)
 			{
@@ -90,11 +80,11 @@ namespace BusinessLogicLayer.Managers
 			}
 		}
 
-		public async Task<Order> GetOrderAsync(int orderId)
+		public async Task<Order> GetOrderByIdAsync(int orderId)
 		{
 			try
 			{
-				return await _OrderRepository.GetOrderDBAsync(orderId);
+				return await _orderRepository.GetOrderByIdAsyncDAL(orderId);
 			}
 			catch (Exception ex)
 			{

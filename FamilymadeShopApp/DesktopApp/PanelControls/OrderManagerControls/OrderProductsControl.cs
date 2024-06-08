@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Managers;
+using DataAccessLayer.DataAccess;
 using ModelLayer.Models;
 using SharedLayer.Enums;
 using System;
@@ -24,7 +25,7 @@ namespace DesktopApp.PanelControls.OrderManagerControls
 		{
 			InitializeComponent();
 
-			_orderManager = new OrderManager();
+			_orderManager = new OrderManager(new OrderRepository());
 			_orderId = orderId;
 			_isLoading = false;
 		}
@@ -66,7 +67,7 @@ namespace DesktopApp.PanelControls.OrderManagerControls
 			{
 				ShowLoadingIndicator();
 				
-				Order order = await _orderManager.GetOrderAsync(_orderId);
+				Order order = await _orderManager.GetOrderByIdAsync(_orderId);
 				return order;
 			}
 			catch (Exception ex)
