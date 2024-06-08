@@ -14,7 +14,7 @@ namespace DataAccessLayer.DataAccess
     {
         public OrderRepository() : base() { }
 
-        public void AddOrderToDB(Order order)
+        public void AddOrderDAL(Order order)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace DataAccessLayer.DataAccess
             }
         }
 
-        public List<Order> GetOrdersByUserIdFromDB(int customerId)
+        public List<Order> GetOrdersByUserIdDAL(int customerId)
         {
             List<Order> orders = new List<Order>();
 
@@ -122,7 +122,7 @@ namespace DataAccessLayer.DataAccess
             return orders;
         }
 
-		public async Task<int> GetOrdersCountDBAsync(string filterName, OrderStatus? filterStatus)
+		public async Task<int> GetOrdersCountAsyncDAL(string filterName, OrderStatus? filterStatus)
 		{
 			try
 			{
@@ -165,7 +165,7 @@ namespace DataAccessLayer.DataAccess
 			}
 		}
 
-		public async Task<List<Order>> GetOrderDataDBAsync(int pageNumber, int pageSize, string filterName, OrderStatus? filterStatus)
+		public async Task<List<Order>> GetOrderDataAsyncDAL(int pageNumber, int pageSize, string filterName, OrderStatus? filterStatus)
 		{
 			try
 			{
@@ -233,7 +233,7 @@ namespace DataAccessLayer.DataAccess
 			}
 		}
 
-		public async Task<bool> UpdateOrderDataDBAsync(List<Order> orders)
+		public async Task<bool> UpdateOrdersDAL(List<Order> orders)
 		{
 			if (orders == null || orders.Count == 0)
 			{
@@ -279,7 +279,7 @@ namespace DataAccessLayer.DataAccess
 			}
 		}
 
-        public async Task<Order> GetOrderDBAsync(int orderId)
+        public async Task<Order> GetOrderByIdAsyncDAL(int orderId)
         {
             Order order = null;
 

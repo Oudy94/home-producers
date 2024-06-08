@@ -15,7 +15,7 @@ namespace DataAccessLayer.DataAccess
     {
         public UserRepository() : base() { }
 
-        public void AddUserToDB(Customer user)
+        public void AddCustomerDAL(Customer user)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace DataAccessLayer.DataAccess
             }
         }  
 		
-		public void AddAdminToDB(Admin admin)
+		public void AddAdminDAL(Admin admin)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace DataAccessLayer.DataAccess
             }
         }
 
-        public Customer GetUserFromDB(int id)
+        public Customer GetCustomerByIdDAL(int id)
         {
             try
             {
@@ -110,7 +110,7 @@ namespace DataAccessLayer.DataAccess
             }
         }
 
-		public async Task<List<Customer>> GetCustomersFromDBAsync(string filterName, int pageNumber, int pageSize)
+		public async Task<List<Customer>> GetAllCustomersAsyncDAL(string filterName, int pageNumber, int pageSize)
 		{
 			try
 			{
@@ -166,7 +166,7 @@ namespace DataAccessLayer.DataAccess
 			}
 		}
 
-		public async Task<List<Admin>> GetAdminsFromDBAsync(string filterName, int pageNumber, int pageSize)
+		public async Task<List<Admin>> GetAllAdminsAsyncDAL(string filterName, int pageNumber, int pageSize)
 		{
 			try
 			{
@@ -222,7 +222,7 @@ namespace DataAccessLayer.DataAccess
 			}
 		}
 
-		public async Task<int> GetAdminDataCountFromDBAsync(string filterName)
+		public async Task<int> GetAdminCountAsyncDAL(string filterName)
 		{
 			try
 			{
@@ -255,7 +255,7 @@ namespace DataAccessLayer.DataAccess
 			}
 		}
 
-		public async Task<int> GetCustomerDataCountFromDBAsync(string filterName)
+		public async Task<int> GetCustomerCountAsyncDAL(string filterName)
 		{
 			try
 			{
@@ -288,7 +288,7 @@ namespace DataAccessLayer.DataAccess
 			}
 		}
 
-		public Customer AuthenticateCustomerFromDB(string email, string password)
+		public Customer GetCustomerByCredentialsDAL(string email, string password)
         {
 			Customer customer = null;
 
@@ -330,7 +330,7 @@ namespace DataAccessLayer.DataAccess
             return customer;
         }
 
-		public Admin AuthenticateAdminFromDB(string email, string password)
+		public Admin GetAdminByCredentialsDAL(string email, string password)
 		{
 			Admin admin = null;
 
@@ -373,12 +373,7 @@ namespace DataAccessLayer.DataAccess
 			return admin;
 		}
 
-		public List<Customer> GetCustomersFromDB()
-		{
-			throw new NotImplementedException();
-		}
-
-		public async Task<bool> UpdateAdminDataDBAsync(List<Admin> admins)
+		public async Task<bool> UpdateAdminsAsyncDAL(List<Admin> admins)
 		{
 			if (admins == null || admins.Count == 0)
 			{  
@@ -423,51 +418,7 @@ namespace DataAccessLayer.DataAccess
 			}
 		}
 
-		public async Task<bool> AddAdminDataDBAsync(List<Admin> admins)
-		{
-			if (admins == null || admins.Count == 0)
-			{
-				return false;
-			}
-
-			SqlTransaction transaction = null;
-
-			try
-			{
-				OpenConnection();
-
-				transaction = connection.BeginTransaction();
-
-				foreach (Admin admin in admins)
-				{
-					string insertQuery = "INSERT INTO [user] (name, email, role) VALUES (@Name, @Email, @Role)";
-
-					using (SqlCommand command = new SqlCommand(insertQuery, connection, transaction))
-					{
-						command.Parameters.AddWithValue("@Name", admin.Name);
-						command.Parameters.AddWithValue("@Email", admin.Email);
-						command.Parameters.AddWithValue("@Role", admin.Role);
-
-						await command.ExecuteNonQueryAsync();
-					}
-				}
-
-				transaction.Commit();
-
-				return true;
-			}
-			catch (Exception ex)
-			{
-				transaction?.Rollback();
-				throw new Exception("Error inserting admin data.", ex);
-			}
-			finally
-			{
-				CloseConnection();
-			}
-		}
-
-		public async Task<bool> UpdateCustomerDataDBAsync(List<Customer> customers)
+		public async Task<bool> UpdateCustomersAsyncDAL(List<Customer> customers)
 		{
 			if (customers == null || customers.Count == 0)
 			{  
@@ -508,8 +459,8 @@ namespace DataAccessLayer.DataAccess
 			}
 			finally
 			{
-				CloseConnection();
-			}
+                CloseConnection();
+            }
 		}
 	}
 }

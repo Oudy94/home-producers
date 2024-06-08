@@ -4,14 +4,14 @@
     string search = Model.SearchTerm;
     int pageIndex = Model.PageIndex;
     int productsPerPage = 4;
-    int totalProducts = await Model.ProductManager.GetProductsCount(search, null);
+    int totalProducts = await Model.ProductManager.GetProductsCountAsync(search, null);
     int totalPages = (int)Math.Ceiling((double)totalProducts / productsPerPage);
 }
 
 <section style="background-color: #eee;">
     <div class="container py-5">
         <div class="row">
-            @foreach (var product in Model.ProductManager.GetAll(search, pageIndex))
+            @foreach (var product in await Model.ProductManager.GetAllProductsAsync(pageIndex, productsPerPage, search, null))
             {
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
                     <div class="card h-100">

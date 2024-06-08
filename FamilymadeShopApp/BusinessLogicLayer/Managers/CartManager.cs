@@ -6,23 +6,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ModelLayer.Models;
+using DataAccessLayer.Interfaces;
 
 namespace BusinessLogicLayer.Managers
 {
-	public class CartManager : IManager<Cart>
-	{
-		private readonly CartRepository _CartRepository;
+	public class CartManager: ICartManager
+    {
+		private readonly ICartRepository _cartRepository;
 
-        public CartManager()
+        public CartManager(ICartRepository cartRepository)
         {
-            this._CartRepository = new CartRepository();
+            this._cartRepository = cartRepository;
         }
 
-        public void Add(Cart cart)
+        public void AddCart(Cart cart)
 		{
 			try
 			{
-                _CartRepository.AddCartToDB(cart);
+                _cartRepository.AddCartDAL(cart);
 			}
 			catch (Exception ex)
 			{
@@ -30,21 +31,11 @@ namespace BusinessLogicLayer.Managers
 			}
 		}
 
-		public Cart Get(int id)
-		{
-			throw new NotImplementedException();
-		}
-
-		public List<Cart> GetAll()
-		{
-			throw new NotImplementedException();
-		}
-
 		public void AddProductToCart(int productId, int quantity, int customerId)
 		{
             try
             {
-                _CartRepository.AddProductToCartInDB(productId, quantity, customerId);
+                _cartRepository.AddProductToCartDAL(productId, quantity, customerId);
             }
             catch (Exception ex)
             {
