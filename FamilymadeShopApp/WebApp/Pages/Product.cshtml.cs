@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using ModelLayer.Models;
 using BusinessLogicLayer.Managers;
+using DataAccessLayer.DataAccess;
 
 namespace WebApp.Pages
 {
@@ -13,8 +14,8 @@ namespace WebApp.Pages
 
         public void OnGet(int id)
         {
-            this.ProductManager = new ProductManager();
-            Product = ProductManager.Get(id);
+            this.ProductManager = new ProductManager(new ProductRepository());
+            Product = ProductManager.GetProductById(id);
         }
 
         public async Task<IActionResult> OnPostAddToCartAsync()

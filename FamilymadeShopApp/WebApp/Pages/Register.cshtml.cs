@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ModelLayer.Models;
 using BusinessLogicLayer.Managers;
+using DataAccessLayer.DataAccess;
 
 namespace WebApp.Pages
 {
@@ -24,7 +25,7 @@ namespace WebApp.Pages
 				return Page();
 			}
 
-			UserManager = new UserManager();
+			UserManager = new UserManager(new UserRepository());
 
 			Customer = new Customer
 			{
@@ -33,7 +34,7 @@ namespace WebApp.Pages
 				Password = Customer.Password,
 			};
 
-			UserManager.Add(Customer);
+			UserManager.AddCustomer(Customer);
 
 			return RedirectToPage("/Index");
 		}

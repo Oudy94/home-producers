@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ModelLayer.Models;
 using BusinessLogicLayer.Managers;
+using DataAccessLayer.DataAccess;
 
 namespace WebApp.Pages
 {
@@ -13,7 +14,7 @@ namespace WebApp.Pages
 
         public void OnGet(string search, int pageIndex = 1)
         {
-            this.ProductManager = new ProductManager();
+            this.ProductManager = new ProductManager(new ProductRepository());
             SearchTerm = search;
             PageIndex = pageIndex;
         }

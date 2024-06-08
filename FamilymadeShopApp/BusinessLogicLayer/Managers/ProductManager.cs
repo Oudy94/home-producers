@@ -12,25 +12,19 @@ using DataAccessLayer.Interfaces;
 
 namespace BusinessLogicLayer.Managers
 {
-    public class ProductManager : IManager<Product>
+    public class ProductManager: IProductManager
     {
-        private readonly ProductRepository _ProductRepository;
+        private readonly IProductRepository _productRepository;
 
-        public ProductManager()
+        public ProductManager(IProductRepository productRepository)
         {
-            this._ProductRepository = new ProductRepository();
+            this._productRepository = productRepository;
         }
-
-        public void Add(Product product)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Product Get(int id)
+        public async Task AddProductAsync(Product product)
         {
             try
             {
-                return _ProductRepository.GetProductByIdFromDB(id);
+                await _productRepository.AddProductAsyncDAL(product);
             }
             catch (Exception ex)
             {
@@ -38,11 +32,11 @@ namespace BusinessLogicLayer.Managers
             }
         }
 
-        public List<Product> GetAll()
+        public Product GetProductById(int id)
         {
             try
             {
-                return _ProductRepository.GetProductsFromDB();
+                return _productRepository.GetProductByIdDAL(id);
             }
             catch (Exception ex)
             {
@@ -50,11 +44,11 @@ namespace BusinessLogicLayer.Managers
             }
         }
 
-        public List<Product> GetAll(string filterName, int pageNumber = 1)
+        public async Task<List<Product>> GetAllProductsAsync(int pageNumber, int pageSize, string filterName, Category? filterCategory)
         {
             try
             {
-                return _ProductRepository.GetProductsFromDB(filterName, pageNumber);
+                return await _productRepository.GetAllProductsAsyncDAL(pageNumber, pageSize, filterName, filterCategory);
             }
             catch (Exception ex)
             {
@@ -62,11 +56,11 @@ namespace BusinessLogicLayer.Managers
             }
         }
 
-        public async Task<int> GetProductsCount(string filterName, Category? filterCategory)
+        public async Task<int> GetProductsCountAsync(string filterName, Category? filterCategory)
         {
             try
             {
-                return await _ProductRepository.GetProductsCountDBAsync(filterName, filterCategory);
+                return await _productRepository.GetProductsCountAsyncDAL(filterName, filterCategory);
             }
             catch (Exception ex)
             {
@@ -74,35 +68,11 @@ namespace BusinessLogicLayer.Managers
             }
         }
 
-        public async Task<List<Product>> GetProductDataAsync(int pageNumber, int pageSize, string filterName, Category? filterCategory)
-        {
-			try
-			{
-				return await _ProductRepository.GetProductDataDBAsync(pageNumber, pageSize, filterName, filterCategory);
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.Message);
-			}
-		}
-
-		public async Task<bool> UpdateProductData(List<Product> products)
+		public async Task<bool> UpdateProductsAsync(List<Product> products)
 		{
 			try
 			{
-				return await _ProductRepository.UpdateProductDataDBAsync(products);
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.Message);
-			}
-		}
-
-		public async Task AddProductAsync(Product product)
-		{
-			try
-			{
-				await _ProductRepository.AddProductDBAsync(product);
+				return await _productRepository.UpdateProductsAsyncDAL(products);
 			}
 			catch (Exception ex)
 			{
@@ -114,7 +84,7 @@ namespace BusinessLogicLayer.Managers
         {
             try
             {
-                return await _ProductRepository.GetProductsNamesDBAsync();
+                return await _productRepository.GetProductsNamesAsyncDAL();
             }
             catch (Exception ex)
             {

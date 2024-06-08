@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using ModelLayer.Models;
 using BusinessLogicLayer.Managers;
+using DataAccessLayer.DataAccess;
 
 namespace WebApp.Pages
 {
@@ -17,11 +18,11 @@ namespace WebApp.Pages
             {
                 CartItems = JsonConvert.DeserializeObject<List<CartProduct>>(Request.Cookies["CartItems"]);
 
-                ProductManager = new ProductManager();
+                ProductManager = new ProductManager(new ProductRepository());
 
                 foreach (CartProduct cartItem in CartItems)
                 {
-                    Product product = ProductManager.Get(cartItem.ProductId);
+                    Product product = ProductManager.GetProductById(cartItem.ProductId);
 
                     cartItem.Name = product.Name;
                     cartItem.Price = product.Price;

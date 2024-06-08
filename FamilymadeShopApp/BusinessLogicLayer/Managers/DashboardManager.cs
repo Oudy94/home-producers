@@ -1,4 +1,6 @@
-﻿using DataAccessLayer.DataAccess;
+﻿using BusinessLogicLayer.Interfaces;
+using DataAccessLayer.DataAccess;
+using DataAccessLayer.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using ModelLayer.Models;
 using SharedLayer.Structs;
@@ -11,14 +13,14 @@ using System.Threading.Tasks;
 
 namespace BusinessLogicLayer.Managers
 {
-    public class DashboardManager
+    public class DashboardManager: IDashboardManager
     {
-        private readonly DashboardRepository _dashboardRepository;
+        private readonly IDashboardRepository _dashboardRepository;
         private readonly MemoryCache _cache;
 
-        public DashboardManager()
+        public DashboardManager(IDashboardRepository dashboardRepository)
         {
-            _dashboardRepository = new DashboardRepository();
+            _dashboardRepository = dashboardRepository;
             _cache = new MemoryCache(new MemoryCacheOptions());
         }
 
@@ -31,7 +33,7 @@ namespace BusinessLogicLayer.Managers
 
             try
             {
-                var data = await _dashboardRepository.FetchEntityStatisticsAsync();
+                var data = await _dashboardRepository.GetEntityStatisticsAsyncDAL();
                 _cache.Set("EntityStatistics", data, TimeSpan.FromMinutes(10));
                 return data;
             }
@@ -52,7 +54,7 @@ namespace BusinessLogicLayer.Managers
 
             try
             {
-                var data = await _dashboardRepository.FetchOrderStatisticsAsync(startDate, endDate);
+                var data = await _dashboardRepository.GetOrderStatisticsAsyncDAL(startDate, endDate);
                 _cache.Set(cacheKey, data, TimeSpan.FromMinutes(10));
                 return data;
             }
@@ -62,7 +64,7 @@ namespace BusinessLogicLayer.Managers
             }
         }
 
-        public async Task<List<KeyValuePair<string, int>>> GetTopProductsList(DateTime startDate, DateTime endDate)
+        public async Task<List<KeyValuePair<string, int>>> GetTopProductsListAsync(DateTime startDate, DateTime endDate)
         {
             string cacheKey = $"TopProductsList_{startDate.ToString("yyyyMMdd")}_{endDate.ToString("yyyyMMdd")}";
 
@@ -73,7 +75,7 @@ namespace BusinessLogicLayer.Managers
 
             try
             {
-                var data = await _dashboardRepository.FetchTopProductsListAsync(startDate, endDate);
+                var data = await _dashboardRepository.GetTopProductsListAsyncDAL(startDate, endDate);
                 _cache.Set(cacheKey, data, TimeSpan.FromMinutes(10));
                 return data;
             }
@@ -94,7 +96,7 @@ namespace BusinessLogicLayer.Managers
 
             try
             {
-                var data = await _dashboardRepository.FetchGrossRevenueAsync(startDate, endDate);
+                var data = await _dashboardRepository.GetGrossRevenueAsyncDAL(startDate, endDate);
                 _cache.Set(cacheKey, data, TimeSpan.FromMinutes(10));
                 return data;
             }
@@ -104,7 +106,7 @@ namespace BusinessLogicLayer.Managers
             }
         }
 
-        public async Task<List<Product>> GetUnderStockProducts()
+        public async Task<List<Product>> GetUnderStockProductsAsync()
         {
             if (_cache.TryGetValue("UnderStockProducts", out List<Product> cachedData))
             {
@@ -113,7 +115,7 @@ namespace BusinessLogicLayer.Managers
 
             try
             {
-                var data = await _dashboardRepository.FetchUnderStockProductsAsync();
+                var data = await _dashboardRepository.GetUnderStockProductsAsyncDAL();
                 _cache.Set("UnderStockProducts", data, TimeSpan.FromMinutes(10));
                 return data;
             }

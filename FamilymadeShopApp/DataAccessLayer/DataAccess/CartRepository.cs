@@ -13,7 +13,7 @@ namespace DataAccessLayer.DataAccess
     {
         public CartRepository() : base() { }
 
-        public void AddCartToDB(Cart cart)
+        public void AddCartDAL(Cart cart)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace DataAccessLayer.DataAccess
             }
         }
 
-        public void AddProductToCartInDB(int productId, int quantity, int customerId)
+        public void AddProductToCartDAL(int productId, int quantity, int customerId)
         {
             try
             {

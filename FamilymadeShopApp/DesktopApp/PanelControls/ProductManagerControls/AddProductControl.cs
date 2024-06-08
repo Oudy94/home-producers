@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Managers;
+using DataAccessLayer.DataAccess;
 using ModelLayer.Models;
 using SharedLayer.Enums;
 using System;
@@ -26,7 +27,7 @@ namespace DesktopApp.PanelControls.ProductManagerControls
 		{
 			InitializeComponent();
 
-			_productManager = new ProductManager();
+			_productManager = new ProductManager(new ProductRepository());
 		}
 
 		private void AddProductControl_Load(object sender, EventArgs e)

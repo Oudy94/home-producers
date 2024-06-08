@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ModelLayer.Models;
 using BusinessLogicLayer.Managers;
+using DataAccessLayer.DataAccess;
 
 namespace WebApp.Pages
 {
@@ -16,16 +17,14 @@ namespace WebApp.Pages
 
         public void OnGet()
         {
-            UserManager = new UserManager();
-
             var userIdClaim = User.FindFirst("id");
             if (userIdClaim != null)
             {
                 if (int.TryParse(userIdClaim.Value, out int userId))
                 {
-                    UserManager = new UserManager();
-                    OrderManager = new OrderManager();
-                    Customer = UserManager.Get(userId);
+                    UserManager = new UserManager(new UserRepository());
+                    OrderManager = new OrderManager(new OrderRepository());
+                    Customer = UserManager.GetCustomerById(userId);
 
                     Orders = OrderManager.GetOrdersByUserId(userId);
                 }

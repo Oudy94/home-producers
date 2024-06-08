@@ -7,23 +7,24 @@ using System.Threading.Tasks;
 using DataAccessLayer.DataAccess;
 using BusinessLogicLayer.Interfaces;
 using ModelLayer.Models;
+using DataAccessLayer.Interfaces;
 
 namespace BusinessLogicLayer.Managers
 {
-	public class UserManager : IManager<Customer>
-	{
-		private readonly UserRepository _UserRepository;
+	public class UserManager: IUserManager
+    {
+		private readonly IUserRepository _userRepository;
 
-		public UserManager()
+		public UserManager(IUserRepository userRepository)
 		{
-			this._UserRepository = new UserRepository();
+			this._userRepository = userRepository;
 		}
 
-		public void Add(Customer user)
+		public void AddCustomer(Customer user)
 		{
 			try
 			{
-				_UserRepository.AddUserToDB(user);
+				_userRepository.AddCustomerDAL(user);
 			}
 			catch (Exception ex)
 			{
@@ -35,7 +36,7 @@ namespace BusinessLogicLayer.Managers
 		{
 			try
 			{
-				_UserRepository.AddAdminToDB(admin);
+				_userRepository.AddAdminDAL(admin);
 			}
 			catch (Exception ex)
 			{
@@ -43,11 +44,11 @@ namespace BusinessLogicLayer.Managers
 			}
 		}
 
-		public Customer Get(int id)
+		public Customer GetCustomerById(int id)
 		{
 			try
 			{
-				return _UserRepository.GetUserFromDB(id);
+				return _userRepository.GetCustomerByIdDAL(id);
 			}
 			catch (Exception ex)
 			{
@@ -55,16 +56,35 @@ namespace BusinessLogicLayer.Managers
 			}
 		}
 
-		public List<Customer> GetAll()
-		{
-			throw new NotImplementedException();
-		}
+        public Customer GetCustomerByCredentials(string email, string password)
+        {
+            try
+            {
+                return _userRepository.GetCustomerByCredentialsDAL(email, password);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
-		public async Task<List<Customer>> GetCustomerDataAsync(string filterName, int pageNumber, int pageSize)
+        public Admin GetAdminByCredentials(string email, string password)
+        {
+            try
+            {
+                return _userRepository.GetAdminByCredentialsDAL(email, password);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<Customer>> GetAllCustomersAsync(string filterName, int pageNumber, int pageSize)
 		{
 			try
 			{
-				return await _UserRepository.GetCustomersFromDBAsync(filterName, pageNumber, pageSize);
+				return await _userRepository.GetAllCustomersAsyncDAL(filterName, pageNumber, pageSize);
 			}
 			catch (Exception ex)
 			{
@@ -72,11 +92,11 @@ namespace BusinessLogicLayer.Managers
 			}
 		}
 
-		public async Task<List<Admin>> GetAdminDataAsync(string filterName, int pageNumber, int pageSize)
+		public async Task<List<Admin>> GetAllAdminsAsync(string filterName, int pageNumber, int pageSize)
 		{
 			try
 			{
-				return await _UserRepository.GetAdminsFromDBAsync(filterName, pageNumber, pageSize);
+				return await _userRepository.GetAllAdminsAsyncDAL(filterName, pageNumber, pageSize);
 			}
 			catch (Exception ex)
 			{
@@ -84,11 +104,11 @@ namespace BusinessLogicLayer.Managers
 			}
 		}
 
-		public async Task<int> GetAdminDataCountAsync(string filterName)
+		public async Task<int> GetAdminCountAsync(string filterName)
 		{
 			try
 			{
-				return await _UserRepository.GetAdminDataCountFromDBAsync(filterName);
+				return await _userRepository.GetAdminCountAsyncDAL(filterName);
 			}
 			catch (Exception ex)
 			{
@@ -96,11 +116,11 @@ namespace BusinessLogicLayer.Managers
 			}
 		}
 
-		public async Task<int> GetCustomerDataCountAsync(string filterName)
+		public async Task<int> GetCustomerCountAsync(string filterName)
 		{
 			try
 			{
-				return await _UserRepository.GetCustomerDataCountFromDBAsync(filterName);
+				return await _userRepository.GetCustomerCountAsyncDAL(filterName);
 			}
 			catch (Exception ex)
 			{
@@ -108,11 +128,11 @@ namespace BusinessLogicLayer.Managers
 			}
 		}
 
-		public Customer AuthenticateCustomer(string email, string password)
+		public async Task<bool> UpdateAdminsAsync(List<Admin> admins)
 		{
 			try
 			{
-				return _UserRepository.AuthenticateCustomerFromDB(email, password);
+				return await _userRepository.UpdateAdminsAsyncDAL(admins);
 			}
 			catch (Exception ex)
 			{
@@ -120,47 +140,11 @@ namespace BusinessLogicLayer.Managers
 			}
 		}
 
-		public Admin AuthenticateAdmin(string email, string password)
+		public async Task<bool> UpdateCustomersAsync(List<Customer> customers)
 		{
 			try
 			{
-				return _UserRepository.AuthenticateAdminFromDB(email, password);
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.Message);
-			}
-		}
-
-		public async Task<bool> UpdateAdminDataAsync(List<Admin> admins)
-		{
-			try
-			{
-				return await _UserRepository.UpdateAdminDataDBAsync(admins);
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.Message);
-			}
-		}
-
-		public async Task<bool> AddAdminData(List<Admin> admins)
-		{
-			try
-			{
-				return await _UserRepository.AddAdminDataDBAsync(admins);
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.Message);
-			}
-		}
-
-		public async Task<bool> UpdateCustomerData(List<Customer> customers)
-		{
-			try
-			{
-				return await _UserRepository.UpdateCustomerDataDBAsync(customers);
+				return await _userRepository.UpdateCustomersAsyncDAL(customers);
 			}
 			catch (Exception ex)
 			{

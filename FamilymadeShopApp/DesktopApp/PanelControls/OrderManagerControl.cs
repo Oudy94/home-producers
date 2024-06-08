@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Managers;
+using DataAccessLayer.DataAccess;
 using DesktopApp.PanelControls.OrderManagerControls;
 using DesktopApp.PanelControls.ProductManagerControls;
 using ModelLayer.Models;
@@ -31,7 +32,7 @@ namespace DesktopApp.PanelControls
 		{
 			InitializeComponent();
 
-			_orderManager = new OrderManager();
+			_orderManager = new OrderManager(new OrderRepository());
 			_isLoading = false;
 			_maxPageNumber = 0;
 			_pageNumber = 1;
@@ -318,7 +319,7 @@ namespace DesktopApp.PanelControls
 
 			try
 			{
-				bool updateSuccess = await _orderManager.UpdateOrderData(orders);
+				bool updateSuccess = await _orderManager.UpdateOrdersAsync(orders);
 				if (updateSuccess)
 				{
 					ClearDataEditingChanges();
