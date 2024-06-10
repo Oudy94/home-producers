@@ -60,14 +60,8 @@ namespace DesktopApp.PanelControls
             crtTopProducts.Series[0].YValueMembers = "Value";
             crtTopProducts.DataBind();
 
-            //dgvUnderstockProducts.AutoGenerateColumns = false;
-            //dgvUnderstockProducts.DataSource = understockProducts;
-        }
-
-        public struct RevenueByDate2
-        {
-            public DateTime Date { get; set; }
-            public decimal TotalAmount { get; set; }
+            dgvUnderstockProducts.AutoGenerateColumns = false;
+            dgvUnderstockProducts.DataSource = understockProducts;
         }
 
         private static DateTime GetStartOfToday(DateTime dateTime)

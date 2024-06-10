@@ -54,7 +54,7 @@ namespace BusinessLogicUnitTest
         public async Task GetOrdersCountAsync_ShouldCallGetOrdersCountAsyncDAL()
         {
             // Arrange
-            string filterName = "chocolate";
+            string filterName = "saoud";
             OrderStatus? filterStatus = OrderStatus.Pending;
 
             // Act
@@ -70,7 +70,7 @@ namespace BusinessLogicUnitTest
             // Arrange
             int pageNumber = 1;
             int pageSize = 10;
-            string filterName = "filter";
+            string filterName = "saoud";
             OrderStatus? filterStatus = OrderStatus.Pending;
 
             // Act
@@ -125,7 +125,7 @@ namespace BusinessLogicUnitTest
         public async Task GetOrdersCountAsync_ShouldReturnCountFromRepository()
         {
             // Arrange
-            string filterName = "filter";
+            string filterName = "saoud";
             OrderStatus? filterStatus = OrderStatus.Pending;
             int expectedCount = 10;
             _mockOrderRepository.Setup(x => x.GetOrdersCountAsyncDAL(filterName, filterStatus)).ReturnsAsync(expectedCount);
@@ -143,7 +143,7 @@ namespace BusinessLogicUnitTest
             // Arrange
             int pageNumber = 1;
             int pageSize = 10;
-            string filterName = "filter";
+            string filterName = "saoud";
             OrderStatus? filterStatus = OrderStatus.Pending;
             var expectedOrders = new List<Order> { new Order(), new Order() };
             _mockOrderRepository.Setup(x => x.GetOrderDataAsyncDAL(pageNumber, pageSize, filterName, filterStatus)).ReturnsAsync(expectedOrders);
