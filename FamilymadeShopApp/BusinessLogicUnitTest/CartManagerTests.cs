@@ -56,10 +56,10 @@ namespace BusinessLogicUnitTest
             int customerId = 1;
 
             // Act
-            _cartManager.AddProductToCart(productId, quantity, customerId);
+            _cartManager.AddProductToCart(customerId, productId, quantity);
 
             // Assert
-            _mockCartRepository.Verify(x => x.AddProductToCartDAL(productId, quantity, customerId), Times.Once);
+            _mockCartRepository.Verify(x => x.AddProductToCartDAL(customerId, productId, quantity), Times.Once);
         }
 
         [TestMethod]
@@ -73,7 +73,7 @@ namespace BusinessLogicUnitTest
             _mockCartRepository.Setup(x => x.AddProductToCartDAL(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Throws(new Exception("Test Exception"));
 
             // Act
-            _cartManager.AddProductToCart(productId, quantity, customerId);
+            _cartManager.AddProductToCart(customerId,productId, quantity);
 
             // Assert is handled by ExpectedException
         }

@@ -14,17 +14,16 @@ function confirmLogout() {
 function UpdateCartBadge() {
     var cartItemsCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('CartItems='));
 
+    var countBadge = document.querySelector('.badge');
+
     if (cartItemsCookie) {
         var cartItemsJson = decodeURIComponent(cartItemsCookie.split('=')[1]);
         var cartItems = JSON.parse(cartItemsJson);
 
-        var itemCount = cartItems.length;
+        var totalQuantity = cartItems.reduce((sum, item) => sum + item.Quantity, 0);
 
-        var countBadge = document.querySelector('.badge');
-
-        countBadge.textContent = itemCount;
+        countBadge.textContent = totalQuantity;
     } else {
-        var countBadge = document.querySelector('.badge');
         countBadge.textContent = '0';
     }
 }

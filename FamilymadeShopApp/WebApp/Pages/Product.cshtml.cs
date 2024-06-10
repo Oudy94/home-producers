@@ -10,6 +10,7 @@ namespace WebApp.Pages
     public class ProductModel : PageModel
     {
         public ProductManager ProductManager { get; set; }
+        public CartManager CartManager { get; set; }
         public Product Product { get; set; }
 
         public void OnGet(int id)
@@ -58,6 +59,19 @@ namespace WebApp.Pages
             }
 
             HttpContext.Response.Cookies.Append("CartItems", JsonConvert.SerializeObject(cartItems));
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var userIdClaim = User.FindFirst("id");
+                if (userIdClaim != null)
+                {
+                    if (int.TryParse(userIdClaim.Value, out int userId))
+                    {
+                        CartManager = new CartManager(new CartRepository());
+                        CartManager.AddProductToCart(userId, cartProduct.ProductId, cartProduct.Quantity);
+                    }
+                }
+            }
         } 
     }
 }

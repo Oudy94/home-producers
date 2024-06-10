@@ -18,7 +18,7 @@ namespace WebApp.Pages
         public UserManager UserManager { get; set; }
         public ProductManager ProductManager { get; set; }
         public OrderManager OrderManager { get; set; }
-
+        public CartManager CartManager { get; set; }
         public PaymentProcessor PaymentProcessor { get; set; }
         public List<CartProduct> CartItems { get; set; }
 
@@ -164,6 +164,7 @@ namespace WebApp.Pages
                         Order order = new Order(Customer.Id, SharedLayer.Enums.OrderStatus.Pending, DateTime.Now, orderProducts, shippingPrice, fullAddress.ToString(), SelectedPaymentMethod);
 
                         OrderManager.AddOrder(order);
+                        CartManager.RemoveCartByCustomerId(userId);
                     }
                 }
             }
