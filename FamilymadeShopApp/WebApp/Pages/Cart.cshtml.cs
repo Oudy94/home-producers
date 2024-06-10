@@ -10,6 +10,7 @@ namespace WebApp.Pages
     public class CartModel : PageModel
     {
         public ProductManager ProductManager { get; set; }
+        public CartManager CartManager { get; set; }
         public List<CartProduct> CartItems { get; set; }
 
         public void OnGet()
@@ -20,13 +21,12 @@ namespace WebApp.Pages
 
                 ProductManager = new ProductManager(new ProductRepository());
 
+                //in case the product name or price is changed we update the information
                 foreach (CartProduct cartItem in CartItems)
                 {
                     Product product = ProductManager.GetProductById(cartItem.ProductId);
-
                     cartItem.Name = product.Name;
                     cartItem.Price = product.Price;
-                    cartItem.ImageUrl = product.Images[0];
                 }
                 HttpContext.Response.Cookies.Append("CartItems", JsonConvert.SerializeObject(CartItems));
             }
@@ -55,8 +55,20 @@ namespace WebApp.Pages
                         if (existingCartItem != null)
                         {
                             existingCartItem.Quantity = cartProduct.Quantity;
-
                             HttpContext.Response.Cookies.Append("CartItems", JsonConvert.SerializeObject(cartItems));
+
+                            if (User.Identity.IsAuthenticated)
+                            {
+                                var userIdClaim = User.FindFirst("id");
+                                if (userIdClaim != null)
+                                {
+                                    if (int.TryParse(userIdClaim.Value, out int userId))
+                                    {
+                                        CartManager = new CartManager(new CartRepository());
+                                        CartManager.UpdateProductQuantityInCart(userId, cartProduct.ProductId, cartProduct.Quantity);
+                                    }
+                                }
+                            }
 
                             return new JsonResult(new { success = true, cartItems = cartItems });
                         }
@@ -90,8 +102,21 @@ namespace WebApp.Pages
                         if (existingCartItem != null)
                         {
                             cartItems.Remove(existingCartItem);
-
                             HttpContext.Response.Cookies.Append("CartItems", JsonConvert.SerializeObject(cartItems));
+
+                            if (User.Identity.IsAuthenticated)
+                            {
+                                var userIdClaim = User.FindFirst("id");
+                                if (userIdClaim != null)
+                                {
+                                    if (int.TryParse(userIdClaim.Value, out int userId))
+                                    {
+                                        CartManager = new CartManager(new CartRepository());
+                                        CartManager.RemoveCartByCustomerId(userId);
+                                    }
+                                }
+                            }
+
                             return new JsonResult(new { success = true, cartItems = cartItems });
                         }
                     }

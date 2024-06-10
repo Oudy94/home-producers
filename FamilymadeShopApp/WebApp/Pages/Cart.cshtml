@@ -188,6 +188,7 @@
                 var parsedData = JSON.parse(data);
                 UpdateCart(parsedData.cartItems);
                 UpdateSummary(parsedData.cartItems);
+                UpdateCartBadge();
             })
             .catch(error => {
                 console.error('Error:', error);

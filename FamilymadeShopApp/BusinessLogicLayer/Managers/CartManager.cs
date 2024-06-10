@@ -31,16 +31,52 @@ namespace BusinessLogicLayer.Managers
 			}
 		}
 
-		public void AddProductToCart(int productId, int quantity, int customerId)
+		public void AddProductToCart(int customerId, int productId, int quantity)
 		{
             try
             {
-                _cartRepository.AddProductToCartDAL(productId, quantity, customerId);
+                _cartRepository.AddProductToCartDAL(customerId, productId, quantity);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
             }
         }
-	}
+
+		public void RemoveCartByCustomerId(int customerId)
+		{
+            try
+            {
+                _cartRepository.RemoveCartByCustomerIdDAL(customerId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        
+        public Cart GetCartByCustomerId(int customerId)
+		{
+            try
+            {
+                return _cartRepository.GetCartByCustomerIdDAL(customerId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public void UpdateProductQuantityInCart(int customerId, int productId, int newQuantity)
+        {
+            try
+            {
+                _cartRepository.UpdateProductQuantityInCartDAL(customerId, productId, newQuantity);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+    }
 }

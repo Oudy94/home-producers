@@ -10,6 +10,9 @@ namespace DataAccessLayer.Interfaces
     public interface ICartRepository
     {
         void AddCartDAL(Cart cart);
-        void AddProductToCartDAL(int productId, int quantity, int customerId);
+        void AddProductToCartDAL(int customerId, int productId, int quantity);
+        void RemoveCartByCustomerIdDAL(int customerId);
+        Cart GetCartByCustomerIdDAL(int customerId);
+        void UpdateProductQuantityInCartDAL(int customerId, int productId, int newQuantity);
     }
 }

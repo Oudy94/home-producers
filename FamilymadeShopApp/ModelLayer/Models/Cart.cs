@@ -8,7 +8,7 @@ namespace ModelLayer.Models
 {
 	public class Cart
 	{
-		public int Id { get; }
+		public int Id { get; set; }
 		public Customer Customer { get; set; }
 		public List<CartProduct> CartProducts { get; set; }
 	}
