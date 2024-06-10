@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedLayer", "SharedLayer\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopApp", "DesktopApp\DesktopApp.csproj", "{67AEFF34-A86E-49ED-939E-00C92D5AC48E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogicUnitTest", "BusinessLogicUnitTest\BusinessLogicUnitTest.csproj", "{906906D1-F2CC-4FC0-B919-8C77409E5612}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogicUnitTest", "BusinessLogicUnitTest\BusinessLogicUnitTest.csproj", "{906906D1-F2CC-4FC0-B919-8C77409E5612}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

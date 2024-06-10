@@ -63,6 +63,7 @@ namespace DesktopApp.PanelControls
 			dgvOrders.Columns.Add("Date", "Date");
 			dgvOrders.Columns.Add("ShippingPrice", "Shipping Price");
 			dgvOrders.Columns.Add("ShippingAddress", "Shipping Address");
+			dgvOrders.Columns.Add("PaymentMethod", "Payment Method");
 			DataGridViewButtonColumn buttonColumn = new DataGridViewButtonColumn
 			{
 				Name = "ViewProducts",
@@ -82,7 +83,7 @@ namespace DesktopApp.PanelControls
 
 			foreach (Order order in orders)
 			{
-				dgvOrders.Rows.Add(order.Id, order.CustomerId, _statusValues[(int)order.Status], order.Date, order.ShippingPrice, order.ShippingAddress);
+				dgvOrders.Rows.Add(order.Id, order.CustomerId, _statusValues[(int)order.Status], order.Date, order.ShippingPrice, order.ShippingAddress, order.PaymentMethod);
 			}
 		}
 
@@ -370,14 +371,21 @@ namespace DesktopApp.PanelControls
 						return false;
 					}
 
-					Order order = new Order
+                    string paymentMethod = row.Cells["PaymentMethod"].Value?.ToString();
+                    if (string.IsNullOrWhiteSpace(shippingAddress))
+                    {
+                        return false;
+                    }
+
+                    Order order = new Order
 					{
 						Id = id,
 						CustomerId = customerId,
 						Status = status,
 						ShippingPrice = shippingPrice,
-						ShippingAddress = shippingAddress
-					};
+						ShippingAddress = shippingAddress,
+                        PaymentMethod = paymentMethod
+                    };
 
 					orders.Add(order);
 				}
