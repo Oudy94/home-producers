@@ -1,4 +1,5 @@
-﻿using ModelLayer.Models;
+﻿using Microsoft.AspNetCore.Http;
+using ModelLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +22,8 @@ namespace DataAccessLayer.Interfaces
         Task<bool> UpdateAdminsAsyncDAL(List<Admin> admins);
         Task<bool> UpdateCustomersAsyncDAL(List<Customer> customers);
         Task RemoveUserByIdAsyncDAL(int id);
+        Task AddPersonalPictureAsyncDAL(int userId, IFormFile personalPic);
+        Task<byte[]> GetPersonalPictureAsyncDAL(int userId);
+
     }
 }

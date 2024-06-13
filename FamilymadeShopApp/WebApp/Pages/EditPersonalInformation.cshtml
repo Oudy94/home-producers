@@ -1,0 +1,79 @@
+﻿@page
+@model WebApp.Pages.EditPersonalInformationModel
+@{
+}
+
+<div class="container">
+    <form id="profile-edit" method="post" enctype="multipart/form-data">
+        @* Display validation summary *@
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <table class="table">
+            <tr>
+                <th style="width: 250px;"><label asp-for="CustomerInfo.Name"><span>Name:</span></label></th>
+                <td>
+                    <input asp-for="CustomerInfo.Name" class="form-control" required />
+                    <span asp-validation-for="CustomerInfo.Name" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 250px;"><label asp-for="CustomerInfo.Email"><span>Email:</span></label></th>
+                <td>
+                    <input asp-for="CustomerInfo.Email" class="form-control" required />
+                    <span asp-validation-for="CustomerInfo.Email" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 250px;"><label asp-for="CustomerInfo.Password"><span>Password:</span></label></th>
+                <td>
+                    <input name="CustomerInfo.Password" type="password" class="form-control" />
+                    @* <span asp-validation-for="CustomerInfo.Password" class="text-danger"></span> *@
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 250px;"><label name="PersonalPic"><span>Personal Picture:</span></label></th>
+                <td>
+                    <input name="PersonalPic" type="file" class="form-control" accept="image/*" />
+                    @* <span asp-validation-for="CustomerInfo.Password" class="text-danger"></span> *@
+                </td>
+            </tr>
+        </table>
+
+        <div class="mt-4">
+            <h3>Address</h3>
+            <table class="table">
+                <tr>
+                    <th style="width: 250px;"><label asp-for="CustomerInfo.ShippingAddress.AddressLine"><span>Address Line:</span></label></th>
+                    <td>
+                        <input asp-for="CustomerInfo.ShippingAddress.AddressLine" class="form-control" />
+                        <span asp-validation-for="CustomerInfo.ShippingAddress.AddressLine" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th style="width: 250px;"><label asp-for="CustomerInfo.ShippingAddress.PostalCode"><span>Postal Code:</span></label></th>
+                    <td>
+                        <input asp-for="CustomerInfo.ShippingAddress.PostalCode" class="form-control" />
+                        <span asp-validation-for="CustomerInfo.ShippingAddress.PostalCode" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th style="width: 250px;"><label asp-for="CustomerInfo.ShippingAddress.City"><span>City:</span></label></th>
+                    <td>
+                        <input asp-for="CustomerInfo.ShippingAddress.City" class="form-control" />
+                        <span asp-validation-for="CustomerInfo.ShippingAddress.City" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th style="width: 250px;"><label asp-for="CustomerInfo.ShippingAddress.Country"><span>Country:</span></label></th>
+                    <td>
+                        <input asp-for="CustomerInfo.ShippingAddress.Country" class="form-control" disabled />
+                        <span asp-validation-for="CustomerInfo.ShippingAddress.Country" class="text-danger"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a class="btn btn-secondary" asp-area="" asp-page="/PersonalInformation">Cancel</a>
+    </form>
+</div>

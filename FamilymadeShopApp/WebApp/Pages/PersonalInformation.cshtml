@@ -16,10 +16,29 @@
             <div class="tab-content" id="v-pills-tabContent">
                 <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
                     <h2>Profile</h2>
-                    <div>
-                        <p><strong>Name:</strong> @Model.Customer.Name</p>
-                        <p><strong>Email:</strong> @Model.Customer.Email</p>
+                    <div class="profile-section">
+                        @if (Model.PersonalPicture != null)
+                        {
+                            <img src="data:image/jpeg;base64,@Model.PersonalPicture" alt="Profile Picture" />
+                        }
+                        else
+                        {
+                            <img src="https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=" alt="Default Profile Picture" />
+                        }
                     </div>
+                    <table class="profile-info-table">
+                        <tr>
+                            <th>Name:</th>
+                            <td>@Model.Customer.Name</td>
+                        </tr>
+                        <tr>
+                            <th>Email:</th>
+                            <td>@Model.Customer.Email</td>
+                        </tr>
+                    </table>
+                    <a class="btn btn-primary text-light position-relative mt-4 btn-navbar" asp-area="" asp-page="/EditPersonalInformation">
+                       Edit
+                    </a>
                 </div>
                 <div class="tab-pane fade" id="v-pills-orders-history" role="tabpanel" aria-labelledby="v-pills-orders-history-tab">
                     <h2>Orders History</h2>
