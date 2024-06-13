@@ -26,14 +26,14 @@ namespace BusinessLogicLayer.Managers.Payment
                 return new PaymentResult
                 {
                     Success = false,
-                    Message = "Insufficient amount in the Paypal."
+                    Message = "Insufficient amount in the PayPal."
                 };
             }
 
             return new PaymentResult
             {
                 Success = true,
-                Message = $"Paypal payment of ${amount} processed successfully."
+                Message = $"PayPal payment of €{amount} processed successfully."
             };
         }
 

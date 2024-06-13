@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -65,8 +66,9 @@ namespace DesktopApp.MainControls
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.Message, "Fail", MessageBoxButtons.OK, MessageBoxIcon.Information);
-			}
+                Debug.WriteLine(ex.Message);
+                MessageBox.Show($"Error login to the application. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 		}
 
 		private void chbLoginShowPassword_CheckedChanged(object sender, EventArgs e)

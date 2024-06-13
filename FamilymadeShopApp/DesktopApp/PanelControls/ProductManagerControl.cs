@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -68,7 +69,8 @@ namespace DesktopApp.PanelControls
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Debug.WriteLine(ex.Message);
+                MessageBox.Show($"Error fetch product names data. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return productsNames;
@@ -177,7 +179,8 @@ namespace DesktopApp.PanelControls
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Debug.WriteLine(ex.Message);
+                MessageBox.Show($"Error fetch product data. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -344,7 +347,8 @@ namespace DesktopApp.PanelControls
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Debug.WriteLine(ex.Message);
+                MessageBox.Show($"Error save product data. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -489,7 +493,8 @@ namespace DesktopApp.PanelControls
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Something went wrong!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Debug.WriteLine(ex.Message);
+                    MessageBox.Show($"Error remove product data. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

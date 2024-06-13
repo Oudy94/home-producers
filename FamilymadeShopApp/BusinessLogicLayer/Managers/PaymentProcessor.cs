@@ -8,14 +8,9 @@ using System.Threading.Tasks;
 
 namespace BusinessLogicLayer.Managers
 {
-    public class PaymentProcessor
+    public class PaymentProcessor: IPaymentProcessor
     {
         private IPaymentStrategy _paymentStrategy;
-
-        public PaymentProcessor(IPaymentStrategy paymentStrategy)
-        {
-            _paymentStrategy = paymentStrategy;
-        }
 
         public void SetPaymentStrategy(IPaymentStrategy paymentStrategy)
         {

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net;
@@ -164,8 +165,9 @@ namespace DesktopApp.PanelControls
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-			}
+                Debug.WriteLine(ex.Message);
+                MessageBox.Show($"Error fetch order data. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 			finally
 			{
 				HideLoadingIndicator();
@@ -329,11 +331,12 @@ namespace DesktopApp.PanelControls
 					MessageBox.Show(($"Update order{(_editedRowsSet.Count > 1 ? "s" : "")} succeeded."), "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				}
 			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-			}
-		}
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                MessageBox.Show($"Error save order data. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
 		private bool TryGetEditedOrders(out List<Order> orders)
 		{

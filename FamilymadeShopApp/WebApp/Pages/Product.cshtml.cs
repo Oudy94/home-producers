@@ -2,21 +2,43 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using ModelLayer.Models;
-using BusinessLogicLayer.Managers;
-using DataAccessLayer.DataAccess;
+using BusinessLogicLayer.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace WebApp.Pages
 {
     public class ProductModel : PageModel
     {
-        public ProductManager ProductManager { get; set; }
-        public CartManager CartManager { get; set; }
+        private readonly IProductManager _productManager;
+        private readonly ICartManager _cartManager;
+
         public Product Product { get; set; }
 
-        public void OnGet(int id)
+        public ProductModel(IProductManager productManager, ICartManager cartManager)
         {
-            this.ProductManager = new ProductManager(new ProductRepository());
-            Product = ProductManager.GetProductById(id);
+            _productManager = productManager;
+            _cartManager = cartManager;
+        }
+
+        public async Task<IActionResult> OnGetAsync(int id)
+        {
+            try
+            {
+                Product = _productManager.GetProductById(id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                TempData["MessageError"] = "Failed to load the product. Please try again later.";
+                return RedirectToPage("/Index");
+            }
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAddToCartAsync()
@@ -30,48 +52,67 @@ namespace WebApp.Pages
 
                     if (cartProduct != null)
                     {
-                        UpdateCart(cartProduct);
+                        return await UpdateCart(cartProduct);
                     }
-
-                    return new JsonResult(new { success = true });
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest("Failed to deserialize JSON data: " + ex.Message);
+                Console.WriteLine($"Exception occurred in UpdateCart: {ex.Message}");
+                TempData["MessageError"] = "Failed to update cart. Please try again later.";
+                return new BadRequestResult();
             }
+
+            return BadRequest("Invalid request");
         }
 
-        private void UpdateCart(CartProduct cartProduct)
+        private async Task<IActionResult> UpdateCart(CartProduct cartProduct)
         {
-            List<CartProduct> cartItems = HttpContext.Request.Cookies.ContainsKey("CartItems")
-                ? JsonConvert.DeserializeObject<List<CartProduct>>(HttpContext.Request.Cookies["CartItems"])
-                : new List<CartProduct>();
-
-            CartProduct existingCartItem = cartItems.FirstOrDefault(item => item.ProductId == cartProduct.ProductId);
-            if (existingCartItem != null)
+            try
             {
-                existingCartItem.Quantity += cartProduct.Quantity;
-            }
-            else
-            {
-                cartItems.Add(cartProduct);
-            }
+                List<CartProduct> cartItems = HttpContext.Request.Cookies.ContainsKey("CartItems")
+                    ? JsonConvert.DeserializeObject<List<CartProduct>>(HttpContext.Request.Cookies["CartItems"])
+                    : new List<CartProduct>();
 
-            HttpContext.Response.Cookies.Append("CartItems", JsonConvert.SerializeObject(cartItems));
 
-            if (User.Identity.IsAuthenticated)
-            {
-                var userIdClaim = User.FindFirst("id");
-                if (userIdClaim != null)
+                if (User.Identity.IsAuthenticated)
                 {
-                    if (int.TryParse(userIdClaim.Value, out int userId))
+                    var userIdClaim = User.FindFirst("id");
+                    if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
                     {
-                        CartManager = new CartManager(new CartRepository());
-                        CartManager.AddProductToCart(userId, cartProduct.ProductId, cartProduct.Quantity);
+                        try
+                        {
+                            _cartManager.AddProductToCart(userId, cartProduct.ProductId, cartProduct.Quantity);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Exception occurred in UpdateCart: {ex.Message}");
+                            TempData["MessageError"] = "Failed to update cart. Please try again later.";
+                            return new BadRequestResult();
+                        }
                     }
                 }
+
+                CartProduct existingCartItem = cartItems.FirstOrDefault(item => item.ProductId == cartProduct.ProductId);
+                if (existingCartItem != null)
+                {
+                    existingCartItem.Quantity += cartProduct.Quantity;
+                }
+                else
+                {
+                    cartItems.Add(cartProduct);
+                }
+
+                HttpContext.Response.Cookies.Append("CartItems", JsonConvert.SerializeObject(cartItems));
+
+                return new OkResult();
             }
-        } 
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred in UpdateCart: {ex.Message}");
+                TempData["MessageError"] = "Failed to update cart. Please try again later.";
+                return new BadRequestResult();
+            }
+        }
     }
 }

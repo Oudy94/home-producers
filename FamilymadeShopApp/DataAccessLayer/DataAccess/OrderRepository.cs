@@ -20,7 +20,7 @@ namespace DataAccessLayer.DataAccess
             {
                 OpenConnection();
 
-                string query = "INSERT INTO [order] (customer_id, status, date, shipping_price, shipping_address, payment_method) VALUES (@CustomerId, @Status, @Date, @ShippingPrice, @ShippingAddress, @PaymentMethod); SELECT SCOPE_IDENTITY();";
+                string query = "INSERT INTO [order] (customer_id, status, date, shipping_price, shipping_address, payment_method, transaction_fee) VALUES (@CustomerId, @Status, @Date, @ShippingPrice, @ShippingAddress, @PaymentMethod, @TransactionFee); SELECT SCOPE_IDENTITY();";
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
@@ -30,6 +30,7 @@ namespace DataAccessLayer.DataAccess
                     cmd.Parameters.AddWithValue("@ShippingPrice", order.ShippingPrice);
                     cmd.Parameters.AddWithValue("@ShippingAddress", order.ShippingAddress.ToString());
                     cmd.Parameters.AddWithValue("@PaymentMethod", order.PaymentMethod);
+                    cmd.Parameters.AddWithValue("@TransactionFee", order.TransactionFee);
 
                     int orderId = Convert.ToInt32(cmd.ExecuteScalar());
 

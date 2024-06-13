@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.ComponentModel.DataAnnotations;
 using DataAccessLayer.DataAccess;
+using System.Diagnostics;
 
 namespace DesktopApp.PanelControls.UserManagerControls
 {
@@ -72,11 +73,12 @@ namespace DesktopApp.PanelControls.UserManagerControls
 				MessageBox.Show("Admin added successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				OpenUserManager(this, true);
 			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-			}
-		}
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                MessageBox.Show($"Error add admin data. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
 
 		private void chbShowPassword_CheckedChanged(object sender, EventArgs e)
