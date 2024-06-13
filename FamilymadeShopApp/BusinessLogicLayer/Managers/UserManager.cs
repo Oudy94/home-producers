@@ -8,6 +8,8 @@ using DataAccessLayer.DataAccess;
 using BusinessLogicLayer.Interfaces;
 using ModelLayer.Models;
 using DataAccessLayer.Interfaces;
+using SharedLayer.Exceptions;
+using Microsoft.AspNetCore.Http;
 
 namespace BusinessLogicLayer.Managers
 {
@@ -167,5 +169,29 @@ namespace BusinessLogicLayer.Managers
 				throw new Exception(ex.Message);
 			}
 		}
-	}
+
+		public async Task AddPersonalPictureAsync(int userId, IFormFile personalPic)
+		{
+			try
+			{
+                await _userRepository.AddPersonalPictureAsyncDAL(userId, personalPic);
+            }
+			catch (Exception ex)
+			{
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<byte []> GetPersonalPictureAsync(int userId)
+        {
+            try
+            {
+                return await _userRepository.GetPersonalPictureAsyncDAL(userId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+    }
 }

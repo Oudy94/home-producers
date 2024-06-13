@@ -1,4 +1,5 @@
-﻿using ModelLayer.Models;
+﻿using Microsoft.AspNetCore.Http;
+using ModelLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +22,7 @@ namespace BusinessLogicLayer.Interfaces
         Task<bool> UpdateAdminsAsync(List<Admin> admins);
         Task<bool> UpdateCustomersAsync(List<Customer> customers);
         Task RemoveUserByIdAsync(int id);
+        Task AddPersonalPictureAsync(int userId, IFormFile personalPic);
+        Task<byte []> GetPersonalPictureAsync(int userId);
     }
 }
