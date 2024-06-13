@@ -158,7 +158,7 @@ namespace DesktopApp.PanelControls
 				int totalCount = await _orderManager.GetOrdersCountAsync(txtFilterSearch.Text, statusSelected);
 				_maxPageNumber = (int)Math.Ceiling((double)totalCount / s_OrdersPageSize);
 
-				orders = await _orderManager.GetOrderDataAsync(_pageNumber, s_OrdersPageSize, txtFilterSearch.Text, statusSelected);
+				orders = await _orderManager.GetOrdersAsync(_pageNumber, s_OrdersPageSize, txtFilterSearch.Text, statusSelected);
 			}
 			catch (Exception ex)
 			{

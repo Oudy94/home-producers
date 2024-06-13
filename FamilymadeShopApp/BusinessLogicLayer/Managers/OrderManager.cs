@@ -56,11 +56,11 @@ namespace BusinessLogicLayer.Managers
 			}
 		}
 
-		public async Task<List<Order>> GetOrderDataAsync(int pageNumber, int pageSize, string filterName, OrderStatus? filterStatus)
+		public async Task<List<Order>> GetOrdersAsync(int pageNumber, int pageSize, string filterName, OrderStatus? filterStatus)
 		{
 			try
 			{
-				return await _orderRepository.GetOrderDataAsyncDAL(pageNumber, pageSize, filterName, filterStatus);
+				return await _orderRepository.GetOrdersAsyncDAL(pageNumber, pageSize, filterName, filterStatus);
 			}
 			catch (Exception ex)
 			{

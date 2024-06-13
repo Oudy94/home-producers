@@ -1,6 +1,5 @@
 ﻿using DataAccessLayer.Interfaces;
 using ModelLayer.Models;
-using SharedLayer.Structs;
 using System;
 using System.Collections.Generic;
 using System.Data;

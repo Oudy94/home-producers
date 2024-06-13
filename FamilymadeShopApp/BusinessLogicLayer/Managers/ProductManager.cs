@@ -92,5 +92,16 @@ namespace BusinessLogicLayer.Managers
             }
         }
 
+        public async Task RemoveProductByIdAsync(int id)
+        {
+            try
+            {
+                await _productRepository.RemoveProductByIdAsyncDAL(id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

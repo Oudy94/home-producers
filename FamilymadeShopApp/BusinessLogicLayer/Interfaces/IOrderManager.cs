@@ -13,7 +13,7 @@ namespace BusinessLogicLayer.Interfaces
         void AddOrder(Order order);
         List<Order> GetOrdersByUserId(int id);
         Task<int> GetOrdersCountAsync(string filterName, OrderStatus? filterStatus);
-        Task<List<Order>> GetOrderDataAsync(int pageNumber, int pageSize, string filterName, OrderStatus? filterStatus);
+        Task<List<Order>> GetOrdersAsync(int pageNumber, int pageSize, string filterName, OrderStatus? filterStatus);
         Task<bool> UpdateOrdersAsync(List<Order> orders);
         Task<Order> GetOrderByIdAsync(int orderId);
     }

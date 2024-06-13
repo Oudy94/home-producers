@@ -3,7 +3,6 @@ using DataAccessLayer.DataAccess;
 using DataAccessLayer.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using ModelLayer.Models;
-using SharedLayer.Structs;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

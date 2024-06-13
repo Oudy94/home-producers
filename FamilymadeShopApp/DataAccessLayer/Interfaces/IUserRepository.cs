@@ -20,5 +20,6 @@ namespace DataAccessLayer.Interfaces
         Admin GetAdminByCredentialsDAL(string email, string password);
         Task<bool> UpdateAdminsAsyncDAL(List<Admin> admins);
         Task<bool> UpdateCustomersAsyncDAL(List<Customer> customers);
+        Task RemoveUserByIdAsyncDAL(int id);
     }
 }
