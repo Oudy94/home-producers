@@ -17,10 +17,11 @@ namespace ModelLayer.Models
         public DateTime Date { get; set; }
         public List<OrderProduct> Products { get; set; }
         public decimal ShippingPrice { get; set; }
-        public string ShippingAddress { get; set; }
+        public Address ShippingAddress { get; set; }
 		public string PaymentMethod { get; set; }
+		public decimal TransactionFee { get; set; }
 
-		public Order(int id, int customerId, OrderStatus status, DateTime date, List<OrderProduct> products, decimal shippingPrice, string shippingAddress, string paymentMethod)
+		public Order(int id, int customerId, OrderStatus status, DateTime date, List<OrderProduct> products, decimal shippingPrice, Address shippingAddress, string paymentMethod, decimal transactionFee)
 		{
 			Id = id;
 			CustomerId = customerId;
@@ -30,9 +31,10 @@ namespace ModelLayer.Models
 			ShippingPrice = shippingPrice;
 			ShippingAddress = shippingAddress;
 			PaymentMethod = paymentMethod;
-		}
+			TransactionFee = transactionFee;
+        }
 
-		public Order(int customerId, OrderStatus status, DateTime date, List<OrderProduct> products, decimal shippingPrice, string shippingAddress, string paymentMethod)
+		public Order(int customerId, OrderStatus status, DateTime date, List<OrderProduct> products, decimal shippingPrice, Address shippingAddress, string paymentMethod, decimal transactionFee)
         {
 			CustomerId = customerId;
 			Status = status;
@@ -41,7 +43,8 @@ namespace ModelLayer.Models
 			ShippingPrice = shippingPrice;
 			ShippingAddress = shippingAddress;
             PaymentMethod = paymentMethod;
-		}
+            TransactionFee = transactionFee;
+        }
 
 		public Order()
 		{

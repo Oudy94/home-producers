@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Interfaces;
+using ModelLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,19 @@ namespace BusinessLogicLayer.Managers
             _paymentStrategy = paymentStrategy;
         }
 
-        public bool ProcessPayment(decimal totalAmount)
+        public void SetPaymentStrategy(IPaymentStrategy paymentStrategy)
+        {
+            _paymentStrategy = paymentStrategy;
+        }
+
+        public PaymentResult ProcessPayment(decimal totalAmount)
         {
             return _paymentStrategy.ProcessPayment(totalAmount);
+        }
+
+        public decimal GetTransactionFee(decimal totalAmount)
+        {
+            return _paymentStrategy.GetTransactionFees(totalAmount);
         }
     }                          
 }

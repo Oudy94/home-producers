@@ -16,5 +16,6 @@ namespace BusinessLogicLayer.Interfaces
         Task<int> GetProductsCountAsync(string filterName, Category? filterCategory);
         Task<bool> UpdateProductsAsync(List<Product> products);
         Task<List<string>> GetProductsNamesAsync();
+        Task RemoveProductByIdAsync(int id);
     }
 }

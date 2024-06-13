@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -64,6 +65,7 @@ namespace DesktopApp.PanelControls
 			dgvOrders.Columns.Add("ShippingPrice", "Shipping Price");
 			dgvOrders.Columns.Add("ShippingAddress", "Shipping Address");
 			dgvOrders.Columns.Add("PaymentMethod", "Payment Method");
+			dgvOrders.Columns.Add("TransactionFee", "Transaction Fee");
 			DataGridViewButtonColumn buttonColumn = new DataGridViewButtonColumn
 			{
 				Name = "ViewProducts",
@@ -83,7 +85,7 @@ namespace DesktopApp.PanelControls
 
 			foreach (Order order in orders)
 			{
-				dgvOrders.Rows.Add(order.Id, order.CustomerId, _statusValues[(int)order.Status], order.Date, order.ShippingPrice, order.ShippingAddress, order.PaymentMethod);
+				dgvOrders.Rows.Add(order.Id, order.CustomerId, _statusValues[(int)order.Status], order.Date, order.ShippingPrice, order.ShippingAddress.ToString(), order.PaymentMethod, order.TransactionFee);
 			}
 		}
 
@@ -365,14 +367,30 @@ namespace DesktopApp.PanelControls
 						return false;
 					}
 
-					string shippingAddress = row.Cells["ShippingAddress"].Value?.ToString();
-					if (string.IsNullOrWhiteSpace(shippingAddress))
+					string shippingAddressString = row.Cells["ShippingAddress"].Value?.ToString();
+                    Address shippingAddress = new Address();
+
+                    if (string.IsNullOrWhiteSpace(shippingAddressString))
 					{
 						return false;
 					}
 
+                    try
+                    {
+                        shippingAddress = Address.Parse(shippingAddressString);
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+
                     string paymentMethod = row.Cells["PaymentMethod"].Value?.ToString();
-                    if (string.IsNullOrWhiteSpace(shippingAddress))
+                    if (string.IsNullOrWhiteSpace(paymentMethod))
+                    {
+                        return false;
+                    }
+
+                    if (!decimal.TryParse(row.Cells["TransactionFee"].Value?.ToString(), out decimal transactionFee))
                     {
                         return false;
                     }
@@ -384,7 +402,8 @@ namespace DesktopApp.PanelControls
 						Status = status,
 						ShippingPrice = shippingPrice,
 						ShippingAddress = shippingAddress,
-                        PaymentMethod = paymentMethod
+                        PaymentMethod = paymentMethod,
+                        TransactionFee = transactionFee
                     };
 
 					orders.Add(order);
