@@ -28,7 +28,7 @@ namespace DataAccessLayer.DataAccess
                     cmd.Parameters.AddWithValue("@Status", (int)order.Status);
                     cmd.Parameters.AddWithValue("@Date", order.Date);
                     cmd.Parameters.AddWithValue("@ShippingPrice", order.ShippingPrice);
-                    cmd.Parameters.AddWithValue("@ShippingAddress", order.ShippingAddress);
+                    cmd.Parameters.AddWithValue("@ShippingAddress", order.ShippingAddress.ToString());
                     cmd.Parameters.AddWithValue("@PaymentMethod", order.PaymentMethod);
 
                     int orderId = Convert.ToInt32(cmd.ExecuteScalar());
@@ -66,7 +66,7 @@ namespace DataAccessLayer.DataAccess
             {
                 OpenConnection();
 
-                string query = "SELECT o.id, o.Status, o.date, o.shipping_price, o.shipping_address, o.payment_method, op.product_id , op.quantity, op.product_price, p.name " +
+                string query = "SELECT o.id, o.Status, o.date, o.shipping_price, o.shipping_address, o.payment_method, o.transaction_fee, op.product_id, op.quantity, op.product_price, p.name " +
                                "FROM [Order] o " +
                                "INNER JOIN order_product op ON o.id = op.order_id " +
                                "INNER JOIN Product p ON op.product_id = p.id " +
@@ -92,8 +92,9 @@ namespace DataAccessLayer.DataAccess
                                     reader.GetDateTime(reader.GetOrdinal("date")),
                                     new List<OrderProduct>(),
                                     reader.GetDecimal(reader.GetOrdinal("shipping_price")),
-                                    reader.GetString(reader.GetOrdinal("shipping_address")),
-                                    reader.GetString(reader.GetOrdinal("payment_method"))
+                                    Address.Parse(reader.GetString(reader.GetOrdinal("shipping_address"))),
+                                    reader.GetString(reader.GetOrdinal("payment_method")),
+                                    reader.GetDecimal(reader.GetOrdinal("transaction_fee"))
 								);
 
                                 orders.Add(order);
@@ -167,7 +168,7 @@ namespace DataAccessLayer.DataAccess
 			}
 		}
 
-		public async Task<List<Order>> GetOrderDataAsyncDAL(int pageNumber, int pageSize, string filterName, OrderStatus? filterStatus)
+		public async Task<List<Order>> GetOrdersAsyncDAL(int pageNumber, int pageSize, string filterName, OrderStatus? filterStatus)
 		{
 			try
 			{
@@ -175,7 +176,7 @@ namespace DataAccessLayer.DataAccess
 
 				List<Order> orders = new List<Order>();
 				int offset = (pageNumber - 1) * pageSize;
-				string query = "SELECT id, customer_id, status, date, shipping_price, shipping_address, payment_method FROM [order] WHERE 1=1";
+				string query = "SELECT id, customer_id, status, date, shipping_price, shipping_address, payment_method, transaction_fee FROM [order] WHERE 1=1";
 
 				if (!string.IsNullOrWhiteSpace(filterName))
 				{
@@ -216,8 +217,9 @@ namespace DataAccessLayer.DataAccess
 								reader.GetDateTime(reader.GetOrdinal("date")),
 								new List<OrderProduct>(),
 								reader.GetDecimal(reader.GetOrdinal("shipping_price")),
-								reader.GetString(reader.GetOrdinal("shipping_address")),
-								reader.GetString(reader.GetOrdinal("payment_method"))
+                                Address.Parse(reader.GetString(reader.GetOrdinal("shipping_address"))),
+								reader.GetString(reader.GetOrdinal("payment_method")),
+								reader.GetDecimal(reader.GetOrdinal("transaction_fee"))
 							);
 							orders.Add(order);
 						}
@@ -260,7 +262,7 @@ namespace DataAccessLayer.DataAccess
 						command.Parameters.AddWithValue("@CustomerId", order.CustomerId);
 						command.Parameters.AddWithValue("@Status", (int)order.Status);
 						command.Parameters.AddWithValue("@ShippingPrice", order.ShippingPrice);
-						command.Parameters.AddWithValue("@ShippingAddress", order.ShippingAddress);
+						command.Parameters.AddWithValue("@ShippingAddress", order.ShippingAddress.ToString());
 						command.Parameters.AddWithValue("@Id", order.Id);
 
 						await command.ExecuteNonQueryAsync();
@@ -290,7 +292,7 @@ namespace DataAccessLayer.DataAccess
             {
                 OpenConnection();
 
-                string query = "SELECT o.id, o.customer_id, o.Status, o.date, o.shipping_price, o.shipping_address, o.payment_method, " +
+                string query = "SELECT o.id, o.customer_id, o.Status, o.date, o.shipping_price, o.shipping_address, o.payment_method, o.transaction_fee, " +
                                "op.product_id, op.quantity, op.product_price, p.name " +
                                "FROM [Order] o " +
                                "INNER JOIN order_product op ON o.id = op.order_id " +
@@ -315,8 +317,9 @@ namespace DataAccessLayer.DataAccess
                                     reader.GetDateTime(reader.GetOrdinal("date")),
                                     new List<OrderProduct>(),
                                     reader.GetDecimal(reader.GetOrdinal("shipping_price")),
-                                    reader.GetString(reader.GetOrdinal("shipping_address")),
-                                    reader.GetString(reader.GetOrdinal("payment_method"))
+                                    Address.Parse(reader.GetString(reader.GetOrdinal("shipping_address"))),
+                                    reader.GetString(reader.GetOrdinal("payment_method")),
+                                    reader.GetDecimal(reader.GetOrdinal("transaction_fee"))
                                 );
                             }
 

@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Interfaces;
+using ModelLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,36 @@ namespace BusinessLogicLayer.Managers.Payment
 {
     public class CreditCardPaymentStrategy : IPaymentStrategy
     {
-        public bool ProcessPayment(decimal amount)
+        public PaymentResult ProcessPayment(decimal amount)
         {
-            return true;
+            if (amount <= 0)
+            {
+                return new PaymentResult
+                {
+                    Success = false,
+                    Message = "Invalid amount."
+                };
+            }
+
+            if (false) //imitate Insufficient amount
+            {
+                return new PaymentResult
+                {
+                    Success = false,
+                    Message = "Insufficient amount in the Mastercard."
+                };
+            }
+
+            return new PaymentResult
+            {
+                Success = true,
+                Message = $"Mastercard payment of ${amount} processed successfully."
+            };
+        }
+
+        public decimal GetTransactionFees(decimal amount)
+        {
+            return amount * 0.02m; ;
         }
     }
 }

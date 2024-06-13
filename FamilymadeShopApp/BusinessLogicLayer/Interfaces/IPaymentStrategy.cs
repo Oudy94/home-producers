@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModelLayer.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace BusinessLogicLayer.Interfaces
 {
     public interface IPaymentStrategy
     {
-        bool ProcessPayment(decimal amount);
+        PaymentResult ProcessPayment(decimal amount);
+        decimal GetTransactionFees(decimal amount);
     }
 }
