@@ -20,5 +20,6 @@ namespace BusinessLogicLayer.Interfaces
         Task<int> GetCustomerCountAsync(string filterName);
         Task<bool> UpdateAdminsAsync(List<Admin> admins);
         Task<bool> UpdateCustomersAsync(List<Customer> customers);
+        Task RemoveUserByIdAsync(int id);
     }
 }

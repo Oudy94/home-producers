@@ -281,5 +281,34 @@ namespace DataAccessLayer.DataAccess
                 CloseConnection();
             }
         }
+
+        public async Task RemoveProductByIdAsyncDAL(int id)
+        {
+            try
+            {
+                OpenConnection();
+
+                string query = "DELETE FROM [product] WHERE Id = @Id";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                    if (rowsAffected <= 0)
+                    {
+                        throw new Exception("No product found with the specified ID.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error removing product", ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
     }
 }

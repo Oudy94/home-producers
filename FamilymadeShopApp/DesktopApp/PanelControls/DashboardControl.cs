@@ -1,7 +1,6 @@
 ﻿using BusinessLogicLayer.Managers;
 using DataAccessLayer.DataAccess;
 using ModelLayer.Models;
-using SharedLayer.Structs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -61,6 +60,27 @@ namespace DesktopApp.PanelControls
             crtTopProducts.DataBind();
 
             dgvUnderstockProducts.AutoGenerateColumns = false;
+
+            DataGridViewTextBoxColumn idColumn = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn nameColumn = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn stockColumn = new DataGridViewTextBoxColumn();
+
+            idColumn.HeaderText = "Id";
+            nameColumn.HeaderText = "Name";
+            stockColumn.HeaderText = "Stock";
+
+            idColumn.DataPropertyName = "Id";
+            nameColumn.DataPropertyName = "Name";
+            stockColumn.DataPropertyName = "Stock";
+
+            idColumn.FillWeight = 1; // Weight of 1 (less important)
+            nameColumn.FillWeight = 4; // Weight of 4 (more important)
+            stockColumn.FillWeight = 2; // Weight of 2 (somewhat important)
+
+            dgvUnderstockProducts.Columns.Add(idColumn);
+            dgvUnderstockProducts.Columns.Add(nameColumn);
+            dgvUnderstockProducts.Columns.Add(stockColumn);
+
             dgvUnderstockProducts.DataSource = understockProducts;
         }
 

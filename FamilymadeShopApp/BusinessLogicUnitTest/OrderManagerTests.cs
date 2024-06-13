@@ -74,10 +74,10 @@ namespace BusinessLogicUnitTest
             OrderStatus? filterStatus = OrderStatus.Pending;
 
             // Act
-            await _orderManager.GetOrderDataAsync(pageNumber, pageSize, filterName, filterStatus);
+            await _orderManager.GetOrdersAsync(pageNumber, pageSize, filterName, filterStatus);
 
             // Assert
-            _mockOrderRepository.Verify(x => x.GetOrderDataAsyncDAL(pageNumber, pageSize, filterName, filterStatus), Times.Once);
+            _mockOrderRepository.Verify(x => x.GetOrdersAsyncDAL(pageNumber, pageSize, filterName, filterStatus), Times.Once);
         }
 
         [TestMethod]
@@ -146,10 +146,10 @@ namespace BusinessLogicUnitTest
             string filterName = "saoud";
             OrderStatus? filterStatus = OrderStatus.Pending;
             var expectedOrders = new List<Order> { new Order(), new Order() };
-            _mockOrderRepository.Setup(x => x.GetOrderDataAsyncDAL(pageNumber, pageSize, filterName, filterStatus)).ReturnsAsync(expectedOrders);
+            _mockOrderRepository.Setup(x => x.GetOrdersAsyncDAL(pageNumber, pageSize, filterName, filterStatus)).ReturnsAsync(expectedOrders);
 
             // Act
-            var result = await _orderManager.GetOrderDataAsync(pageNumber, pageSize, filterName, filterStatus);
+            var result = await _orderManager.GetOrdersAsync(pageNumber, pageSize, filterName, filterStatus);
 
             // Assert
             CollectionAssert.AreEqual(expectedOrders, result);

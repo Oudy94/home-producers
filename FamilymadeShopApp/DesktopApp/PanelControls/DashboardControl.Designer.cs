@@ -28,14 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title3 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title4 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
             btnThisMonth = new Button();
             btnLastMonth = new Button();
             btnToday = new Button();
@@ -59,16 +59,16 @@
             dtpStartDate = new DateTimePicker();
             btnCustom = new Button();
             panel5 = new Panel();
+            panel3 = new Panel();
+            label2 = new Label();
             dgvUnderstockProducts = new DataGridView();
-            Id = new DataGridViewTextBoxColumn();
-            Name = new DataGridViewTextBoxColumn();
-            Stock = new DataGridViewTextBoxColumn();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)crtGrossRevenue).BeginInit();
             ((System.ComponentModel.ISupportInitialize)crtTopProducts).BeginInit();
             panel4.SuspendLayout();
             panel5.SuspendLayout();
+            panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvUnderstockProducts).BeginInit();
             SuspendLayout();
             // 
@@ -180,57 +180,57 @@
             // crtGrossRevenue
             // 
             crtGrossRevenue.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            chartArea3.AxisY.LabelStyle.Format = "€{0}";
-            chartArea3.Name = "ChartArea1";
-            crtGrossRevenue.ChartAreas.Add(chartArea3);
-            legend3.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Top;
-            legend3.Name = "Legend1";
-            crtGrossRevenue.Legends.Add(legend3);
+            chartArea1.AxisY.LabelStyle.Format = "€{0}";
+            chartArea1.Name = "ChartArea1";
+            crtGrossRevenue.ChartAreas.Add(chartArea1);
+            legend1.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Top;
+            legend1.Name = "Legend1";
+            crtGrossRevenue.Legends.Add(legend1);
             crtGrossRevenue.Location = new Point(6, 84);
             crtGrossRevenue.Name = "crtGrossRevenue";
-            series3.BorderWidth = 4;
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.SplineArea;
-            series3.Legend = "Legend1";
-            series3.MarkerSize = 10;
-            series3.Name = "Series1";
-            series3.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Date;
-            crtGrossRevenue.Series.Add(series3);
+            series1.BorderWidth = 4;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.SplineArea;
+            series1.Legend = "Legend1";
+            series1.MarkerSize = 10;
+            series1.Name = "Series1";
+            series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Date;
+            crtGrossRevenue.Series.Add(series1);
             crtGrossRevenue.Size = new Size(557, 224);
             crtGrossRevenue.TabIndex = 54;
             crtGrossRevenue.Text = "chart1";
-            title3.Alignment = ContentAlignment.TopLeft;
-            title3.Font = new Font("Microsoft Sans Serif", 15F);
-            title3.Name = "Title1";
-            title3.Text = "Gross Revenue";
-            crtGrossRevenue.Titles.Add(title3);
+            title1.Alignment = ContentAlignment.TopLeft;
+            title1.Font = new Font("Microsoft Sans Serif", 15F);
+            title1.Name = "Title1";
+            title1.Text = "Gross Revenue";
+            crtGrossRevenue.Titles.Add(title1);
             // 
             // crtTopProducts
             // 
             crtTopProducts.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            chartArea4.Name = "ChartArea1";
-            crtTopProducts.ChartAreas.Add(chartArea4);
-            legend4.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Bottom;
-            legend4.Name = "Legend1";
-            crtTopProducts.Legends.Add(legend4);
+            chartArea2.Name = "ChartArea1";
+            crtTopProducts.ChartAreas.Add(chartArea2);
+            legend2.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Bottom;
+            legend2.Name = "Legend1";
+            crtTopProducts.Legends.Add(legend2);
             crtTopProducts.Location = new Point(569, 84);
             crtTopProducts.Name = "crtTopProducts";
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Doughnut;
-            series4.Font = new Font("Microsoft Sans Serif", 12F);
-            series4.IsValueShownAsLabel = true;
-            series4.LabelForeColor = Color.White;
-            series4.Legend = "Legend1";
-            series4.Name = "Series1";
-            crtTopProducts.Series.Add(series4);
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Doughnut;
+            series2.Font = new Font("Microsoft Sans Serif", 12F);
+            series2.IsValueShownAsLabel = true;
+            series2.LabelForeColor = Color.White;
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            crtTopProducts.Series.Add(series2);
             crtTopProducts.Size = new Size(231, 371);
             crtTopProducts.TabIndex = 55;
             crtTopProducts.Text = "chart2";
-            title4.Alignment = ContentAlignment.TopLeft;
-            title4.Font = new Font("Microsoft Sans Serif", 15F);
-            title4.Name = "Title1";
-            title4.Text = "Top Products";
-            crtTopProducts.Titles.Add(title4);
+            title2.Alignment = ContentAlignment.TopLeft;
+            title2.Font = new Font("Microsoft Sans Serif", 15F);
+            title2.Name = "Title1";
+            title2.Text = "Top Products";
+            crtTopProducts.Titles.Add(title2);
             // 
             // panel4
             // 
@@ -363,7 +363,6 @@
             // 
             // panel5
             // 
-            panel5.Controls.Add(dgvUnderstockProducts);
             panel5.Controls.Add(dtpStartDate);
             panel5.Controls.Add(btnCustom);
             panel5.Controls.Add(dtpEndDate);
@@ -372,43 +371,43 @@
             panel5.Controls.Add(btnThisMonth);
             panel5.Controls.Add(btnThisWeek);
             panel5.Controls.Add(btnToday);
+            panel5.Controls.Add(panel3);
             panel5.Dock = DockStyle.Fill;
             panel5.Location = new Point(0, 0);
             panel5.Name = "panel5";
             panel5.Size = new Size(812, 467);
             panel5.TabIndex = 61;
             // 
+            // panel3
+            // 
+            panel3.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panel3.BackColor = Color.White;
+            panel3.Controls.Add(label2);
+            panel3.Controls.Add(dgvUnderstockProducts);
+            panel3.Location = new Point(164, 314);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(399, 141);
+            panel3.TabIndex = 54;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label2.Location = new Point(6, -3);
+            label2.Name = "label2";
+            label2.Size = new Size(158, 21);
+            label2.TabIndex = 62;
+            label2.Text = "Low Stock Products";
+            // 
             // dgvUnderstockProducts
             // 
             dgvUnderstockProducts.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvUnderstockProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvUnderstockProducts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvUnderstockProducts.Columns.AddRange(new DataGridViewColumn[] { Id, Name, Stock });
-            dgvUnderstockProducts.Location = new Point(164, 314);
+            dgvUnderstockProducts.Location = new Point(6, 21);
             dgvUnderstockProducts.Name = "dgvUnderstockProducts";
-            dgvUnderstockProducts.Size = new Size(399, 141);
+            dgvUnderstockProducts.Size = new Size(390, 117);
             dgvUnderstockProducts.TabIndex = 61;
-            // 
-            // Id
-            // 
-            Id.DataPropertyName = "Id";
-            Id.FillWeight = 20F;
-            Id.HeaderText = "Id";
-            Id.Name = "Id";
-            // 
-            // Name
-            // 
-            Name.DataPropertyName = "Name";
-            Name.FillWeight = 65F;
-            Name.HeaderText = "Name";
-            Name.Name = "Name";
-            // 
-            // Stock
-            // 
-            Stock.DataPropertyName = "Stock";
-            Stock.FillWeight = 15F;
-            Stock.HeaderText = "Stock";
-            Stock.Name = "Stock";
             // 
             // DashboardControl
             // 
@@ -419,6 +418,7 @@
             Controls.Add(panel2);
             Controls.Add(panel1);
             Controls.Add(panel5);
+            Name = "DashboardControl";
             Size = new Size(812, 467);
             Load += HomeControl_Load;
             panel1.ResumeLayout(false);
@@ -430,6 +430,8 @@
             panel4.ResumeLayout(false);
             panel4.PerformLayout();
             panel5.ResumeLayout(false);
+            panel3.ResumeLayout(false);
+            panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvUnderstockProducts).EndInit();
             ResumeLayout(false);
         }
@@ -459,9 +461,8 @@
         private DateTimePicker dtpStartDate;
         private Button btnCustom;
         private Panel panel5;
+        private Panel panel3;
+        private Label label2;
         private DataGridView dgvUnderstockProducts;
-        private DataGridViewTextBoxColumn Id;
-        private DataGridViewTextBoxColumn Name;
-        private DataGridViewTextBoxColumn Stock;
     }
 }

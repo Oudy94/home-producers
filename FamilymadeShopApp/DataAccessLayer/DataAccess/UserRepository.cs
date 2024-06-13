@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace DataAccessLayer.DataAccess
 {
@@ -21,14 +22,13 @@ namespace DataAccessLayer.DataAccess
             {
                 OpenConnection();
 
-                string query = "INSERT INTO [user] (name, email, password, registration_date, shipping_address, role) VALUES (@Name, @Email, @Password, @RegistrationDate, @ShippingAddress, @Role)";
+                string query = "INSERT INTO [user] (name, email, password, registration_date, role) VALUES (@Name, @Email, @Password, @RegistrationDate, @Role)";
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
                     cmd.Parameters.AddWithValue("@Name", user.Name);
                     cmd.Parameters.AddWithValue("@Email", user.Email);
                     cmd.Parameters.AddWithValue("@Password", user.Password);
                     cmd.Parameters.AddWithValue("@RegistrationDate", user.RegistrationDate.ToUniversalTime());
-                    cmd.Parameters.AddWithValue("@ShippingAddress", user.ShippingAddress);
                     cmd.Parameters.AddWithValue("@Role", DBNull.Value);
                     cmd.ExecuteNonQuery();
                 }
@@ -92,8 +92,8 @@ namespace DataAccessLayer.DataAccess
                                 Id = id,
                                 Name = reader.GetString(reader.GetOrdinal("name")),
                                 Email = reader.GetString(reader.GetOrdinal("email")),
-                                RegistrationDate = reader.GetDateTime(reader.GetOrdinal("registration_date")),
-                            };
+                                RegistrationDate = reader.GetDateTime(reader.GetOrdinal("registration_date"))
+							};
                         }
                     }
                 }
@@ -119,7 +119,7 @@ namespace DataAccessLayer.DataAccess
 				List<Customer> customers = new List<Customer>();
 				int offset = (pageNumber - 1) * pageSize;
 
-				string query = "SELECT id, name, email, registration_date, shipping_address, role FROM [user] WHERE role IS NULL";
+				string query = "SELECT id, name, email, registration_date, role FROM [user] WHERE role IS NULL";
 
 				if (!string.IsNullOrEmpty(filterName))
 				{
@@ -146,8 +146,7 @@ namespace DataAccessLayer.DataAccess
 								Id = reader.GetInt32(reader.GetOrdinal("id")),
 								Name = reader.GetString(reader.GetOrdinal("name")),
 								Email = reader.GetString(reader.GetOrdinal("email")),
-								RegistrationDate = reader.GetDateTime(reader.GetOrdinal("registration_date")),
-								ShippingAddress = reader.GetString(reader.GetOrdinal("shipping_address")),
+								RegistrationDate = reader.GetDateTime(reader.GetOrdinal("registration_date"))
 							};
 							customers.Add(customer);
 						}
@@ -435,13 +434,12 @@ namespace DataAccessLayer.DataAccess
 
 				foreach (Customer customer in customers)
 				{
-					string updateQuery = "UPDATE [user] SET name = @Name, email = @Email, shipping_address = @ShippingAddress WHERE id = @Id";
+					string updateQuery = "UPDATE [user] SET name = @Name, email = @Email  WHERE id = @Id";
 
 					using (SqlCommand command = new SqlCommand(updateQuery, connection, transaction))
 					{
 						command.Parameters.AddWithValue("@Name", customer.Name);
 						command.Parameters.AddWithValue("@Email", customer.Email);
-						command.Parameters.AddWithValue("@ShippingAddress", customer.ShippingAddress);
 						command.Parameters.AddWithValue("@Id", customer.Id);
 
 						await command.ExecuteNonQueryAsync();
@@ -462,5 +460,34 @@ namespace DataAccessLayer.DataAccess
                 CloseConnection();
             }
 		}
-	}
+
+        public async Task RemoveUserByIdAsyncDAL(int id)
+        {
+            try
+            {
+                OpenConnection();
+
+                string query = "DELETE FROM [user] WHERE Id = @Id";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                    if (rowsAffected <= 0)
+                    {
+                        throw new Exception("No user found with the specified ID.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error removing user", ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+    }
 }

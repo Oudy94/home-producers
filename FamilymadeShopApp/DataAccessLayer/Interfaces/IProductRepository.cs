@@ -16,5 +16,6 @@ namespace DataAccessLayer.Interfaces
         Task<List<Product>> GetAllProductsAsyncDAL(int pageNumber, int pageSize, string filterName, Category? filterCategory);
         Task<List<string>> GetProductsNamesAsyncDAL();
         Task<bool> UpdateProductsAsyncDAL(List<Product> products);
+        Task RemoveProductByIdAsyncDAL(int id);
     }
 }
