@@ -26,9 +26,13 @@ namespace BusinessLogicLayer.Managers
 			{
 				_userRepository.AddCustomerDAL(user);
 			}
-			catch (Exception ex)
+            catch (ExistingEmailException ex)
+            {
+                throw new ExistingEmailException(ex.Message, ex);
+            }
+            catch (Exception ex)
 			{
-				throw new Exception(ex.Message);
+				throw new Exception(ex.Message, ex);
 			}
 		}
 

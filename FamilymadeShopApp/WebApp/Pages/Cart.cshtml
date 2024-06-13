@@ -2,6 +2,13 @@
 @model WebApp.Pages.CartModel
 @{
     @Html.AntiForgeryToken();
+
+    bool isAuthenticated = User.Identity.IsAuthenticated;
+    bool isVIP = false;
+
+    decimal shippingCost = isVIP ? 0 : 10;
+    decimal productsTotal = Model.CartItems.Sum(cartItem => cartItem.Price * cartItem.Quantity);
+    decimal initialTotalPrice = productsTotal + shippingCost;
 }
 
 <section class="h-100 gradient-custom">
@@ -66,56 +73,21 @@
                         <h5 class="mb-0">Summary</h5>
                     </div>
                     <div class="card-body cart-summary">
-                        <ul class="list-group list-group-flush">
+                        <ul class="list-group list-group-flush summary">
                             <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                                 Products
-                                <span>
-                                    €@(Model.CartItems.Sum(cartItem => cartItem.Price * cartItem.Quantity))
-                                </span>
+                                <span>€@productsTotal</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                 Shipping
-                                @if (User.Identity.IsAuthenticated)
-                                {
-                                    bool isVIP = false;
-
-                                    if (isVIP)
-                                    {
-                                        <span>Free</span>
-                                    }
-                                    else
-                                    {
-                                        <span>€10,00</span>
-                                    }
-                                }
-                                else
-                                {
-                                    <span>€10,00</span>
-                                }
+                                <span>@(isVIP ? "Free" : $"€{shippingCost:0.00}")</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
                                 <div>
                                     <strong>Total amount</strong>
                                 </div>
                                 <span>
-                                    @if (User.Identity.IsAuthenticated)
-                                    {
-                                        bool isVIP = false;
-
-                                        if (isVIP)
-                                        {
-                                            <strong>@(Model.CartItems.Sum(cartItem => cartItem.Price * cartItem.Quantity))</strong>
-                                        }
-                                        else
-                                        {
-                                            <strong>€@(Model.CartItems.Sum(cartItem => cartItem.Price * cartItem.Quantity) + 10)</strong>
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <strong>€@(Model.CartItems.Sum(cartItem => cartItem.Price * cartItem.Quantity) + 10)</strong>
-                                    }
-                                    
+                                    <strong id="total-price">€@initialTotalPrice</strong>
                                 </span>
                             </li>
                         </ul>
@@ -183,7 +155,16 @@
                 },
                 body: JSON.stringify(dataToSend)
             })
-            .then(response => response.text())
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    return response.text().then(errorMessage => {
+                        window.location.href = '/Index';
+                        throw new Error(errorMessage);
+                    });
+                }
+            })
             .then(data => {
                 var parsedData = JSON.parse(data);
                 UpdateCart(parsedData.cartItems);
@@ -208,7 +189,16 @@
                 },
                 body: JSON.stringify(dataToSend)
             })
-            .then(response => response.text())
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    return response.text().then(errorMessage => {
+                        window.location.href = '/Index';
+                        throw new Error(errorMessage);
+                    });
+                }
+            })
             .then(data => {
                 var productCountElement = document.querySelector(`.cart-count-items`);
                 var parsedData = JSON.parse(data);
@@ -276,12 +266,12 @@
         }
 
         function UpdateSummary(cartItems) {
-            var cartSummaryElement = document.querySelector('.cart-summary');
+            var cartSummaryElement = document.querySelector('.summary');
 
             var totalPrice = cartItems.reduce((total, cartItem) => total + (cartItem.price * cartItem.quantity), 0);
 
             var summaryHtml = `
-                <ul class="list-group list-group-flush">
+                <ul class="list-group list-group-flush summary">
                     <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                         Products
                         <span>€${totalPrice.toFixed(2)}</span>
@@ -297,10 +287,6 @@
                         <span>${isAuthenticated ? (isVIP ? `<strong>€${totalPrice.toFixed(2)}</strong>` : `<strong>€${(totalPrice + 10).toFixed(2)}</strong>`) : `<strong>€${(totalPrice + 10).toFixed(2)}</strong>`}</span>
                     </li>
                 </ul>
-
-                <button type="button" class="btn btn-primary btn-lg btn-block">
-                    Go to checkout
-                </button>
             `;
 
             cartSummaryElement.innerHTML = summaryHtml;

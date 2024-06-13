@@ -14,10 +14,10 @@ namespace WebApp.Pages
 
         public void OnGet()
         {
-            if (TempData.ContainsKey("MessageDanger"))
+            if (TempData.ContainsKey("MessageError"))
             {
-                string message = TempData["MessageDanger"].ToString();
-                ViewData["MessageDanger"] = message;
+                string message = TempData["MessageError"].ToString();
+                ViewData["MessageError"] = message;
             }
             else if (TempData.ContainsKey("MessageSuccess"))
             {

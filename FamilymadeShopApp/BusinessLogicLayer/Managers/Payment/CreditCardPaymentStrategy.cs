@@ -26,14 +26,14 @@ namespace BusinessLogicLayer.Managers.Payment
                 return new PaymentResult
                 {
                     Success = false,
-                    Message = "Insufficient amount in the Mastercard."
+                    Message = "Insufficient amount in the CreditCard."
                 };
             }
 
             return new PaymentResult
             {
                 Success = true,
-                Message = $"Mastercard payment of ${amount} processed successfully."
+                Message = $"CreditCard payment of €{amount} processed successfully."
             };
         }
 

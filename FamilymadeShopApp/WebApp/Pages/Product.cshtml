@@ -136,19 +136,24 @@
             })
             .then(response => {
                 if (response.ok) {
-                    window.location.href = '/Cart';
+                    return response.text().then(data => {
+                        window.location.href = '/Cart';
+                    });
                 } else {
-                    console.error('Failed to process the request:', response.statusText);
+                    return response.text().then(errorMessage => {
+                        window.location.href = '/Index';
+                        throw new Error(errorMessage)
+                    });
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
             });
-        };
+        }
 
         function OnClickAddToCart() {
             var dataToSend = {
-                ProductId: @Model.Product.Id,
+                ProductId: 4,
                 Quantity: document.querySelector('.form-control-quantity').value
             };
 
@@ -160,15 +165,24 @@
                 },
                 body: JSON.stringify(dataToSend)
             })
-            .then(response => response.text())
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    return response.text().then(errorMessage => {
+                        window.location.href = '/Index';
+                        throw new Error(errorMessage);
+                    });
+                }
+            })
             .then(data => {
-                    UpdateCartBadge()
-                    alert("Product added to cart.");
+                UpdateCartBadge();
+                alert("Product added to cart.");
             })
             .catch(error => {
                 console.error('Error:', error);
             });
-        };
+        }
 
     </script>
 }

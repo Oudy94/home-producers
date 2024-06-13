@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -70,11 +71,12 @@ namespace DesktopApp.PanelControls.OrderManagerControls
 				Order order = await _orderManager.GetOrderByIdAsync(_orderId);
 				return order;
 			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-			}
-			finally
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                MessageBox.Show($"Error fetch order data. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
 			{
 				HideLoadingIndicator();
 			}

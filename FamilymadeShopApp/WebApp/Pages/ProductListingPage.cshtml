@@ -3,62 +3,70 @@
 @{
     string search = Model.SearchTerm;
     int pageIndex = Model.PageIndex;
-    int productsPerPage = 4;
-    int totalProducts = await Model.ProductManager.GetProductsCountAsync(search, null);
-    int totalPages = (int)Math.Ceiling((double)totalProducts / productsPerPage);
+    int productsPerPage = Model.ProductsPerPage;
+    int totalPages = Model.TotalPages;
+    var products = Model.Products;
+
+    string searchUrl = string.IsNullOrWhiteSpace(search) ? "" : $"&search={Uri.EscapeDataString(search)}";
 }
 
 <section style="background-color: #eee;">
     <div class="container py-5">
         <div class="row">
-            @foreach (var product in await Model.ProductManager.GetAllProductsAsync(pageIndex, productsPerPage, search, null))
+            @if (products.Any())
             {
-                <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                    <div class="card h-100">
-                        <img src="https://via.placeholder.com/650x500" class="card-img-top" alt="" />
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="text-center">
-                                <a class="text-decoration-none product-text-title" asp-page="Product" asp-route-id="@product.Id">@product.Name</a>
-
-                            </h5>
-                            <div class="mt-auto">
-                                <div class="d-flex justify-content-between mt-3">
-                                    <p class="small m-0"><a href="#!" class="text-muted">@product.Category</a></p>
-                                    <h5 class="text-dark text-center m-0">€@product.Price</h5>
-                                </div>
-
+                @foreach (var product in products)
+                {
+                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                        <div class="card h-100">
+                            <img src="https://via.placeholder.com/650x500" class="card-img-top" alt="" />
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="text-center">
+                                    <a class="text-decoration-none product-text-title" asp-page="Product" asp-route-id="@product.Id">@product.Name</a>
+                                </h5>
                                 <div class="mt-auto">
-                                    <p class="text-muted mb-0">Stock: <span class="fw-bold">@product.Stock</span></p>
-                                    <div class="ms-auto text-warning text-center mt-2">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <p class="small m-0"><a href="#!" class="text-muted">@product.Category</a></p>
+                                        <h5 class="text-dark text-center m-0">€@product.Price</h5>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <p class="text-muted mb-0">Stock: <span class="fw-bold">@product.Stock</span></p>
+                                        <div class="ms-auto text-warning text-center mt-2">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                }
+                <nav class="mt-4" aria-label=" ">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(pageIndex == 1 ? "disabled" : "")">
+                            <a class="page-link" href="?PageIndex=@(pageIndex - 1)@searchUrl" tabindex="-1">Previous</a>
+                        </li>
+                        @for (int i = 1; i <= totalPages; i++)
+                        {
+                            <li class="page-item @(pageIndex == i ? "active" : "")">
+                                <a class="page-link" href="?PageIndex=@i@searchUrl">@i</a>
+                            </li>
+                        }
+                        <li class="page-item @(pageIndex == totalPages ? "disabled" : "")">
+                            <a class="page-link" href="?PageIndex=@(pageIndex + 1)@searchUrl">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+            else
+            {
+                <div class="col-12 text-center">
+                    <h2>No products found</h2>
                 </div>
             }
         </div>
-
-        <nav class="mt-4" aria-label=" ">
-            <ul class="pagination justify-content-center">
-                <li class="page-item @(pageIndex == 1 ? "disabled" : "")">
-                    <a class="page-link" href="?PageIndex=@(pageIndex - 1)" tabindex="-1">Previous</a>
-                </li>
-                @for (int i = 1; i <= totalPages; i++)
-                {
-                    <li class="page-item @(pageIndex == i ? "active" : "")">
-                        <a class="page-link" href="?PageIndex=@i">@i</a>
-                    </li>
-                }
-                <li class="page-item @(pageIndex == totalPages ? "disabled" : "")">
-                    <a class="page-link" href="?PageIndex=@(pageIndex + 1)">Next</a>
-                </li>
-            </ul>
-        </nav>
     </div>
 </section>

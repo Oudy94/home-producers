@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -36,52 +37,60 @@ namespace DesktopApp.PanelControls
 
         private async Task LoadData()
         {
-            var (numberOfCustomers, numberOfProducts) = await _dashboardManager.GetEntityStatisticsAsync();
-            var (numberOfOrders, totalRevenue) = await _dashboardManager.GetOrderStatisticsAsync(dtpStartDate.Value, dtpEndDate.Value);
-            List<KeyValuePair<DateTime, decimal>> revenuesList = await _dashboardManager.GetGrossRevenueAsync(dtpStartDate.Value, dtpEndDate.Value);
-            List<KeyValuePair<string, int>> topProductsList = await _dashboardManager.GetTopProductsListAsync(dtpStartDate.Value, dtpEndDate.Value);
-            List<Product> understockProducts = await _dashboardManager.GetUnderStockProductsAsync();
+            try
+            {
+                var (numberOfCustomers, numberOfProducts) = await _dashboardManager.GetEntityStatisticsAsync();
+                var (numberOfOrders, totalRevenue) = await _dashboardManager.GetOrderStatisticsAsync(dtpStartDate.Value, dtpEndDate.Value);
+                List<KeyValuePair<DateTime, decimal>> revenuesList = await _dashboardManager.GetGrossRevenueAsync(dtpStartDate.Value, dtpEndDate.Value);
+                List<KeyValuePair<string, int>> topProductsList = await _dashboardManager.GetTopProductsListAsync(dtpStartDate.Value, dtpEndDate.Value);
+                List<Product> understockProducts = await _dashboardManager.GetUnderStockProductsAsync();
 
-            lblNumberOfCustomers.Text = numberOfCustomers.ToString("N0");
-            lblNumberOfProducts.Text = numberOfProducts.ToString("N0");
+                lblNumberOfCustomers.Text = numberOfCustomers.ToString("N0");
+                lblNumberOfProducts.Text = numberOfProducts.ToString("N0");
 
-            lblNumberOfOrders.Text = numberOfOrders.ToString("N0");
-            lblTotalRevenue.Text = $"€{totalRevenue.ToString("N0")}";
+                lblNumberOfOrders.Text = numberOfOrders.ToString("N0");
+                lblTotalRevenue.Text = $"€{totalRevenue.ToString("N0")}";
 
-            crtGrossRevenue.Series[0].XValueMember = "Key";
-            crtGrossRevenue.Series[0].YValueMembers = "Value";
-            crtGrossRevenue.ChartAreas[0].AxisX.LabelStyle.Format = "dd/MM";
-            crtGrossRevenue.DataSource = revenuesList;
-            crtGrossRevenue.DataBind();
+                crtGrossRevenue.Series[0].XValueMember = "Key";
+                crtGrossRevenue.Series[0].YValueMembers = "Value";
+                crtGrossRevenue.ChartAreas[0].AxisX.LabelStyle.Format = "dd/MM";
+                crtGrossRevenue.DataSource = revenuesList;
+                crtGrossRevenue.DataBind();
 
-            crtTopProducts.DataSource = topProductsList;
-            crtTopProducts.Series[0].XValueMember = "Key";
-            crtTopProducts.Series[0].YValueMembers = "Value";
-            crtTopProducts.DataBind();
+                crtTopProducts.DataSource = topProductsList;
+                crtTopProducts.Series[0].XValueMember = "Key";
+                crtTopProducts.Series[0].YValueMembers = "Value";
+                crtTopProducts.DataBind();
 
-            dgvUnderstockProducts.AutoGenerateColumns = false;
+                dgvUnderstockProducts.AutoGenerateColumns = false;
 
-            DataGridViewTextBoxColumn idColumn = new DataGridViewTextBoxColumn();
-            DataGridViewTextBoxColumn nameColumn = new DataGridViewTextBoxColumn();
-            DataGridViewTextBoxColumn stockColumn = new DataGridViewTextBoxColumn();
+                DataGridViewTextBoxColumn idColumn = new DataGridViewTextBoxColumn();
+                DataGridViewTextBoxColumn nameColumn = new DataGridViewTextBoxColumn();
+                DataGridViewTextBoxColumn stockColumn = new DataGridViewTextBoxColumn();
 
-            idColumn.HeaderText = "Id";
-            nameColumn.HeaderText = "Name";
-            stockColumn.HeaderText = "Stock";
+                idColumn.HeaderText = "Id";
+                nameColumn.HeaderText = "Name";
+                stockColumn.HeaderText = "Stock";
 
-            idColumn.DataPropertyName = "Id";
-            nameColumn.DataPropertyName = "Name";
-            stockColumn.DataPropertyName = "Stock";
+                idColumn.DataPropertyName = "Id";
+                nameColumn.DataPropertyName = "Name";
+                stockColumn.DataPropertyName = "Stock";
 
-            idColumn.FillWeight = 1; // Weight of 1 (less important)
-            nameColumn.FillWeight = 4; // Weight of 4 (more important)
-            stockColumn.FillWeight = 2; // Weight of 2 (somewhat important)
+                idColumn.FillWeight = 1;
+                nameColumn.FillWeight = 4;
+                stockColumn.FillWeight = 2;
 
-            dgvUnderstockProducts.Columns.Add(idColumn);
-            dgvUnderstockProducts.Columns.Add(nameColumn);
-            dgvUnderstockProducts.Columns.Add(stockColumn);
+                dgvUnderstockProducts.Columns.Add(idColumn);
+                dgvUnderstockProducts.Columns.Add(nameColumn);
+                dgvUnderstockProducts.Columns.Add(stockColumn);
 
-            dgvUnderstockProducts.DataSource = understockProducts;
+                dgvUnderstockProducts.DataSource = understockProducts;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                MessageBox.Show($"An error retrieving dashboard data. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private static DateTime GetStartOfToday(DateTime dateTime)

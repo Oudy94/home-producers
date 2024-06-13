@@ -2,38 +2,53 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using ModelLayer.Models;
-using BusinessLogicLayer.Managers;
-using DataAccessLayer.DataAccess;
+using BusinessLogicLayer.Interfaces;
 
 namespace WebApp.Pages
 {
     public class CartModel : PageModel
     {
-        public ProductManager ProductManager { get; set; }
-        public CartManager CartManager { get; set; }
+        private readonly IProductManager _productManager;
+        private readonly ICartManager _cartManager;
+
         public List<CartProduct> CartItems { get; set; }
 
-        public void OnGet()
+        public CartModel(IProductManager productManager, ICartManager cartManager)
+        {
+            _productManager = productManager;
+            _cartManager = cartManager;
+        }
+
+        public async Task<IActionResult> OnGetAsync()
         {
             if (Request.Cookies.ContainsKey("CartItems"))
             {
                 CartItems = JsonConvert.DeserializeObject<List<CartProduct>>(Request.Cookies["CartItems"]);
 
-                ProductManager = new ProductManager(new ProductRepository());
-
-                //in case the product name or price is changed we update the information
                 foreach (CartProduct cartItem in CartItems)
                 {
-                    Product product = ProductManager.GetProductById(cartItem.ProductId);
-                    cartItem.Name = product.Name;
-                    cartItem.Price = product.Price;
+                    try
+                    {
+                        Product product = _productManager.GetProductById(cartItem.ProductId);
+                        cartItem.Name = product.Name;
+                        cartItem.Price = product.Price;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        TempData["MessageError"] = "Failed to load the cart. Please try again later.";
+                        return RedirectToPage("/Index");
+                    }
                 }
+
                 HttpContext.Response.Cookies.Append("CartItems", JsonConvert.SerializeObject(CartItems));
             }
             else
             {
                 CartItems = new List<CartProduct>();
             }
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostChangeQuantityAsync()
@@ -54,21 +69,26 @@ namespace WebApp.Pages
                         CartProduct existingCartItem = cartItems.FirstOrDefault(item => item.ProductId == cartProduct.ProductId);
                         if (existingCartItem != null)
                         {
-                            existingCartItem.Quantity = cartProduct.Quantity;
-                            HttpContext.Response.Cookies.Append("CartItems", JsonConvert.SerializeObject(cartItems));
-
                             if (User.Identity.IsAuthenticated)
                             {
                                 var userIdClaim = User.FindFirst("id");
-                                if (userIdClaim != null)
+                                if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
                                 {
-                                    if (int.TryParse(userIdClaim.Value, out int userId))
+                                    try
                                     {
-                                        CartManager = new CartManager(new CartRepository());
-                                        CartManager.UpdateProductQuantityInCart(userId, cartProduct.ProductId, cartProduct.Quantity);
+                                        _cartManager.UpdateProductQuantityInCart(userId, cartProduct.ProductId, cartProduct.Quantity);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine(ex.Message);
+                                        TempData["MessageError"] = "Failed to add product to cart. Please try again later.";
+                                        return new BadRequestResult();
                                     }
                                 }
                             }
+
+                            existingCartItem.Quantity = cartProduct.Quantity;
+                            HttpContext.Response.Cookies.Append("CartItems", JsonConvert.SerializeObject(cartItems));
 
                             return new JsonResult(new { success = true, cartItems = cartItems });
                         }
@@ -101,21 +121,26 @@ namespace WebApp.Pages
                         CartProduct existingCartItem = cartItems.FirstOrDefault(item => item.ProductId == cartProduct.ProductId);
                         if (existingCartItem != null)
                         {
-                            cartItems.Remove(existingCartItem);
-                            HttpContext.Response.Cookies.Append("CartItems", JsonConvert.SerializeObject(cartItems));
-
                             if (User.Identity.IsAuthenticated)
                             {
                                 var userIdClaim = User.FindFirst("id");
-                                if (userIdClaim != null)
+                                if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
                                 {
-                                    if (int.TryParse(userIdClaim.Value, out int userId))
+                                    try 
                                     {
-                                        CartManager = new CartManager(new CartRepository());
-                                        CartManager.RemoveCartByCustomerId(userId);
+                                        _cartManager.RemoveCartByCustomerId(userId);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine(ex.Message);
+                                        TempData["MessageError"] = "Failed to remove product from cart. Please try again later.";
+                                        return new BadRequestResult();
                                     }
                                 }
                             }
+
+                            cartItems.Remove(existingCartItem);
+                            HttpContext.Response.Cookies.Append("CartItems", JsonConvert.SerializeObject(cartItems));
 
                             return new JsonResult(new { success = true, cartItems = cartItems });
                         }
@@ -129,6 +154,6 @@ namespace WebApp.Pages
                 return BadRequest("Failed to deserialize JSON data: " + ex.Message);
             }
         }
-
     }
+
 }

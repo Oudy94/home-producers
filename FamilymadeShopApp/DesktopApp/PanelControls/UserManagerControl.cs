@@ -15,6 +15,7 @@ using DesktopApp.PanelControls.UserManagerControls;
 using System.Drawing.Printing;
 using DataAccessLayer.DataAccess;
 using Microsoft.VisualBasic.ApplicationServices;
+using System.Diagnostics;
 
 namespace DesktopApp.PanelControls
 {
@@ -188,7 +189,8 @@ namespace DesktopApp.PanelControls
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Debug.WriteLine(ex.Message);
+                MessageBox.Show($"Error fetch admins names data. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -213,7 +215,8 @@ namespace DesktopApp.PanelControls
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Debug.WriteLine(ex.Message);
+                MessageBox.Show($"Error fetch customers names data. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -410,7 +413,8 @@ namespace DesktopApp.PanelControls
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Debug.WriteLine(ex.Message);
+                    MessageBox.Show($"Error save admins data. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -441,7 +445,8 @@ namespace DesktopApp.PanelControls
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Debug.WriteLine(ex.Message);
+                    MessageBox.Show($"Error save customers data. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -515,7 +520,8 @@ namespace DesktopApp.PanelControls
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Something went wrong!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Debug.WriteLine(ex.Message);
+                    MessageBox.Show($"Error remove user data. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
