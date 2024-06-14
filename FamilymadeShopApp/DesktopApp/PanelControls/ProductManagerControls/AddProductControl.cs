@@ -57,7 +57,7 @@ namespace DesktopApp.PanelControls.ProductManagerControls
 				return;
 			}
 
-			Product product = new Product { Name = name, Description = description, Category = (Category)selectedCategory, Price = price, Stock = stock, Images = new List<string> { "", "", "" },  SalesCount = salesCount };
+			Product product = new Product { Name = name, Description = description, Category = (Category)selectedCategory, Price = price, Stock = stock, Image = image,  SalesCount = salesCount };
 
 			var validationContext = new ValidationContext(product);
 			var validationResults = new List<ValidationResult>();

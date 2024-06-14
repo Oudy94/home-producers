@@ -12,7 +12,7 @@ namespace DesktopApp.Utilities
 		public const int s_ProductsPageSize = 50;
 		public const int s_OrdersPageSize = 50;
 
-		public const int s_MaxDBRequestCount = 5;
+		public const int s_MaxDBRequestCount = 10;
 		public const int s_MaxDBRequestTime = 10;
 	}
 }

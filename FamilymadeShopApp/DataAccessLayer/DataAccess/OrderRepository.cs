@@ -126,7 +126,7 @@ namespace DataAccessLayer.DataAccess
             return orders;
         }
 
-		public async Task<int> GetOrdersCountAsyncDAL(string filterName, OrderStatus? filterStatus)
+		public async Task<int> GetOrdersCountAsyncDAL(int userId, OrderStatus? filterStatus)
 		{
 			try
 			{
@@ -134,9 +134,9 @@ namespace DataAccessLayer.DataAccess
 
 				string query = "SELECT COUNT(*) FROM [order] WHERE 1=1";
 
-				if (!string.IsNullOrEmpty(filterName))
+				if (userId != 0)
 				{
-					query += " AND name LIKE @FilterName";
+					query += " AND customer_id LIKE @CustomerId";
 				}
 
 				if (filterStatus != null)
@@ -146,9 +146,9 @@ namespace DataAccessLayer.DataAccess
 
 				using (SqlCommand cmd = new SqlCommand(query, connection))
 				{
-					if (!string.IsNullOrEmpty(filterName))
-					{
-						cmd.Parameters.AddWithValue("@FilterName", "%" + filterName + "%");
+                    if (userId != 0)
+                    {
+						cmd.Parameters.AddWithValue("@CustomerId", userId);
 					}
 
 					if (filterStatus != null)
@@ -169,7 +169,7 @@ namespace DataAccessLayer.DataAccess
 			}
 		}
 
-		public async Task<List<Order>> GetOrdersAsyncDAL(int pageNumber, int pageSize, string filterName, OrderStatus? filterStatus)
+		public async Task<List<Order>> GetOrdersAsyncDAL(int pageNumber, int pageSize, int userId, OrderStatus? filterStatus)
 		{
 			try
 			{
@@ -179,9 +179,9 @@ namespace DataAccessLayer.DataAccess
 				int offset = (pageNumber - 1) * pageSize;
 				string query = "SELECT id, customer_id, status, date, shipping_price, shipping_address, payment_method, transaction_fee FROM [order] WHERE 1=1";
 
-				if (!string.IsNullOrWhiteSpace(filterName))
-				{
-					query += " AND name LIKE @FilterName";
+                if (userId != 0)
+                {
+					query += " AND customer_id LIKE @UserId";
 				}
 
 				if (filterStatus != null)
@@ -193,9 +193,9 @@ namespace DataAccessLayer.DataAccess
 
 				using (SqlCommand cmd = new SqlCommand(query, connection))
 				{
-					if (!string.IsNullOrWhiteSpace(filterName))
-					{
-						cmd.Parameters.AddWithValue("@FilterName", "%" + filterName + "%");
+                    if (userId != 0)
+                    {
+						cmd.Parameters.AddWithValue("@UserId", userId);
 					}
 
 					if (filterStatus != null)
@@ -277,8 +277,8 @@ namespace DataAccessLayer.DataAccess
 			catch (Exception ex)
 			{
 				transaction?.Rollback();
-				throw new Exception("Error updating order data.", ex);
-			}
+                throw new Exception(ex.Message, ex);
+            }
 			finally
 			{
 				CloseConnection();

@@ -25,13 +25,20 @@ namespace WebApp.Pages
             {
                 CartItems = JsonConvert.DeserializeObject<List<CartProduct>>(Request.Cookies["CartItems"]);
 
-                foreach (CartProduct cartItem in CartItems)
+                foreach (CartProduct cartItem in CartItems.ToList())
                 {
                     try
                     {
                         Product product = _productManager.GetProductById(cartItem.ProductId);
-                        cartItem.Name = product.Name;
-                        cartItem.Price = product.Price;
+                        if (product != null)
+                        {
+                            cartItem.Name = product.Name;
+                            cartItem.Price = product.Price;
+                        }
+                        else
+                        {
+                            CartItems.Remove(cartItem);
+                        }
                     }
                     catch (Exception ex)
                     {

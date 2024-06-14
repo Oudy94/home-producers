@@ -24,6 +24,6 @@ namespace DataAccessLayer.Interfaces
         Task RemoveUserByIdAsyncDAL(int id);
         Task AddPersonalPictureAsyncDAL(int userId, IFormFile personalPic);
         Task<byte[]> GetPersonalPictureAsyncDAL(int userId);
-
+        Task UpdateCustomerAsyncDAL(Customer customer);
     }
 }

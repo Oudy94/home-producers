@@ -12,8 +12,8 @@ namespace DataAccessLayer.Interfaces
     {
         void AddOrderDAL(Order order);
         List<Order> GetOrdersByUserIdDAL(int customerId);
-        Task<int> GetOrdersCountAsyncDAL(string filterName, OrderStatus? filterStatus);
-        Task<List<Order>> GetOrdersAsyncDAL(int pageNumber, int pageSize, string filterName, OrderStatus? filterStatus);
+        Task<int> GetOrdersCountAsyncDAL(int userId, OrderStatus? filterStatus);
+        Task<List<Order>> GetOrdersAsyncDAL(int pageNumber, int pageSize, int userId, OrderStatus? filterStatus);
         Task<bool> UpdateOrdersDAL(List<Order> orders);
         Task<Order> GetOrderByIdAsyncDAL(int orderId);
     }

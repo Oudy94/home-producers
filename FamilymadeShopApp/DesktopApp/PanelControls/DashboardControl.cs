@@ -80,6 +80,8 @@ namespace DesktopApp.PanelControls
                 nameColumn.FillWeight = 4;
                 stockColumn.FillWeight = 2;
 
+                dgvUnderstockProducts.Columns.Clear();
+
                 dgvUnderstockProducts.Columns.Add(idColumn);
                 dgvUnderstockProducts.Columns.Add(nameColumn);
                 dgvUnderstockProducts.Columns.Add(stockColumn);

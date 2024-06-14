@@ -31,7 +31,7 @@
 
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <p class="me-2 mb-0" style="margin-top: 7px;">Hello, @User.Identity.Name</p>
+                        <p class="me-2 mb-0" style="margin-top: 7px;">Hello, @User.FindFirst("name")?.Value</p>
                         <a class="btn btn-light text-secondary position-relative me-2 btn-navbar" asp-area="" asp-page="/PersonalInformation">
                             <i class="fas fa-user"></i>
                         </a>

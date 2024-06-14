@@ -1,9 +1,12 @@
 using BusinessLogicLayer.Interfaces;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ModelLayer.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace WebApp.Pages
 {
@@ -23,7 +26,6 @@ namespace WebApp.Pages
 
         [BindProperty]
         public CustomerPersonalInformation CustomerInfo { get; set; }
-        public IFormFile PersonalPic { get; set; }
 
 
         public async Task<IActionResult> OnGetAsync()
@@ -34,9 +36,7 @@ namespace WebApp.Pages
                 try
                 {
                     Customer = _userManager.GetCustomerById(userId);
-
-                    CustomerInfo = new CustomerPersonalInformation(Customer.Name, Customer.Email, new Address());
-
+                    CustomerInfo = new CustomerPersonalInformation(Customer.Name, Customer.Email);
                 }
                 catch (Exception ex)
                 {
@@ -49,11 +49,16 @@ namespace WebApp.Pages
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPost()
         {
             if (string.IsNullOrEmpty(CustomerInfo.Password))
             {
                 ModelState.Remove("CustomerInfo.Password");
+            }
+
+            if (CustomerInfo.PersonalPic == null)
+            {
+                ModelState.Remove("CustomerInfo.PersonalPic");
             }
 
             if (!ModelState.IsValid)
@@ -66,7 +71,24 @@ namespace WebApp.Pages
             {
                 try
                 {
-                    _userManager.AddPersonalPictureAsync(userId, PersonalPic);
+                    Customer customer = new Customer { Id = userId, Name = CustomerInfo .Name, Email = CustomerInfo.Email, Password = CustomerInfo.Password };
+                    _userManager.UpdateCustomerAsync(customer);
+                    if (CustomerInfo.PersonalPic != null)
+                    {
+                        await _userManager.AddPersonalPictureAsync(userId, CustomerInfo.PersonalPic);
+                    }
+
+                    List<Claim> claims = new List<Claim>()
+                    {
+                        new Claim(ClaimTypes.Name, customer.Name),
+                        new Claim("id", customer.Id.ToString()),
+                        new Claim("name", customer.Name)
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                    HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity)).Wait();
+
                 }
                 catch (Exception ex)
                 {
@@ -76,7 +98,8 @@ namespace WebApp.Pages
                 }
             }
 
-            return RedirectToPage("/PersonalInformation");
+            TempData["MessageSuccess"] = "Personal information updated successfully.";
+            return RedirectToPage("/Index");
         }
     }
 
@@ -94,16 +117,18 @@ namespace WebApp.Pages
         [StringLength(24, ErrorMessage = "Password must be between {2} and {1} characters", MinimumLength = 6)]
         public string Password { get; set; }
 
-        public Address ShippingAddress { get; set; }
+        public IFormFile PersonalPic { get; set; }
+
+        //public Address ShippingAddress { get; set; }
 
         public CustomerPersonalInformation() { }
 
-        public CustomerPersonalInformation(string name, string email, Address shippingAddress)
+        public CustomerPersonalInformation(string name, string email)
         {
             Name = name;
             Email = email;
             Password = "";
-            ShippingAddress = shippingAddress;
+            //ShippingAddress = shippingAddress;
         }
     }
 }

@@ -9,11 +9,20 @@
         <div class="row gx-5">
             <aside class="col-lg-6">
                 <div class="border rounded-4 mb-3 d-flex justify-content-center">
-                    <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" href="https://via.placeholder.com/650x500">
-                        <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="https://via.placeholder.com/650x500" />
-                    </a>
+                    @if (!string.IsNullOrEmpty(Model.Product.Image))
+                    {
+                        <a data-fslightbox="mygallery" class="rounded-4" target="_blank" data-type="image" href="@Model.Product.Image">
+                            <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="@Model.Product.Image" />
+                        </a>
+                    }
+                    else
+                    {
+                        <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" href="https://via.placeholder.com/650x500">
+                            <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="https://via.placeholder.com/650x500" />
+                        </a>
+                    }
                 </div>
-                <div class="d-flex justify-content-center mb-3">
+@*                 <div class="d-flex justify-content-center mb-3">
                     <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://via.placeholder.com/100x100" class="item-thumb">
                         <img width="60" height="60" class="rounded-2" src="https://via.placeholder.com/100x100" />
                     </a>
@@ -29,7 +38,7 @@
                     <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://via.placeholder.com/100x100" class="item-thumb">
                         <img width="60" height="60" class="rounded-2" src="https://via.placeholder.com/100x100" />
                     </a>
-                </div>
+                </div> *@
 
             </aside>
             <main class="col-lg-6">
@@ -153,7 +162,7 @@
 
         function OnClickAddToCart() {
             var dataToSend = {
-                ProductId: 4,
+                ProductId: @Model.Product.Id,
                 Quantity: document.querySelector('.form-control-quantity').value
             };
 
