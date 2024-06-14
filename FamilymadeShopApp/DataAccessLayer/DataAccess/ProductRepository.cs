@@ -21,7 +21,7 @@ namespace DataAccessLayer.DataAccess
             {
                 OpenConnection();
 
-                string query = "INSERT INTO [product] (name, description, category, price, quantity, images, sales_count) VALUES (@Name, @Description, @Category, @Price, @Quantity, @Images, @SalesCount)";
+                string query = "INSERT INTO [product] (name, description, category, price, quantity, image, sales_count) VALUES (@Name, @Description, @Category, @Price, @Quantity, @Image, @SalesCount)";
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
                     cmd.Parameters.AddWithValue("@Name", product.Name);
@@ -29,7 +29,7 @@ namespace DataAccessLayer.DataAccess
                     cmd.Parameters.AddWithValue("@Category", product.Category);
                     cmd.Parameters.AddWithValue("@Price", product.Price);
                     cmd.Parameters.AddWithValue("@Quantity", product.Stock);
-                    cmd.Parameters.AddWithValue("@Images", product.Images[0]);
+                    cmd.Parameters.AddWithValue("@Image", product.Image);
                     cmd.Parameters.AddWithValue("@SalesCount", product.SalesCount);
                     await cmd.ExecuteNonQueryAsync();
                 }
@@ -70,7 +70,7 @@ namespace DataAccessLayer.DataAccess
                                 (Category)reader.GetInt32(reader.GetOrdinal("category")),
                                 reader.GetDecimal(reader.GetOrdinal("price")),
                                 reader.GetInt32(reader.GetOrdinal("quantity")),
-                                new List<string> { "", "", "" },
+                                reader.GetString(reader.GetOrdinal("image")),
                                 reader.GetInt32(reader.GetOrdinal("sales_count"))
                             );
                         }
@@ -140,7 +140,7 @@ namespace DataAccessLayer.DataAccess
 
                 List<Product> products = new List<Product>();
 				int offset = (pageNumber - 1) * pageSize;
-				string query = "SELECT id, name, description, category, price, quantity, images, sales_count FROM [product] WHERE 1=1";
+				string query = "SELECT id, name, description, category, price, quantity, image, sales_count FROM [product] WHERE 1=1";
 
                 if (!string.IsNullOrWhiteSpace(filterName))
                 {
@@ -181,8 +181,8 @@ namespace DataAccessLayer.DataAccess
 								(Category)reader.GetInt32(reader.GetOrdinal("category")),
 								reader.GetDecimal(reader.GetOrdinal("price")),
 								reader.GetInt32(reader.GetOrdinal("quantity")),
-								new List<string> { "", "", "" },
-								reader.GetInt32(reader.GetOrdinal("sales_count"))
+                                reader.GetString(reader.GetOrdinal("image")),
+                                reader.GetInt32(reader.GetOrdinal("sales_count"))
 							);
 							products.Add(product);
 						}
@@ -218,7 +218,7 @@ namespace DataAccessLayer.DataAccess
 
                 foreach (Product product in products)
                 {
-                    string updateQuery = "UPDATE [product] SET name = @Name, description = @Description, category = @Category, price = @Price, quantity = @Quantity, images = @Images, sales_count = @SalesCount WHERE id = @Id";
+                    string updateQuery = "UPDATE [product] SET name = @Name, description = @Description, category = @Category, price = @Price, quantity = @Quantity, image = @Image, sales_count = @SalesCount WHERE id = @Id";
 
                     using (SqlCommand command = new SqlCommand(updateQuery, connection, transaction))
                     {
@@ -227,7 +227,7 @@ namespace DataAccessLayer.DataAccess
                         command.Parameters.AddWithValue("@Category", (int)product.Category);
                         command.Parameters.AddWithValue("@Price", product.Price);
                         command.Parameters.AddWithValue("@Quantity", product.Stock);
-                        command.Parameters.AddWithValue("@Images", product.Images[0]);
+                        command.Parameters.AddWithValue("@Image", product.Image);
                         command.Parameters.AddWithValue("@SalesCount", product.SalesCount);
                         command.Parameters.AddWithValue("@Id", product.Id);
 
@@ -242,7 +242,7 @@ namespace DataAccessLayer.DataAccess
             catch (Exception ex)
             {
                 transaction?.Rollback();
-                throw new Exception("Error updating product data.", ex);
+                throw new Exception(ex.Message, ex);
             }
             finally
             {
@@ -288,12 +288,28 @@ namespace DataAccessLayer.DataAccess
             {
                 OpenConnection();
 
-                string query = "DELETE FROM [product] WHERE Id = @Id";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
+                // Delete from order_product table
+                string deleteOrderProductQuery = "DELETE FROM order_product WHERE product_id = @ProductId;";
+                using (SqlCommand orderProductCommand = new SqlCommand(deleteOrderProductQuery, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", id);
-                    int rowsAffected = await command.ExecuteNonQueryAsync();
+                    orderProductCommand.Parameters.AddWithValue("@ProductId", id);
+                    await orderProductCommand.ExecuteNonQueryAsync();
+                }
+
+                // Delete from cart table
+                string deleteCartQuery = "DELETE FROM cart WHERE product_id = @ProductId;";
+                using (SqlCommand cartCommand = new SqlCommand(deleteCartQuery, connection))
+                {
+                    cartCommand.Parameters.AddWithValue("@ProductId", id);
+                    await cartCommand.ExecuteNonQueryAsync();
+                }
+
+                // Delete from product table
+                string deleteProductQuery = "DELETE FROM product WHERE Id = @Id;";
+                using (SqlCommand productCommand = new SqlCommand(deleteProductQuery, connection))
+                {
+                    productCommand.Parameters.AddWithValue("@Id", id);
+                    int rowsAffected = await productCommand.ExecuteNonQueryAsync();
 
                     if (rowsAffected <= 0)
                     {
@@ -303,7 +319,7 @@ namespace DataAccessLayer.DataAccess
             }
             catch (Exception ex)
             {
-                throw new Exception("Error removing product", ex);
+                throw new Exception(ex.Message, ex);
             }
             finally
             {

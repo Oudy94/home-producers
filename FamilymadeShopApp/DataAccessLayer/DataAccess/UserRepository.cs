@@ -50,8 +50,8 @@ namespace DataAccessLayer.DataAccess
 			}
 			catch (Exception ex)
 			{
-				throw new Exception("Error adding customer.", ex);
-			}
+                throw new Exception(ex.Message, ex);
+            }
 			finally
 			{
 				CloseConnection();
@@ -436,8 +436,8 @@ namespace DataAccessLayer.DataAccess
 			catch (Exception ex)
 			{
 				transaction?.Rollback();
-				throw new Exception("Error updating admin data.", ex);
-			}
+                throw new Exception(ex.Message, ex);
+            }
 			finally
 			{
 				CloseConnection();
@@ -480,15 +480,103 @@ namespace DataAccessLayer.DataAccess
 			catch (Exception ex)
 			{
 				transaction?.Rollback();
-				throw new Exception("Error updating customer data.", ex);
-			}
+                throw new Exception(ex.Message, ex);
+            }
 			finally
 			{
 				CloseConnection();
 			}
 		}
 
-		public async Task RemoveUserByIdAsyncDAL(int id)
+        public async Task UpdateCustomerAsyncDAL(Customer customer)
+        {
+            try
+            {
+                OpenConnection();
+
+                string query = "UPDATE [user] SET name = @Name, email = @Email ";
+
+                if (!string.IsNullOrEmpty(customer.Password))
+                {
+                    query += ", password = @Password ";
+                }
+
+                query += " WHERE id = @Id";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Name", customer.Name);
+                    command.Parameters.AddWithValue("@Email", customer.Email);
+                    if (!string.IsNullOrEmpty(customer.Password))
+					{
+                        command.Parameters.AddWithValue("@Password", customer.Password);
+                    }
+                    command.Parameters.AddWithValue("@Id", customer.Id);
+
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                    if (rowsAffected == 0)
+                    {
+                        throw new Exception("No customer found with the specified ID.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+
+        public async Task RemoveProductByIdAsyncDAL(int id)
+        {
+            try
+            {
+                OpenConnection();
+
+                // Delete from order_product table
+                string deleteOrderProductQuery = "DELETE FROM order_product WHERE product_id = @ProductId;";
+                using (SqlCommand orderProductCommand = new SqlCommand(deleteOrderProductQuery, connection))
+                {
+                    orderProductCommand.Parameters.AddWithValue("@ProductId", id);
+                    await orderProductCommand.ExecuteNonQueryAsync();
+                }
+
+                // Delete from cart table
+                string deleteCartQuery = "DELETE FROM cart WHERE product_id = @ProductId;";
+                using (SqlCommand cartCommand = new SqlCommand(deleteCartQuery, connection))
+                {
+                    cartCommand.Parameters.AddWithValue("@ProductId", id);
+                    await cartCommand.ExecuteNonQueryAsync();
+                }
+
+                // Delete from product table
+                string deleteProductQuery = "DELETE FROM product WHERE Id = @Id;";
+                using (SqlCommand productCommand = new SqlCommand(deleteProductQuery, connection))
+                {
+                    productCommand.Parameters.AddWithValue("@Id", id);
+                    int rowsAffected = await productCommand.ExecuteNonQueryAsync();
+
+                    if (rowsAffected <= 0)
+                    {
+                        throw new Exception("No product found with the specified ID.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+
+        public async Task RemoveUserByIdAsyncDAL(int id)
 		{
 			try
 			{
@@ -509,8 +597,8 @@ namespace DataAccessLayer.DataAccess
 			}
 			catch (Exception ex)
 			{
-				throw new Exception("Error removing user", ex);
-			}
+                throw new Exception(ex.Message, ex);
+            }
 			finally
 			{
 				CloseConnection();
@@ -566,8 +654,8 @@ namespace DataAccessLayer.DataAccess
 			}
 			catch (Exception ex)
 			{
-				throw new Exception("Failed to update profile picture.", ex);
-			}
+                throw new Exception(ex.Message, ex);
+            }
 		}
 
 		public async Task<byte[]> GetPersonalPictureAsyncDAL(int userId)
@@ -594,8 +682,8 @@ namespace DataAccessLayer.DataAccess
 			}
 			catch (Exception ex)
 			{
-				throw new Exception("Failed to retrieve profile picture.", ex);
-			}
+                throw new Exception(ex.Message, ex);
+            }
 		}
 	}
 }

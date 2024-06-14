@@ -171,7 +171,7 @@ namespace DataAccessLayer.DataAccess
             }
             catch (Exception ex)
             {
-                throw new Exception("Error fetching order statistics: " + ex.Message, ex);
+                throw new Exception(ex.Message, ex);
             }
             finally
             {

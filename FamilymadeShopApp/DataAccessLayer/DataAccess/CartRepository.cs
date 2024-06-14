@@ -51,13 +51,13 @@ namespace DataAccessLayer.DataAccess
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        throw new Exception("An error occurred while processing the cart. Transaction rolled back.", ex);
+                        throw new Exception(ex.Message, ex);
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while adding the cart.", ex);
+                throw new Exception(ex.Message, ex);
             }
             finally
             {
@@ -170,7 +170,7 @@ namespace DataAccessLayer.DataAccess
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while fetching the customer's cart.", ex);
+                throw new Exception(ex.Message, ex);
             }
             finally
             {
@@ -186,34 +186,33 @@ namespace DataAccessLayer.DataAccess
             {
                 OpenConnection();
 
-                string updateQuery = @"
-                    UPDATE cart
-                    SET quantity = @NewQuantity
-                    WHERE customer_id = @CustomerId AND product_id = @ProductId;";
+                string mergeQuery = @"
+                    MERGE cart AS target
+                    USING (SELECT @CustomerId AS customer_id, @ProductId AS product_id) AS source
+                    ON (target.customer_id = source.customer_id AND target.product_id = source.product_id)
+                    WHEN MATCHED THEN 
+                        UPDATE SET quantity = @NewQuantity
+                    WHEN NOT MATCHED THEN
+                        INSERT (customer_id, product_id, quantity)
+                        VALUES (@CustomerId, @ProductId, @NewQuantity);";
 
-                using (SqlCommand cmd = new SqlCommand(updateQuery, connection))
+                using (SqlCommand cmd = new SqlCommand(mergeQuery, connection))
                 {
                     cmd.Parameters.AddWithValue("@CustomerId", customerId);
                     cmd.Parameters.AddWithValue("@ProductId", productId);
                     cmd.Parameters.AddWithValue("@NewQuantity", newQuantity);
 
-                    int rowsAffected = cmd.ExecuteNonQuery();
-
-                    if (rowsAffected == 0)
-                    {
-                        throw new Exception("The product does not exist in the customer's cart.");
-                    }
+                    cmd.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while changing the product quantity in the cart.", ex);
+                throw new Exception(ex.Message, ex);
             }
             finally
             {
                 CloseConnection();
             }
         }
-
     }
 }

@@ -100,7 +100,7 @@ namespace DesktopApp.PanelControls
 
             foreach (Product product in products)
             {
-                dgvProducts.Rows.Add(product.Id, product.Name, product.Description, _categoryValues[(int)product.Category], product.Price, product.Stock, product.Images[0], product.SalesCount);
+                dgvProducts.Rows.Add(product.Id, product.Name, product.Description, _categoryValues[(int)product.Category], product.Price, product.Stock, product.Image, product.SalesCount);
             }
         }
 
@@ -407,7 +407,7 @@ namespace DesktopApp.PanelControls
                         Category = category,
                         Price = price,
                         Stock = stock,
-                        Images = new List<string> { "", "", "" },
+                        Image = image,
                         SalesCount = salesCount
                     };
 

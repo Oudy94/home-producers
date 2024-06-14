@@ -56,7 +56,8 @@ namespace WebApp.Pages
             List<Claim> claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, customer.Name),
-                new Claim("id", customer.Id.ToString())
+                new Claim("id", customer.Id.ToString()),
+                new Claim("name", customer.Name)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

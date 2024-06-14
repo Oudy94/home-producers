@@ -24,5 +24,6 @@ namespace BusinessLogicLayer.Interfaces
         Task RemoveUserByIdAsync(int id);
         Task AddPersonalPictureAsync(int userId, IFormFile personalPic);
         Task<byte []> GetPersonalPictureAsync(int userId);
+        Task UpdateCustomerAsync(Customer customer);
     }
 }

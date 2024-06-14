@@ -30,7 +30,6 @@
         {
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             pnlUserManager = new Panel();
-            btnRemoveUser = new Button();
             btnRefreshData = new Button();
             btnAddUser = new Button();
             btnSaveData = new Button();
@@ -53,7 +52,6 @@
             // 
             // pnlUserManager
             // 
-            pnlUserManager.Controls.Add(btnRemoveUser);
             pnlUserManager.Controls.Add(btnRefreshData);
             pnlUserManager.Controls.Add(btnAddUser);
             pnlUserManager.Controls.Add(btnSaveData);
@@ -69,21 +67,6 @@
             pnlUserManager.Name = "pnlUserManager";
             pnlUserManager.Size = new Size(812, 467);
             pnlUserManager.TabIndex = 0;
-            // 
-            // btnRemoveUser
-            // 
-            btnRemoveUser.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnRemoveUser.BackColor = Color.IndianRed;
-            btnRemoveUser.FlatAppearance.BorderColor = Color.White;
-            btnRemoveUser.FlatStyle = FlatStyle.Flat;
-            btnRemoveUser.ForeColor = Color.White;
-            btnRemoveUser.Location = new Point(614, 424);
-            btnRemoveUser.Name = "btnRemoveUser";
-            btnRemoveUser.Size = new Size(88, 26);
-            btnRemoveUser.TabIndex = 37;
-            btnRemoveUser.Text = "Remove User";
-            btnRemoveUser.UseVisualStyleBackColor = false;
-            btnRemoveUser.Click += btnRemoveUser_Click;
             // 
             // btnRefreshData
             // 
@@ -106,7 +89,7 @@
             btnAddUser.FlatAppearance.BorderColor = Color.White;
             btnAddUser.FlatStyle = FlatStyle.Flat;
             btnAddUser.ForeColor = Color.White;
-            btnAddUser.Location = new Point(526, 424);
+            btnAddUser.Location = new Point(620, 424);
             btnAddUser.Name = "btnAddUser";
             btnAddUser.Size = new Size(82, 26);
             btnAddUser.TabIndex = 36;
@@ -256,9 +239,9 @@
             label2.Font = new Font("Segoe UI", 10F);
             label2.Location = new Point(203, 26);
             label2.Name = "label2";
-            label2.Size = new Size(52, 19);
+            label2.Size = new Size(90, 19);
             label2.TabIndex = 4;
-            label2.Text = "Search:";
+            label2.Text = "Search name:";
             // 
             // txtFilterSearch
             // 

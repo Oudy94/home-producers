@@ -370,13 +370,18 @@ namespace DesktopApp.PanelControls
 
                 Admin admin = new Admin { Id = id, Name = name, Email = email, Role = (Role)roleCell.Items.IndexOf(roleCell.EditedFormattedValue) };
 
-                _editedAdminDict.Add(e.RowIndex, admin);
+                if (!_editedAdminDict.ContainsKey(e.RowIndex))
+                {
+                    _editedAdminDict.Add(e.RowIndex, admin);
+                }
             }
             else
             {
                 Customer customer = new Customer { Id = id, Name = name, Email = email };
-                _editedCustomerDict.Add(e.RowIndex, customer);
-
+                if (!_editedCustomerDict.ContainsKey(e.RowIndex))
+                {
+                    _editedCustomerDict.Add(e.RowIndex, customer);
+                }
             }
 
             editedCell.Style.BackColor = Color.Yellow;
@@ -493,37 +498,37 @@ namespace DesktopApp.PanelControls
             await RefreshUserData();
         }
 
-        private async void btnRemoveUser_Click(object sender, EventArgs e)
-        {
-            if (dgvUsers.SelectedRows.Count <= 0)
-            {
-                MessageBox.Show("No user selected!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+        //private async void btnRemoveUser_Click(object sender, EventArgs e)
+        //{
+        //    if (dgvUsers.SelectedRows.Count <= 0)
+        //    {
+        //        MessageBox.Show("No user selected!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        return;
+        //    }
 
-            DataGridViewRow selectedRow = dgvUsers.SelectedRows[0];
+        //    DataGridViewRow selectedRow = dgvUsers.SelectedRows[0];
 
-            int userId = Convert.ToInt32(selectedRow.Cells["Id"].Value);
-            string userName = selectedRow.Cells["Name"].Value.ToString();
+        //    int userId = Convert.ToInt32(selectedRow.Cells["Id"].Value);
+        //    string userName = selectedRow.Cells["Name"].Value.ToString();
 
-            DialogResult result = MessageBox.Show($"Are you sure you want to remove user {userName}?", "Confirm Removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+        //    DialogResult result = MessageBox.Show($"Are you sure you want to remove user {userName}?", "Confirm Removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-            if (result == DialogResult.Yes)
-            {
-                try
-                {
-                    await _userManager.RemoveUserByIdAsync(userId);
+        //    if (result == DialogResult.Yes)
+        //    {
+        //        try
+        //        {
+        //            await _userManager.RemoveUserByIdAsync(userId);
 
-                    dgvUsers.Rows.Remove(selectedRow);
+        //            dgvUsers.Rows.Remove(selectedRow);
 
-                    MessageBox.Show($"User {userName} has been removed.", "User Removed", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                    MessageBox.Show($"Error remove user data. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
+        //            MessageBox.Show($"User {userName} has been removed.", "User Removed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Debug.WriteLine(ex.Message);
+        //            MessageBox.Show($"Error remove user data. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        }
+        //    }
+        //}
     }
 }

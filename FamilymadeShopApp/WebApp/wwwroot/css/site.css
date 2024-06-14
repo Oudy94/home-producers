@@ -109,3 +109,8 @@ body {
     padding: 8px;
     border-bottom: 1px solid #ddd;
 }
+
+.card-img-top {
+    object-fit: cover;
+    height: 200px; 
+}

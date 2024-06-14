@@ -21,7 +21,7 @@ namespace ModelLayer.Models
 		public decimal Price { get; set; }
 		[Required(ErrorMessage = "Stock is required")]
 		public int Stock { get; set; }
-        public List<string> Images { get; set; }
+        public string Image { get; set; }
 		[Required(ErrorMessage = "Sales count is required")]
 		public int SalesCount { get; set; }
 
@@ -30,7 +30,7 @@ namespace ModelLayer.Models
 
         }
 
-        public Product(int id, string name, string description, Category category, decimal price, int stock, List<string> images, int salesCount)
+        public Product(int id, string name, string description, Category category, decimal price, int stock, string image, int salesCount)
         {
             this.Id = id;
             this.Name = name;
@@ -38,7 +38,7 @@ namespace ModelLayer.Models
             this.Category = category;
             this.Price = price;
             this.Stock = stock;
-            this.Images = images;
+            this.Image = image;
             this.SalesCount = salesCount;
         }
     }

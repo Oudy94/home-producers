@@ -158,10 +158,18 @@ namespace DesktopApp.PanelControls
 				ShowLoadingIndicator();
 
 				OrderStatus? statusSelected = cmbFilterStatus.SelectedIndex > 0 ? (OrderStatus)cmbFilterStatus.SelectedIndex - 1 : null;
-				int totalCount = await _orderManager.GetOrdersCountAsync(txtFilterSearch.Text, statusSelected);
+                string searchText = txtFilterSearch.Text;
+                int userId = 0;
+
+                if (!string.IsNullOrWhiteSpace(searchText) && int.TryParse(searchText, out int parsedSearch))
+                {
+                    userId = parsedSearch;
+                }
+
+                int totalCount = await _orderManager.GetOrdersCountAsync(userId, statusSelected);
 				_maxPageNumber = (int)Math.Ceiling((double)totalCount / s_OrdersPageSize);
 
-				orders = await _orderManager.GetOrdersAsync(_pageNumber, s_OrdersPageSize, txtFilterSearch.Text, statusSelected);
+				orders = await _orderManager.GetOrdersAsync(_pageNumber, s_OrdersPageSize, userId, statusSelected);
 			}
 			catch (Exception ex)
 			{

@@ -28,8 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             pnlProductManager = new Panel();
+            btnRemoveProduct = new Button();
             btnAddProduct = new Button();
             btnSaveData = new Button();
             lblMaxPage = new Label();
@@ -45,7 +46,6 @@
             txtFilterSearch = new TextBox();
             label1 = new Label();
             cmbFilterCategory = new ComboBox();
-            btnRemoveProduct = new Button();
             pnlProductManager.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvProducts).BeginInit();
             groupBox1.SuspendLayout();
@@ -69,6 +69,21 @@
             pnlProductManager.Name = "pnlProductManager";
             pnlProductManager.Size = new Size(812, 467);
             pnlProductManager.TabIndex = 0;
+            // 
+            // btnRemoveProduct
+            // 
+            btnRemoveProduct.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnRemoveProduct.BackColor = Color.IndianRed;
+            btnRemoveProduct.FlatAppearance.BorderColor = Color.White;
+            btnRemoveProduct.FlatStyle = FlatStyle.Flat;
+            btnRemoveProduct.ForeColor = Color.White;
+            btnRemoveProduct.Location = new Point(590, 424);
+            btnRemoveProduct.Name = "btnRemoveProduct";
+            btnRemoveProduct.Size = new Size(112, 26);
+            btnRemoveProduct.TabIndex = 43;
+            btnRemoveProduct.Text = "Remove Product";
+            btnRemoveProduct.UseVisualStyleBackColor = false;
+            btnRemoveProduct.Click += btnRemoveProduct_Click;
             // 
             // btnAddProduct
             // 
@@ -174,14 +189,14 @@
             dgvProducts.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvProducts.BackgroundColor = SystemColors.ControlLight;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.FromArgb(170, 197, 175);
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(135, 162, 140);
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvProducts.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.FromArgb(170, 197, 175);
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(135, 162, 140);
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            dgvProducts.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dgvProducts.ColumnHeadersHeight = 37;
             dgvProducts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvProducts.EnableHeadersVisualStyles = false;
@@ -241,9 +256,9 @@
             label2.Font = new Font("Segoe UI", 10F);
             label2.Location = new Point(203, 26);
             label2.Name = "label2";
-            label2.Size = new Size(52, 19);
+            label2.Size = new Size(94, 19);
             label2.TabIndex = 4;
-            label2.Text = "Search:";
+            label2.Text = "Search  name:";
             // 
             // txtFilterSearch
             // 
@@ -276,21 +291,6 @@
             cmbFilterCategory.Size = new Size(140, 25);
             cmbFilterCategory.TabIndex = 1;
             cmbFilterCategory.SelectedIndexChanged += cmbFilterCategory_SelectedIndexChanged;
-            // 
-            // btnRemoveProduct
-            // 
-            btnRemoveProduct.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnRemoveProduct.BackColor = Color.IndianRed;
-            btnRemoveProduct.FlatAppearance.BorderColor = Color.White;
-            btnRemoveProduct.FlatStyle = FlatStyle.Flat;
-            btnRemoveProduct.ForeColor = Color.White;
-            btnRemoveProduct.Location = new Point(590, 424);
-            btnRemoveProduct.Name = "btnRemoveProduct";
-            btnRemoveProduct.Size = new Size(112, 26);
-            btnRemoveProduct.TabIndex = 43;
-            btnRemoveProduct.Text = "Remove Product";
-            btnRemoveProduct.UseVisualStyleBackColor = false;
-            btnRemoveProduct.Click += btnRemoveProduct_Click;
             // 
             // ProductManagerControl
             // 

@@ -157,6 +157,18 @@ namespace BusinessLogicLayer.Managers
 				throw new Exception(ex.Message);
 			}
 		}
+		
+		public async Task UpdateCustomerAsync(Customer customer) 
+		{ 
+			try
+			{
+				await _userRepository.UpdateCustomerAsyncDAL(customer);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
 
 		public async Task RemoveUserByIdAsync(int id)
 		{

@@ -31,15 +31,15 @@
                 </td>
             </tr>
             <tr>
-                <th style="width: 250px;"><label name="PersonalPic"><span>Personal Picture:</span></label></th>
+                <th style="width: 250px;"><label name="CustomerInfo.PersonalPic"><span>Personal Picture:</span></label></th>
                 <td>
-                    <input name="PersonalPic" type="file" class="form-control" accept="image/*" />
+                    <input name="CustomerInfo.PersonalPic" type="file" class="form-control" accept="image/*" />
                     @* <span asp-validation-for="CustomerInfo.Password" class="text-danger"></span> *@
                 </td>
             </tr>
         </table>
 
-        <div class="mt-4">
+@*         <div class="mt-4">
             <h3>Address</h3>
             <table class="table">
                 <tr>
@@ -71,7 +71,7 @@
                     </td>
                 </tr>
             </table>
-        </div>
+        </div> *@
 
         <button type="submit" class="btn btn-primary">Save</button>
         <a class="btn btn-secondary" asp-area="" asp-page="/PersonalInformation">Cancel</a>
